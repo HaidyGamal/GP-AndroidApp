@@ -3,7 +3,6 @@ package com.example.publictransportationguidance.Fragments;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +14,8 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.publictransportationguidance.API.POJO.AllNodes;
-import com.example.publictransportationguidance.API.POJO.Station;
+import com.example.publictransportationguidance.API.POJO.StationsResponse.AllNodes;
+import com.example.publictransportationguidance.API.POJO.StationsResponse.Station;
 import com.example.publictransportationguidance.API.RetrofitClient;
 import com.example.publictransportationguidance.Adapters.CustomAutoCompleteAdapter;
 import com.example.publictransportationguidance.PathResults;
@@ -54,20 +53,15 @@ public class HomeFragment extends Fragment {
         tvLocation=view.findViewById(R.id.tv_location);
         tvDestination=view.findViewById(R.id.tv_destination);
 
-        RetrofitClient.getInstance().getApi().getConstantValue().enqueue(new Callback<AllNodes>() {
+        RetrofitClient.getInstance().getApi().getAllNodes().enqueue(new Callback<AllNodes>() {
             @Override
             public void onResponse(Call<AllNodes> call, Response<AllNodes> response) {
                 AllNodes allNodes = response.body();
                 ArrayList<Station> nodes =allNodes.getAllNodes();
 
                 for (Station n : nodes) { stations.add(n.getStationName()); }
-
-                Log.i("5555555555555555555555555555555555555555555555555555555555555555555555555",stations.size()+"");
-                Log.i("5555555555555555555555555555555555555555555555555555555555555555555555555",stations.get(4));
-
-/*                *//* M Osama: Give inital values to the text views *//*
+/*                M Osama: Give inital values to the text views
                 CustomAutoCompleteAdapter list=new CustomAutoCompleteAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line,places,footer);*/
-
                 /* M Osama: Give inital values to the text views */
                 CustomAutoCompleteAdapter list=new CustomAutoCompleteAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line,stations.toArray(new String[0]), footer);
 

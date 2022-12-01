@@ -1,4 +1,4 @@
-package com.example.publictransportationguidance.API.POJO;
+package com.example.publictransportationguidance.API.POJO.StationsResponse;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
