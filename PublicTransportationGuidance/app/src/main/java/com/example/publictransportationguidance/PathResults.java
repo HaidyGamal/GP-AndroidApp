@@ -5,11 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
-import java.nio.file.Path;
+import com.example.publictransportationguidance.Tracking.SelectedPath;
 
 public class PathResults extends AppCompatActivity {
 
@@ -19,8 +18,7 @@ public class PathResults extends AppCompatActivity {
     NumberPicker resultsWheel;
     Intent txtIntent;
     String  pickedValue ;
-    public static final String TAG="rout";
-
+    public static final String TAG="route";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,16 +30,11 @@ public class PathResults extends AppCompatActivity {
         resultsWheel.setValue(2);                               /* M Osama: index2 content represent best result; to be edited after building database & mapping */
         resultsWheel.setDisplayedValues(transportations);       /* M Osama: populating wheel with data */
 
-        resultsWheel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                txtIntent =new Intent(PathResults.this,SelectedPath.class); /* haidy: to link between the 2 pages*/
+        resultsWheel.setOnClickListener((View v) -> {
+                txtIntent =new Intent(PathResults.this, SelectedPath.class); /* haidy: to link between the 2 pages*/
                 pickedValue=transportations[resultsWheel.getValue()];     /*haidy: getting the text of the selected index in the NumberPicker*/
                 txtIntent.putExtra(TAG,pickedValue);
                 startActivity(txtIntent);
-
-
-            }
         });
         Toast.makeText(this, "For blind their will be a sound", Toast.LENGTH_SHORT).show();
     }

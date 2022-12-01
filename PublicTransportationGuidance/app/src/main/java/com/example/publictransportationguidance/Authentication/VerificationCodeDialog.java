@@ -1,4 +1,4 @@
-package com.example.publictransportationguidance;
+package com.example.publictransportationguidance.Authentication;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
 
+import com.example.publictransportationguidance.R;
 
 public class VerificationCodeDialog extends DialogFragment {
      TextView count_txt;
@@ -22,18 +23,13 @@ public class VerificationCodeDialog extends DialogFragment {
 
         long maxCounter = 61000;
 
-        new CountDownTimer(maxCounter , 1000 ) {   //haidy: built in function that takes the max counter
-            // and the time step in milli sec. and generates down counter
+        new CountDownTimer(maxCounter , 1000 ) {
+            //haidy: built in function that takes the max counter and the time step in milli sec. and generates down counter
 
-            public void onTick(long millisUntilFinished) {
+            public void onTick(long millisUntilFinished) { count_txt.setText( (millisUntilFinished/1000 )+"sec"); }
 
-                count_txt.setText( (millisUntilFinished/1000 )+"sec");
-            }
-            public void onFinish() {
-
-            }
+            public void onFinish() {}
         }.start();
-
 
         return view;
 

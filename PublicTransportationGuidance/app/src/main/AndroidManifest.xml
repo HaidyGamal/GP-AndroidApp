@@ -2,13 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.publictransportationguidance">
+
     <!-- M Osama: Permissions to use Interned & Locations -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
+        android:usesCleartextTraffic="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -26,13 +29,13 @@
             android:name=".PathResults"
             android:exported="false" />
         <activity
-            android:name=".SelectedPath"
+            android:name=".Tracking.SelectedPath"
             android:exported="false" />
         <activity
-            android:name=".LiveLocation"
+            android:name=".Tracking.LiveLocation"
             android:exported="false" />
         <activity
-            android:name=".SignUp"
+            android:name=".Authentication.SignUp"
             android:exported="false" />
 
 

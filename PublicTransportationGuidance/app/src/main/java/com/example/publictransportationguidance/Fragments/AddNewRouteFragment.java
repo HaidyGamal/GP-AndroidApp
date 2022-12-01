@@ -12,7 +12,7 @@ import android.widget.Spinner;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.publictransportationguidance.LoginDialog;
+import com.example.publictransportationguidance.Authentication.LoginDialog;
 import com.example.publictransportationguidance.R;
 import com.example.publictransportationguidance.VerifyDialog;
 

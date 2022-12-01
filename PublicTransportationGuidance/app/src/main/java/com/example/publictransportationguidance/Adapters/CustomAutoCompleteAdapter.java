@@ -1,4 +1,4 @@
-package com.example.publictransportationguidance;
+package com.example.publictransportationguidance.Adapters;
 
 import android.content.Context;
 import android.util.Log;
@@ -16,9 +16,7 @@ import java.util.List;
 
 /* M Osama: Module representing a customAdapter to allow putting a fixed item at the end AutoCompleteTextView */
 public class CustomAutoCompleteAdapter extends BaseAdapter implements Filterable {
-    public interface OnFooterClickListener {
-        public void onFooterClicked();
-    }
+    public interface OnFooterClickListener { public void onFooterClicked();}
 
     private List<String> mObjects;
     private final Object mLock = new Object();
@@ -31,7 +29,7 @@ public class CustomAutoCompleteAdapter extends BaseAdapter implements Filterable
 
     private LayoutInflater mInflater;
 
-    private String mFooterText;             // the last item, i.e the footer
+    private String mFooterText;                    // the last item, i.e the footer
 
     private OnFooterClickListener mListener;       // our listener
 

@@ -8,18 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.publictransportationguidance.CustomAutoCompleteAdapter;
+import com.example.publictransportationguidance.Adapters.CustomAutoCompleteAdapter;
 import com.example.publictransportationguidance.PathResults;
 import com.example.publictransportationguidance.R;
-
-import java.util.Arrays;
 
 public class HomeFragment extends Fragment {
     public HomeFragment() {}
@@ -27,7 +24,6 @@ public class HomeFragment extends Fragment {
     /* M Osama: Populating random data to be futurely replaced with real locations */
     String[] places={"Maadi","Heliopelis","Zamalek","Sheikh Zayed","October","Tagamo3"};
     String footer="Set Location On The Map";
-
 
     AutoCompleteTextView tvLocation,tvDestination;
     Button findResults;
@@ -62,23 +58,18 @@ public class HomeFragment extends Fragment {
                 toast.show();
         });
 
-
         tvLocation.setAdapter(list);
         tvLocation.setOnItemClickListener((AdapterView<?> parent, View v, int position, long id)-> {
             String itemSelected=tvLocation.getText()+"";
             if(itemSelected.equals(footer));
-            else{
-                Toast.makeText(getActivity(), "To Be Edited", Toast.LENGTH_LONG).show();
-            }
+            else{ Toast.makeText(getActivity(), "To Be Edited", Toast.LENGTH_LONG).show(); }
         });
 
         tvDestination.setAdapter(list);
         tvDestination.setOnItemClickListener((AdapterView<?> parent, View v, int position, long id)-> {
             String itemSelected=tvDestination.getText()+"";
             if(itemSelected.equals(footer));
-            else{
-                Toast.makeText(getActivity(), "To Be Edited", Toast.LENGTH_LONG).show();
-            }
+            else{ Toast.makeText(getActivity(), "To Be Edited", Toast.LENGTH_LONG).show(); }
         });
 
         findResults =view.findViewById(R.id.btn_ok);
