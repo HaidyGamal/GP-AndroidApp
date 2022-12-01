@@ -35,8 +35,6 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
         // haidy: Applying the adapter to the spinner
         spinner.setAdapter(adapter);
 
-
-
         input=view.findViewById(R.id.transport);
         submit=view.findViewById(R.id.submit_btn);
         spinner.setOnItemSelectedListener(this);

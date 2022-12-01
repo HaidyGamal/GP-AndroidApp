@@ -18,7 +18,6 @@ public class LoginFragment extends DialogFragment {
 
     public LoginFragment() {
         // Required empty public constructor
-
     }
 
     @Override

@@ -1,14 +1,15 @@
 package com.example.publictransportationguidance;
 
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
-
+import com.example.publictransportationguidance.API.POJO.AllNodes;
+import com.example.publictransportationguidance.API.POJO.Station;
+import com.example.publictransportationguidance.API.RetrofitClient;
+import com.example.publictransportationguidance.Fragments.HomeFragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
-
-import androidx.core.view.GravityCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -17,6 +18,12 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.publictransportationguidance.databinding.ActivityMainBinding;
+
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity{
 
