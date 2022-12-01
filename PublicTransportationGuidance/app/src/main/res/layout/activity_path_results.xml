@@ -6,16 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".PathResults">
 
+    <!--displaying a radio group on below line-->
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
         android:gravity="center"
         android:text="Path depending on: "
         android:textColor="@color/black"
         android:textSize="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/radioGroup"></TextView>
+        app:layout_constraintBottom_toTopOf="@+id/radioGroup"
+        tools:layout_editor_absoluteX="0dp"></TextView>
 
-    <!--displaying a radio group on below line-->
     <RadioGroup
         android:id="@+id/radioGroup"
         android:layout_width="match_parent"

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PublicTransportationGuidance</string>
+    <string name="app_name">Tawsila</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Tawsila</string>
@@ -13,7 +13,54 @@
     <string name="menu_add_new_route">Add New Route</string>
     <string name="menu_contact_us">Contact Us</string>
     <string name="menu_about">About</string>
+    <string name="account">Account</string>
+    <string name="off">OFF</string>
 
+    <string name="mode">Dark Mode</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="places_api_key">Places API Key</string>
+    <string name="title_activity_select_path">SelectPath</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="dnt_have">Don\'t have an account?</string>
+    <string name="sign">Sign Up</string>
+    <string name="log">Login</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <!-- Strings related to signup -->
+    <string name="email">Email</string>
+    <string name="pass">Password</string>
+    <string name="phone">Phone</string>
+    <string name="fname">First Name</string>
+    <string name="lname">Last Name</string>
+    <!-- Strings related to ADD new route -->
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="no.">No. of Transportations</string>
+    <string name="transport">Transportation</string>
+    <string name="bus">Bus</string>
+    <string name="mic_bus">Microbus</string>
+    <string name="cost">Cost(Optional)</string>
+    <string name="submit">Submit</string>
+    <string name="verify">Your Request Will Be Reviewed</string>
+    <string name="verification">Verification Code Sent</string>
+    <!-- Strings related to spinner -->
+    <string-array name="transportations">
+        <item>Microbus</item>
+        <item>Bus</item>
+        <item>Metro</item>
+
+    </string-array>
+
 </resources>
