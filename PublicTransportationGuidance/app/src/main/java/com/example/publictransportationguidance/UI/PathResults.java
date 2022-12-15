@@ -4,22 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
-import com.example.publictransportationguidance.API.POJO.ShortestPathResponse.Shortest;
-import com.example.publictransportationguidance.API.POJO.ShortestPathResponse.ShortestPath;
+import com.example.publictransportationguidance.API.POJO.StopsResponse.StopModel;
 import com.example.publictransportationguidance.API.RetrofitClient;
 import com.example.publictransportationguidance.R;
+import com.example.publictransportationguidance.Room.RoomDB;
 import com.example.publictransportationguidance.Tracking.SelectedPath;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class PathResults extends AppCompatActivity {
 
@@ -27,13 +23,20 @@ public class PathResults extends AppCompatActivity {
     Intent txtIntent;
     String  pickedValue ;
     public static final String TAG="route";
+
     String[] transportations={"Bus from Faisal ro Zamalek","Metro from Zamalek to Sheraton","temp1","temp2","temp3","temp4"};
+
+    ArrayList<String> transportationsTwoTemp =new ArrayList<>();
+    public static String[] transportationsTwo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_path_results);
         resultsWheel=findViewById(R.id.wheel);
+
+        //for(StopModel tempStop : stops){ transportationsTwoTemp.add(tempStop.getName()); }
+        //transportationsTwo=transportationsTwoTemp.toArray(new String[0]);
 
         resultsWheel.setMinValue(0);                            /* M Osama: wheel populated starting from index0 from source*/
         resultsWheel.setMaxValue(transportations.length-1);     /* M Osama: wheel populated till index(len-1)*/

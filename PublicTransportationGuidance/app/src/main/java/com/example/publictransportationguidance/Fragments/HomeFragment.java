@@ -14,9 +14,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.publictransportationguidance.API.POJO.StopsResponse.AllStops;
 import com.example.publictransportationguidance.API.POJO.StopsResponse.StopModel;
-import com.example.publictransportationguidance.API.RetrofitClient;
 import com.example.publictransportationguidance.Adapters.CustomAutoCompleteAdapter;
 import com.example.publictransportationguidance.Room.RoomDB;
 import com.example.publictransportationguidance.UI.PathResults;
@@ -25,18 +23,13 @@ import com.example.publictransportationguidance.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class HomeFragment extends Fragment {
     public HomeFragment() {}
 
-    public static ArrayList<String> stations = new ArrayList<>();
-
-    /* M Osama: Populating random data to be futurely replaced with real locations */
-    String[] places = {"Maadi", "Heliopelis", "Zamalek", "Sheikh Zayed", "October", "Tagamo3"};
     String footer = "Set Location On The Map";
+
+    String[] stops;
+    ArrayList<String> stopsTemp =new ArrayList<>();
 
     AutoCompleteTextView tvLocation, tvDestination;
     Button findResults;
@@ -52,11 +45,17 @@ public class HomeFragment extends Fragment {
     /* M Osama: OnViewCreated used to write the code we want to execute in a fragment */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+
         tvLocation = view.findViewById(R.id.tv_location);
         tvDestination = view.findViewById(R.id.tv_destination);
 
+        List<StopModel> stops = RoomDB.getInstance(getActivity()).Dao().getAllStops();  // M Osama: Reading the locations cached in Room
+        for (StopModel tempStop : stops){
+            stopsTemp.add(tempStop.getName());}           // M Osama: Populating the ArrayList with names from Room
+        this.stops = stopsTemp.toArray(new String[0]);                                      // M Osama: ArrayList to Array
+
         /* M Osama: Give inital values to the text views */
-        CustomAutoCompleteAdapter list = new CustomAutoCompleteAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, places, footer);
+        CustomAutoCompleteAdapter list = new CustomAutoCompleteAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, this.stops, footer);
 
         /* M Osama: bind to our custom click listener interface */
         list.setOnFooterClickListener(() -> {
@@ -75,18 +74,16 @@ public class HomeFragment extends Fragment {
         tvLocation.setOnItemClickListener((AdapterView<?> parent, View v, int position, long id) -> {
             String itemSelected = tvLocation.getText() + "";
             if (itemSelected.equals(footer)) ;
-            else {
-                Toast.makeText(getActivity(), "To Be Edited", Toast.LENGTH_LONG).show();
-            }
+            else Toast.makeText(getActivity(), "To Be Edited", Toast.LENGTH_LONG).show();
+
         });
 
         tvDestination.setAdapter(list);
         tvDestination.setOnItemClickListener((AdapterView<?> parent, View v, int position, long id) -> {
             String itemSelected = tvDestination.getText() + "";
             if (itemSelected.equals(footer)) ;
-            else {
-                Toast.makeText(getActivity(), "To Be Edited", Toast.LENGTH_LONG).show();
-            }
+            else Toast.makeText(getActivity(), "To Be Edited", Toast.LENGTH_LONG).show();
+
         });
 
         findResults = view.findViewById(R.id.btn_ok);
