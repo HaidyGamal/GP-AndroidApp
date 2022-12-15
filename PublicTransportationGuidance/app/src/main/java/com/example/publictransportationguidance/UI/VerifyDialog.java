@@ -1,4 +1,4 @@
-package com.example.publictransportationguidance;
+package com.example.publictransportationguidance.UI;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.fragment.app.DialogFragment;
+
+import com.example.publictransportationguidance.R;
+import com.example.publictransportationguidance.UI.MainActivity;
 
 public class VerifyDialog extends DialogFragment {
     Button ok;
@@ -20,7 +23,7 @@ public class VerifyDialog extends DialogFragment {
 
         ok.setOnClickListener((View v)-> {
                 dismiss();
-                intent=new Intent(getActivity().getBaseContext(),MainActivity.class);  //haidy: to return back to home page
+                intent=new Intent(getActivity().getBaseContext(), MainActivity.class);  //haidy: to return back to home page
                 startActivity(intent);
         });
         return view;

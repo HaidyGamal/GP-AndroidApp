@@ -1,7 +1,9 @@
 package com.example.publictransportationguidance.API;
 
-import com.example.publictransportationguidance.API.POJO.ShortestPathResponse.ShortestPathInfo;
-import com.example.publictransportationguidance.API.POJO.StationsResponse.AllNodes;
+import com.example.publictransportationguidance.API.POJO.ShortestPathResponse.ShortestPath;
+import com.example.publictransportationguidance.API.POJO.StopsResponse.AllStops;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -10,16 +12,22 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public interface Api {
-    String BASE_URL="https://public-transportations.herokuapp.com/"; /* Api doc: BaseURL used in every Api request */
+    /* M Osama: BaseURL used in every Api request */
+    String BASE_URL="https://samplepublictransportationsapi.onrender.com/";
 
-    /* GET request (rootThatWillBeAddedToBaseURL) */
-    /* It returns with JSON array of Hero; so we stores it in List<Hero> */
-    @GET(".")           /* GET request URL = Base URL */
-    Call<AllNodes> getAllNodes();
+    @GET(".")
+    Call<AllStops> getAllStops();
 
     @FormUrlEncoded
-    @POST("showResult")
-    Call<ShortestPathInfo> getShortestPath(
+    @POST("orderByCost")
+    Call<List<List<ShortestPath>>> getShortestByCost(
+            @Field("Location") String Location,
+            @Field("Destination") String Destination
+    );
+
+    @FormUrlEncoded
+    @POST("orderByDistance")
+    Call<List<List<ShortestPath>>> getShortestByDistance(
             @Field("Location") String Location,
             @Field("Destination") String Destination
     );

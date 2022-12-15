@@ -10,14 +10,13 @@ public class RetrofitClient {
     public static RetrofitClient instance =null;
     private Api api;
 
-    /*Retrofit instance to send requests to Api */
     private RetrofitClient(){
         Retrofit retrofit= new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
         api=retrofit.create(Api.class);
     }
 
     public static synchronized RetrofitClient getInstance(){
-        if(instance==null){instance=new RetrofitClient();}
+        if(instance==null){ instance=new RetrofitClient(); }
         return instance;
     }
 

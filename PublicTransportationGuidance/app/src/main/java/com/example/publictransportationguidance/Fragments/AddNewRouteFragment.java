@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.publictransportationguidance.Authentication.LoginDialog;
 import com.example.publictransportationguidance.R;
-import com.example.publictransportationguidance.VerifyDialog;
+import com.example.publictransportationguidance.UI.VerifyDialog;
 
 public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     public AddNewRouteFragment() {}

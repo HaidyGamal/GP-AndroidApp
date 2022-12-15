@@ -1,9 +1,10 @@
-package com.example.publictransportationguidance;
+package com.example.publictransportationguidance.UI;
 
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
 
+import com.example.publictransportationguidance.R;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
@@ -58,7 +59,6 @@ public class MainActivity extends AppCompatActivity{
                 }
                 currentMode ^= 1; /*M Osama: toggle mode between Normal & Blind */
         });
-
     }
 
     /*M Osama: Inflate the menu(right at the right of action bar); this adds items to the action bar if it is present. */
@@ -74,8 +74,6 @@ public class MainActivity extends AppCompatActivity{
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
     }
-
-
 
 
 }

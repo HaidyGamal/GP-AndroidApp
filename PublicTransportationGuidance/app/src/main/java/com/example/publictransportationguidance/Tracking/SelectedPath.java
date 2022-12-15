@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.publictransportationguidance.PathResults;
+import com.example.publictransportationguidance.UI.PathResults;
 import com.example.publictransportationguidance.R;
 
 public class SelectedPath extends AppCompatActivity {

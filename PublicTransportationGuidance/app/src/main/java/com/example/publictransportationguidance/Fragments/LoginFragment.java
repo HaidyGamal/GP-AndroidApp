@@ -15,10 +15,8 @@ import com.example.publictransportationguidance.R;
 public class LoginFragment extends DialogFragment {
 
     Button log;
-
-    public LoginFragment() {
-        // Required empty public constructor
-    }
+    // Required empty public constructor
+    public LoginFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
