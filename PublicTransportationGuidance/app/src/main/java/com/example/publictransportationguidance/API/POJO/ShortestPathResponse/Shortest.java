@@ -1,9 +1,7 @@
 package com.example.publictransportationguidance.API.POJO.ShortestPathResponse;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Shortest {
@@ -18,6 +16,10 @@ public class Shortest {
             return pathStops;
         }
         else return getPathStops(listOfList,0);
+    }
+
+    public static int getNumberOfPathStops(List<ShortestPath> list){
+        return list.size();
     }
 
     public static List<ShortestPath> getPath(List<List<ShortestPath>> listOfList, int pathNumber){
@@ -42,4 +44,33 @@ public class Shortest {
         }
         else return -1.0;
     }
+
+    public static HashMap<Integer,List<String>> pathMap(List<List<ShortestPath>> listOfList){
+        HashMap<Integer,List<String>> paths=new HashMap<>();
+        List<String> tempPath;
+
+        int numberOfPaths=Shortest.getNumberOfPaths(listOfList);
+        for(int pathNum=0;pathNum<numberOfPaths;pathNum++){
+            tempPath=new ArrayList<String>();
+            List<ShortestPath> path= listOfList.get(pathNum);
+            int numberOfPathStops=Shortest.getNumberOfPathStops(path);
+
+            for(int pathStop=0;pathStop<numberOfPathStops;pathStop++){
+                String stop=path.get(pathStop).getName();   tempPath.add(stop);
+            }
+
+            paths.put(pathNum,tempPath);
+        }
+
+        return paths;
+    }
+
+    public static String pathToPrint(List<String> str){
+        String path="";
+        for (String stop : str){
+           path+=(stop+" -> ");
+        }
+        return path.substring(0,path.length()-3);
+    }
+
 }

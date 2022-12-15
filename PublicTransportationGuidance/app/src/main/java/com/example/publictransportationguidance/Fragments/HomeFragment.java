@@ -13,12 +13,15 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.example.publictransportationguidance.API.POJO.StopsResponse.StopModel;
 import com.example.publictransportationguidance.Adapters.CustomAutoCompleteAdapter;
 import com.example.publictransportationguidance.Room.RoomDB;
 import com.example.publictransportationguidance.UI.PathResults;
 import com.example.publictransportationguidance.R;
+import com.example.publictransportationguidance.UI.StopViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

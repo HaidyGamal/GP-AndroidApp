@@ -9,7 +9,7 @@ import com.example.publictransportationguidance.Room.RoomDB;
 
 public class StopViewModel extends ViewModel {
 
-    MutableLiveData<String> stopNameMutableLiveData=new MutableLiveData<>();
+    public MutableLiveData<String> stopNameMutableLiveData=new MutableLiveData<>();
 
     public void getStopName(Context context, int stopNumber){
         String stopName=getStopFromRoom(context,stopNumber).getName();

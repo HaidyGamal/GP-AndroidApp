@@ -58,17 +58,6 @@ public class MainActivity extends AppCompatActivity{
         NavigationView navigationView = binding.navView;
 
 
-
-
-        //stopsViewModel = new ViewModelProvider(this).get(StopViewModel.class);
-        stopsViewModel= ViewModelProviders.of(this).get(StopViewModel.class);
-
-        stopsViewModel.stopNameMutableLiveData.observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String s) {}
-        });
-
-
         RetrofitClient.getInstance().getApi().getAllStops().enqueue(new Callback<AllStops>() {
             @Override
             public void onResponse(Call<AllStops> call, Response<AllStops> response) {

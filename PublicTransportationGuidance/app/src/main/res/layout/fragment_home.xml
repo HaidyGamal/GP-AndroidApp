@@ -105,14 +105,14 @@
 
         <!--adding a radio button -->
         <RadioButton
-            android:id="@+id/timeRB"
+            android:id="@+id/distanceRB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:checked="false"
             android:padding="4dp"
             android:layout_margin="32dp"
-            android:text="Time"
+            android:text="Distance"
             android:textAlignment="center"
             android:textSize="20sp" />
 
