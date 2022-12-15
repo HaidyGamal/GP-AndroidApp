@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.NumberPicker;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +32,9 @@ public class PathResults extends AppCompatActivity {
     String  pickedValue ;
     TextView tvCost;
     TextView tvDistance;
+    RadioButton costRadioBtn;
+    RadioButton distanceRadioBtn;
+
     public static final String TAG="route";
 
     String[] transportations={"Bus from Faisal ro Zamalek","Metro from Zamalek to Sheraton","temp1","temp2","temp3","temp4"};
@@ -45,6 +50,8 @@ public class PathResults extends AppCompatActivity {
         resultsWheel=findViewById(R.id.wheel);
         tvCost=findViewById(R.id.cost);
         tvDistance=findViewById(R.id.distance);
+        costRadioBtn=findViewById(R.id.costRB_pathResults);
+        distanceRadioBtn=findViewById(R.id.distanceRB_pathResults);
 
         transportationsTemp =new ArrayList<>();
 
@@ -78,11 +85,22 @@ public class PathResults extends AppCompatActivity {
                     startActivity(txtIntent);
                 });
 
+                /* M Osama: track costs & distances of selected Path */
                 resultsWheel.setOnScrollListener((NumberPicker numberPicker, int i) ->{
                     String cost = ""+Shortest.getPathCost(shortestPathsInCost,numberPicker.getValue());
                     String distance = ""+Shortest.getPathDistance(shortestPathsInCost,numberPicker.getValue());
                     tvCost.setText(cost);
                     tvDistance.setText(distance);
+                });
+
+                /* M Osama: Sort by cost */
+                costRadioBtn.setOnClickListener((View view)-> {
+                        Toast.makeText(PathResults.this, "Cost", Toast.LENGTH_SHORT).show();
+                });
+
+                /* M Osama: Sort by distance */
+                distanceRadioBtn.setOnClickListener((View view)-> {
+                        Toast.makeText(PathResults.this, "Distance", Toast.LENGTH_SHORT).show();
                 });
 
             }

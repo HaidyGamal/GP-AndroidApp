@@ -80,7 +80,7 @@
 
     <!--displaying a radio group on below line-->
     <RadioGroup
-        android:id="@+id/radioGroup"
+        android:id="@+id/radioGroup_homeFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -92,7 +92,7 @@
 
         <!--adding a radio button -->
         <RadioButton
-            android:id="@+id/costRB"
+            android:id="@+id/costRB_homeFragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -105,7 +105,7 @@
 
         <!--adding a radio button -->
         <RadioButton
-            android:id="@+id/distanceRB"
+            android:id="@+id/distanceRB_homeFragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -29,6 +30,9 @@ import java.util.List;
 public class HomeFragment extends Fragment {
     public HomeFragment() {}
 
+    RadioButton costRadioBtn;
+    RadioButton distanceRadioBtn;
+
     String footer = "Set Location On The Map";
 
     String[] stops;
@@ -36,6 +40,7 @@ public class HomeFragment extends Fragment {
 
     AutoCompleteTextView tvLocation, tvDestination;
     Button findResults;
+
 
     /* M Osama: OnCreateView used to connect the fragment java class with it's xml layout */
     @Override
@@ -51,6 +56,9 @@ public class HomeFragment extends Fragment {
 
         tvLocation = view.findViewById(R.id.tv_location);
         tvDestination = view.findViewById(R.id.tv_destination);
+
+        costRadioBtn=view.findViewById(R.id.costRB_homeFragment);
+        distanceRadioBtn=view.findViewById(R.id.distanceRB_homeFragment);
 
         List<StopModel> stops = RoomDB.getInstance(getActivity()).Dao().getAllStops();  // M Osama: Reading the locations cached in Room
         for (StopModel tempStop : stops){
@@ -95,8 +103,15 @@ public class HomeFragment extends Fragment {
             startActivity(intent);
         });
 
-    }
+        distanceRadioBtn.setOnClickListener((View v)-> {
+                Toast.makeText(getActivity(), "Distance", Toast.LENGTH_SHORT).show();
+        });
 
+        costRadioBtn.setOnClickListener((View v) -> {
+                Toast.makeText(getActivity(), "Cost", Toast.LENGTH_SHORT).show();
+        });
+
+    }
 
 }
 
