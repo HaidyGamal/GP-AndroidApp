@@ -1,14 +1,12 @@
 package com.example.publictransportationguidance.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Dao;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.NumberPicker;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +42,7 @@ public class PathResults extends AppCompatActivity {
     String[] transportations={"Bus from Faisal ro Zamalek","Metro from Zamalek to Sheraton","temp1","temp2","temp3","temp4"};
     ArrayList<String> transportationsTemp=new ArrayList<>();
 
-    String SOURCE ="الحي الثامن";
+    String LOCATION ="الحي الثامن";
     String DESTINATION ="العباسية";
 
     @Override
@@ -57,9 +55,15 @@ public class PathResults extends AppCompatActivity {
         costRadioBtn=findViewById(R.id.costRB_pathResults);
         distanceRadioBtn=findViewById(R.id.distanceRB_pathResults);
 
+        Bundle extras = getIntent().getExtras();
+        if(extras!=null){
+            LOCATION=extras.getString("LOCATION");
+            DESTINATION=extras.getString("DESTINATION");
+        }
+
         DAO dao = RoomDB.getInstance(getApplication()).Dao();
 
-        RetrofitClient.getInstance().getApi().getShortestByCost(SOURCE, DESTINATION).enqueue(new Callback<List<List<ShortestPath>>>() {
+        RetrofitClient.getInstance().getApi().getShortestByCost(LOCATION, DESTINATION).enqueue(new Callback<List<List<ShortestPath>>>() {
             @Override
             public void onResponse(Call<List<List<ShortestPath>>> call, Response<List<List<ShortestPath>>> response) {
                 List<List<ShortestPath>> shortestPathsInCost=response.body();

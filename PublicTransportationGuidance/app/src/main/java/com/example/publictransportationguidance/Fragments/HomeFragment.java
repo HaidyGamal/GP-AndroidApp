@@ -99,8 +99,17 @@ public class HomeFragment extends Fragment {
 
         findResults = view.findViewById(R.id.btn_ok);
         findResults.setOnClickListener((View v) -> {
-            Intent intent = new Intent(getActivity(), PathResults.class);
-            startActivity(intent);
+            String location = tvLocation.getText()+"";
+            String destination = tvDestination.getText()+"";
+            if(location!="" && destination!=""){
+                Intent intent = new Intent(getActivity(), PathResults.class);
+                intent.putExtra("LOCATION",location);
+                intent.putExtra("DESTINATION",destination);
+                startActivity(intent);
+            }
+            else {
+                Toast.makeText(getActivity(), "Choose Location & Destination First", Toast.LENGTH_SHORT).show();
+            }
         });
 
         distanceRadioBtn.setOnClickListener((View v)-> {
