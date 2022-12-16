@@ -14,15 +14,12 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.example.publictransportationguidance.API.POJO.StopsResponse.StopModel;
 import com.example.publictransportationguidance.Adapters.CustomAutoCompleteAdapter;
 import com.example.publictransportationguidance.Room.RoomDB;
 import com.example.publictransportationguidance.UI.PathResults;
 import com.example.publictransportationguidance.R;
-import com.example.publictransportationguidance.UI.StopViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +37,6 @@ public class HomeFragment extends Fragment {
 
     AutoCompleteTextView tvLocation, tvDestination;
     Button findResults;
-
 
     /* M Osama: OnCreateView used to connect the fragment java class with it's xml layout */
     @Override
@@ -84,7 +80,7 @@ public class HomeFragment extends Fragment {
         tvLocation.setOnItemClickListener((AdapterView<?> parent, View v, int position, long id) -> {
             String itemSelected = tvLocation.getText() + "";
             if (itemSelected.equals(footer)) ;
-            else Toast.makeText(getActivity(), "To Be Edited", Toast.LENGTH_LONG).show();
+            else ;
 
         });
 
@@ -92,7 +88,7 @@ public class HomeFragment extends Fragment {
         tvDestination.setOnItemClickListener((AdapterView<?> parent, View v, int position, long id) -> {
             String itemSelected = tvDestination.getText() + "";
             if (itemSelected.equals(footer)) ;
-            else Toast.makeText(getActivity(), "To Be Edited", Toast.LENGTH_LONG).show();
+            else ;
 
         });
 
@@ -124,7 +120,3 @@ public class HomeFragment extends Fragment {
 
 }
 
-
-
-
-// CustomAutoCompleteAdapter list=new CustomAutoCompleteAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line,stations.toArray(new String[0]), footer);

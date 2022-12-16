@@ -57,10 +57,14 @@ public class MainActivity extends AppCompatActivity{
                 AllStops allStops=response.body();
                 List<StopModel> stops=allStops.getAllNodes();
 
-                // caching Stops in Room (only if StopsTable is empty)
-                if(RoomDB.getInstance(getApplicationContext()).Dao().getNumberOfRowsInStopTable()==0) {
-                    for (StopModel st : stops) {
-                        RoomDB.getInstance(getApplicationContext()).Dao().insertStop(st);
+                // M Osama: delete old data if new greater data is received
+                if(stops.size()>RoomDB.getInstance(getApplicationContext()).Dao().getNumberOfRowsInStopTable()) {
+                    RoomDB.getInstance(getApplicationContext()).Dao().deleteAllStops();
+                    // M Osama: caching Stops in Room (only if StopsTable is empty)
+                    if (RoomDB.getInstance(getApplicationContext()).Dao().getNumberOfRowsInStopTable() == 0) {
+                        for (StopModel st : stops) {
+                            RoomDB.getInstance(getApplicationContext()).Dao().insertStop(st);
+                        }
                     }
                 }
 
@@ -84,12 +88,12 @@ public class MainActivity extends AppCompatActivity{
         binding.appBarMain.fab.setOnClickListener((View view)-> {
                 navController.navigate(R.id.nav_home);
                 if(currentMode==NORMAL_MODE){
-                    Snackbar.make(view, "Now, you are on blind mode", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    Snackbar.make(view, "أنتم الآن في نظام التعامل مع الضريرين", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     binding.appBarMain.fab.setImageResource(0);
                     /*M Osama: to add code/sound assistant in blindMode */
                 }
                 else{
-                    Snackbar.make(view, "Now, you are on normal mode", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    Snackbar.make(view, "أنتم الآن في نظام التعامل مع المبصرين", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     binding.appBarMain.fab.setImageResource(R.drawable.ic_blind_mode);
                 }
                 currentMode ^= 1; /*M Osama: toggle mode between Normal & Blind */

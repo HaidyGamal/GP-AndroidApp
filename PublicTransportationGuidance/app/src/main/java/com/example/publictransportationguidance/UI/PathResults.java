@@ -120,12 +120,12 @@ public class PathResults extends AppCompatActivity {
 
                     /* M Osama: Sort by cost */
                     costRadioBtn.setOnClickListener((View view) -> {
-                        Toast.makeText(PathResults.this, "Cost", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PathResults.this, "يتم الترتيب طبقا للتكلفة", Toast.LENGTH_SHORT).show();
                     });
 
                     /* M Osama: Sort by distance */
                     distanceRadioBtn.setOnClickListener((View view) -> {
-                        Toast.makeText(PathResults.this, "Distance", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PathResults.this, "يتم الترتيب طبقا للمسافة", Toast.LENGTH_SHORT).show();
                     });
 
                 }
@@ -134,6 +134,16 @@ public class PathResults extends AppCompatActivity {
                     tvDistance.setText("غير متوفر");
                     String[] temp={"عذرا، لا يوجد طريق متوفر"};
                     resultsWheel.setDisplayedValues(temp);
+
+                    /* M Osama: Sort by cost */
+                    costRadioBtn.setOnClickListener((View view) -> {
+                        Toast.makeText(PathResults.this, "لا يوجد طرق لترتيبهم", Toast.LENGTH_SHORT).show();
+                    });
+
+                    /* M Osama: Sort by distance */
+                    distanceRadioBtn.setOnClickListener((View view) -> {
+                        Toast.makeText(PathResults.this, "لا يوجد طرق لترتيبهم", Toast.LENGTH_SHORT).show();
+                    });
                 }
             }
 
@@ -146,7 +156,6 @@ public class PathResults extends AppCompatActivity {
             }
         });
 
-        Toast.makeText(this, "سيتم اضافة خاصية للشخص الكفيف", Toast.LENGTH_SHORT).show();
     }
 
 }

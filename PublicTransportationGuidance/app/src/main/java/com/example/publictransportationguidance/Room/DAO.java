@@ -41,4 +41,10 @@ public interface DAO {
     @Query("SELECT * FROM Paths WHERE id =:pathNum")
     PathInfo getPathToPopulateWheel(int pathNum);
 
+    @Query("SELECT * FROM Paths ORDER BY cost")
+    PathInfo getPathInfoOrderedByCost();
+
+    @Query("SELECT * FROM Paths ORDER BY distance")
+    PathInfo getPathInfoOrderedByDistance();
+
 }

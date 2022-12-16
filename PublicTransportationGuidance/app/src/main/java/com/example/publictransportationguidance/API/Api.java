@@ -15,6 +15,7 @@ public interface Api {
     /* M Osama: BaseURL used in every Api request */
     String BASE_URL="https://samplepublictransportationsapi.onrender.com/";
 
+    /* M Osama: RequestURL is the same as BaseURL */
     @GET(".")
     Call<AllStops> getAllStops();
 
