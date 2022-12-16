@@ -13,9 +13,6 @@ import com.example.publictransportationguidance.Room.RoomDB;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -67,9 +64,9 @@ public class MainActivity extends AppCompatActivity{
                 Toast.makeText(MainActivity.this, stops.get(0).getName(), Toast.LENGTH_SHORT).show();
 
                 // caching Stops in Room (only if StopsTable is empty)
-                if(RoomDB.getInstance(getApplicationContext()).Dao().getNumberOfRows()==0) {
+                if(RoomDB.getInstance(getApplicationContext()).Dao().getNumberOfRowsInStopTable()==0) {
                     for (StopModel st : stops) {
-                        RoomDB.getInstance(getApplicationContext()).Dao().insert(st);
+                        RoomDB.getInstance(getApplicationContext()).Dao().insertStop(st);
                     }
                 }
 

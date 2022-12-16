@@ -73,6 +73,15 @@ public class Shortest {
         return path.substring(0,path.length()-3);
     }
 
-
+    public static ArrayList<String> getStringPathToPopulateRoom(HashMap pathMap){
+        ArrayList<String> transportations=new ArrayList<String>();
+        int hashMapSize=pathMap.size();
+        for(int pathNum=0;pathNum<hashMapSize;pathNum++){
+            List<String> pathStops = (List<String>) pathMap.get(pathNum);
+            String path=Shortest.pathToPrint(pathStops);
+            transportations.add(path);
+        }
+        return transportations;
+    }
 
 }
