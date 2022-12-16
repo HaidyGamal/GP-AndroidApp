@@ -11,10 +11,12 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.publictransportationguidance.API.POJO.PathInfo;
 import com.example.publictransportationguidance.API.POJO.ShortestPathResponse.Shortest;
 import com.example.publictransportationguidance.API.POJO.ShortestPathResponse.ShortestPath;
 import com.example.publictransportationguidance.API.RetrofitClient;
 import com.example.publictransportationguidance.R;
+import com.example.publictransportationguidance.Room.RoomDB;
 import com.example.publictransportationguidance.Tracking.SelectedPath;
 
 import java.util.ArrayList;
@@ -66,6 +68,19 @@ public class PathResults extends AppCompatActivity {
 
                     transportationsTemp=Shortest.getStringPathToPopulateRoom(pathMap);
                     transportations= transportationsTemp.toArray(new String[0]);
+
+
+                // caching Paths in Room (only if PathsTable is empty)
+                if(RoomDB.getInstance(getApplication()).Dao().getNumberOfRowsOfPathsTable()==0) {
+                    for (int pathNum = 0; pathNum < pathMap.size(); pathNum++) {
+                        int tempCost = Shortest.getPathCost(shortestPathsInCost, pathNum);
+                        double tempDistance = Shortest.getPathDistance(shortestPathsInCost, pathNum);
+                        String tempPath = Shortest.getStringPathToPopulateRoom(pathMap).get(pathNum);
+
+                        RoomDB.getInstance(getApplication()).Dao().insertPath(new PathInfo(tempDistance, tempCost, tempPath));
+                    }
+                }
+
 
 
                 resultsWheel.setMinValue(0);                            /* M Osama: wheel populated starting from index0 from source*/
