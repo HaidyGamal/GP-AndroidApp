@@ -38,10 +38,6 @@ public class MainActivity extends AppCompatActivity{
     private final static int BLIND_MODE=1;
     public static int currentMode=NORMAL_MODE;
 
-    private StopViewModel stopsViewModel;
-
-    public static ArrayList<String> stations = new ArrayList<>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,8 +57,6 @@ public class MainActivity extends AppCompatActivity{
                 AllStops allStops=response.body();
                 List<StopModel> stops=allStops.getAllNodes();
 
-                Toast.makeText(MainActivity.this, stops.get(0).getName(), Toast.LENGTH_SHORT).show();
-
                 // caching Stops in Room (only if StopsTable is empty)
                 if(RoomDB.getInstance(getApplicationContext()).Dao().getNumberOfRowsInStopTable()==0) {
                     for (StopModel st : stops) {
@@ -74,15 +68,9 @@ public class MainActivity extends AppCompatActivity{
 
             @Override
             public void onFailure(Call<AllStops> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "FuckYou", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "هناك مشكلة في النت لديكم", Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
-
-
-
 
 
         /* M Osama: Passing each menu ID as a set of Ids because each menu should be considered as top level destinations. */
@@ -106,7 +94,6 @@ public class MainActivity extends AppCompatActivity{
                 }
                 currentMode ^= 1; /*M Osama: toggle mode between Normal & Blind */
         });
-
 
     }
 

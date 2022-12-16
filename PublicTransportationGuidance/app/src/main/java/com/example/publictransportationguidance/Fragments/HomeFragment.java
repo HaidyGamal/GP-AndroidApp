@@ -61,16 +61,15 @@ public class HomeFragment extends Fragment {
         distanceRadioBtn=view.findViewById(R.id.distanceRB_homeFragment);
 
         List<StopModel> stops = RoomDB.getInstance(getActivity()).Dao().getAllStops();  // M Osama: Reading the locations cached in Room
-        for (StopModel tempStop : stops){
-            stopsTemp.add(tempStop.getName());}           // M Osama: Populating the ArrayList with names from Room
-        this.stops = stopsTemp.toArray(new String[0]);                                      // M Osama: ArrayList to Array
+        for (StopModel tempStop : stops){ stopsTemp.add(tempStop.getName());}           // M Osama: Populating the ArrayList with names from Room
+        this.stops = stopsTemp.toArray(new String[0]);                                  // M Osama: ArrayList to Array
 
         /* M Osama: Give inital values to the text views */
         CustomAutoCompleteAdapter list = new CustomAutoCompleteAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, this.stops, footer);
 
         /* M Osama: bind to our custom click listener interface */
         list.setOnFooterClickListener(() -> {
-            Toast toast = Toast.makeText(getContext(), "Going to Google Maps!", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getContext(), "جاري الذهاب إلي جوجل", Toast.LENGTH_LONG);
 
             Uri gmmIntentUri = Uri.parse("geo:30.0444,31.2357");             // Create a Uri from an intent string. Use the result to create an Intent. /*M Osama: entered latitude & longitude for Cairo*/
             Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri); // Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
@@ -102,22 +101,23 @@ public class HomeFragment extends Fragment {
             String location = tvLocation.getText()+"";
             String destination = tvDestination.getText()+"";
             if(location!="" && destination!=""){
-                Intent intent = new Intent(getActivity(), PathResults.class);
-                intent.putExtra("LOCATION",location);
-                intent.putExtra("DESTINATION",destination);
-                startActivity(intent);
+                if(stopsTemp.contains(location) && stopsTemp.contains(destination)) {
+                    Intent intent = new Intent(getActivity(), PathResults.class);
+                    intent.putExtra("LOCATION", location);
+                    intent.putExtra("DESTINATION", destination);
+                    startActivity(intent);
+                }
+                else{ Toast.makeText(getActivity(), "عفوا يجب اختيار نقطتين متوفرتين لدينا", Toast.LENGTH_SHORT).show(); }
             }
-            else {
-                Toast.makeText(getActivity(), "Choose Location & Destination First", Toast.LENGTH_SHORT).show();
-            }
+            else { Toast.makeText(getActivity(), "يجب تحديد نقطة للانطلاق وكذلك نقطة انتهاء أولا", Toast.LENGTH_SHORT).show(); }
         });
 
         distanceRadioBtn.setOnClickListener((View v)-> {
-                Toast.makeText(getActivity(), "Distance", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "يتم الترتيب طبقا للمسافة", Toast.LENGTH_SHORT).show();
         });
 
         costRadioBtn.setOnClickListener((View v) -> {
-                Toast.makeText(getActivity(), "Cost", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "يتم الترتيب طبقا للسعر", Toast.LENGTH_SHORT).show();
         });
 
     }
