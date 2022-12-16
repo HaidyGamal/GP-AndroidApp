@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 @Entity(tableName = "Paths")
 public class PathInfo {
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     private int id;
 
     @NotNull
@@ -20,7 +20,8 @@ public class PathInfo {
     @NotNull
     private String path;
 
-    public PathInfo(Double distance, int cost, String path) {
+    public PathInfo(int id,Double distance, int cost, String path) {
+        this.id=id;
         this.distance = distance;
         this.cost = cost;
         this.path = path;

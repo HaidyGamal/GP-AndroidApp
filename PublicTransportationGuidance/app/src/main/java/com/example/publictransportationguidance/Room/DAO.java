@@ -32,7 +32,7 @@ public interface DAO {
     @Query("SELECT COUNT(name) FROM Stops")
     int getNumberOfRowsInStopTable();
 
-    @Query("SELECT COUNT(id) FROM Paths")
+    @Query("SELECT COUNT(path) FROM Paths")
     int getNumberOfRowsOfPathsTable();
 
     @Query("SELECT * FROM Stops ORDER BY name")

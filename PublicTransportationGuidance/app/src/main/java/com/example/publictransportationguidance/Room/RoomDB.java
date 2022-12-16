@@ -12,7 +12,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.example.publictransportationguidance.API.POJO.PathInfo;
 import com.example.publictransportationguidance.API.POJO.StopsResponse.StopModel;
 
-@Database(entities = {StopModel.class, PathInfo.class}, version = 2)
+@Database(entities = {StopModel.class, PathInfo.class}, version = 3)
 public abstract class RoomDB extends RoomDatabase {
     private static RoomDB instance;
     public abstract DAO Dao();

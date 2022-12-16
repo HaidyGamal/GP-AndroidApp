@@ -1,6 +1,7 @@
 package com.example.publictransportationguidance.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Dao;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import com.example.publictransportationguidance.API.POJO.ShortestPathResponse.Sh
 import com.example.publictransportationguidance.API.POJO.ShortestPathResponse.ShortestPath;
 import com.example.publictransportationguidance.API.RetrofitClient;
 import com.example.publictransportationguidance.R;
+import com.example.publictransportationguidance.Room.DAO;
 import com.example.publictransportationguidance.Room.RoomDB;
 import com.example.publictransportationguidance.Tracking.SelectedPath;
 
@@ -40,7 +42,7 @@ public class PathResults extends AppCompatActivity {
     public static final String TAG="route";
 
     String[] transportations={"Bus from Faisal ro Zamalek","Metro from Zamalek to Sheraton","temp1","temp2","temp3","temp4"};
-    ArrayList<String> transportationsTemp;
+    ArrayList<String> transportationsTemp=new ArrayList<>();
 
     String SOURCE ="الحي الثامن";
     String DESTINATION ="العباسية";
@@ -55,7 +57,7 @@ public class PathResults extends AppCompatActivity {
         costRadioBtn=findViewById(R.id.costRB_pathResults);
         distanceRadioBtn=findViewById(R.id.distanceRB_pathResults);
 
-        transportationsTemp =new ArrayList<>();
+        DAO dao = RoomDB.getInstance(getApplication()).Dao();
 
         RetrofitClient.getInstance().getApi().getShortestByCost(SOURCE, DESTINATION).enqueue(new Callback<List<List<ShortestPath>>>() {
             @Override
@@ -64,25 +66,30 @@ public class PathResults extends AppCompatActivity {
                 tvCost.setText(""+Shortest.getPathCost(shortestPathsInCost,0));
                 tvDistance.setText(""+Shortest.getPathDistance(shortestPathsInCost,0));
 
-                    HashMap pathMap=Shortest.pathMap(shortestPathsInCost);
+                HashMap pathMap=Shortest.pathMap(shortestPathsInCost);
 
-                    transportationsTemp=Shortest.getStringPathToPopulateRoom(pathMap);
-                    transportations= transportationsTemp.toArray(new String[0]);
+                /*ToBe Deleted*/
+                dao.deleteAllPaths();
 
-
-                // caching Paths in Room (only if PathsTable is empty)
-                if(RoomDB.getInstance(getApplication()).Dao().getNumberOfRowsOfPathsTable()==0) {
+                /* M Osama: caching Paths in Room (only if PathsTable is empty) */
+                if(dao.getNumberOfRowsOfPathsTable()==0) {
                     for (int pathNum = 0; pathNum < pathMap.size(); pathNum++) {
-                        int tempCost = Shortest.getPathCost(shortestPathsInCost, pathNum);
                         double tempDistance = Shortest.getPathDistance(shortestPathsInCost, pathNum);
+                        int tempCost = Shortest.getPathCost(shortestPathsInCost, pathNum);
                         String tempPath = Shortest.getStringPathToPopulateRoom(pathMap).get(pathNum);
-
-                        RoomDB.getInstance(getApplication()).Dao().insertPath(new PathInfo(tempDistance, tempCost, tempPath));
+                        PathInfo pathInfo = new PathInfo(pathNum,tempDistance,tempCost,tempPath);
+                        dao.insertPath(pathInfo);
                     }
                 }
 
+                /* M Osama: Build String Array from cachedPath Info */
+                for(int pathNum=0;pathNum<dao.getNumberOfRowsOfPathsTable();pathNum++) {
+                    PathInfo info = dao.getPathToPopulateWheel(pathNum);
+                    transportationsTemp.add(info.getPath());
+                }
+                transportations=transportationsTemp.toArray(new String[0]);
 
-
+                /* M Osama: Identifying wheel settings*/
                 resultsWheel.setMinValue(0);                            /* M Osama: wheel populated starting from index0 from source*/
                 resultsWheel.setMaxValue(transportations.length-1);     /* M Osama: wheel populated till index(len-1)*/
                 resultsWheel.setValue(0);                               /* M Osama: index0 content represent best result; to be edited after building database & mapping */
@@ -97,8 +104,8 @@ public class PathResults extends AppCompatActivity {
 
                 /* M Osama: track costs & distances of selected Path */
                 resultsWheel.setOnScrollListener((NumberPicker numberPicker, int i) ->{
-                    String cost = ""+Shortest.getPathCost(shortestPathsInCost,numberPicker.getValue());
-                    String distance = ""+Shortest.getPathDistance(shortestPathsInCost,numberPicker.getValue());
+                    String cost = ""+dao.getPathToPopulateWheel(numberPicker.getValue()).getCost();
+                    String distance = ""+dao.getPathToPopulateWheel(numberPicker.getValue()).getDistance();
                     tvCost.setText(cost);
                     tvDistance.setText(distance);
                 });
