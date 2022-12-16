@@ -64,12 +64,7 @@ public class PathResults extends AppCompatActivity {
 
                     HashMap pathMap=Shortest.pathMap(shortestPathsInCost);
 
-                    int hashMapSize=pathMap.size();
-                    for(int pathNum=0;pathNum<hashMapSize;pathNum++){
-                        List<String> pathStops = (List<String>) pathMap.get(pathNum);
-                        String path=Shortest.pathToPrint(pathStops);
-                        transportationsTemp.add(path);
-                    }
+                    transportationsTemp=Shortest.getStringPathToPopulateRoom(pathMap);
                     transportations= transportationsTemp.toArray(new String[0]);
 
 
