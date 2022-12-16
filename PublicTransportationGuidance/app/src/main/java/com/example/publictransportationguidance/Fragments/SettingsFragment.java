@@ -20,12 +20,9 @@ public class SettingsFragment extends Fragment{
         View view=inflater.inflate(R.layout.fragment_settings, container, false); // haidy:Inflate the layout for this fragment
         mode = view.findViewById(R.id.nav_mode);
         mode.setText("OFF");
-        mode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {                  //haidy: to toggle switch text
+        mode.setOnClickListener((View v)-> {                  //haidy: to toggle switch text
             if(mode.getText()=="OFF") mode.setText("ON");
             else mode.setText("OFF");
-            }
         });
 
         return view;

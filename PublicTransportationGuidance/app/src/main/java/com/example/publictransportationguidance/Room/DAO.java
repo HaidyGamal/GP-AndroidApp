@@ -16,24 +16,26 @@ public interface DAO {
 
     @Insert
     void insertStop(StopModel stop);
-
     @Insert
     void insertPath(PathInfo path);
 
-    @Delete
-    void deleteStop(StopModel stop);
-
     @Query("DELETE FROM Stops")
     void deleteAllStops();
-
     @Query("DELETE FROM Paths")
     void deleteAllPaths();
 
     @Query("SELECT COUNT(name) FROM Stops")
     int getNumberOfRowsInStopTable();
-
     @Query("SELECT COUNT(path) FROM Paths")
     int getNumberOfRowsOfPathsTable();
+
+    @Query("SELECT * FROM Paths ORDER BY cost")
+    PathInfo getPathInfoOrderedByCost();
+    @Query("SELECT * FROM Paths ORDER BY distance")
+    PathInfo getPathInfoOrderedByDistance();
+
+    @Delete
+    void deleteStop(StopModel stop);
 
     @Query("SELECT * FROM Stops ORDER BY name")
     List<StopModel> getAllStops();
@@ -41,10 +43,6 @@ public interface DAO {
     @Query("SELECT * FROM Paths WHERE id =:pathNum")
     PathInfo getPathToPopulateWheel(int pathNum);
 
-    @Query("SELECT * FROM Paths ORDER BY cost")
-    PathInfo getPathInfoOrderedByCost();
 
-    @Query("SELECT * FROM Paths ORDER BY distance")
-    PathInfo getPathInfoOrderedByDistance();
 
 }

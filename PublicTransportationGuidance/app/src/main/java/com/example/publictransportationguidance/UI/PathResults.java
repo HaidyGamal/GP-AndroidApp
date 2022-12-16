@@ -39,7 +39,7 @@ public class PathResults extends AppCompatActivity {
 
     public static final String TAG="route";
 
-    String[] transportations={"Bus from Faisal ro Zamalek","Metro from Zamalek to Sheraton","temp1","temp2","temp3","temp4"};
+    String[] transportations={"Bus from Faisal to Zamalek","Metro from Zamalek to Sheraton","temp1","temp2","temp3","temp4"};
     ArrayList<String> transportationsTemp=new ArrayList<>();
 
     String LOCATION ="";
@@ -95,7 +95,7 @@ public class PathResults extends AppCompatActivity {
                         PathInfo info = dao.getPathToPopulateWheel(pathNum);
                         transportationsTemp.add(info.getPath());
                     }
-                    transportations = transportationsTemp.toArray(new String[0]);
+                    transportations=Shortest.arrayListToArray(transportationsTemp);
 
                     /* M Osama: Identifying wheel settings*/
                     resultsWheel.setMinValue(0);                            /* M Osama: wheel populated starting from index0 from source*/

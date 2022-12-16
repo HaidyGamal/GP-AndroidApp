@@ -38,13 +38,10 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
         input=view.findViewById(R.id.transport);
         submit=view.findViewById(R.id.submit_btn);
         spinner.setOnItemSelectedListener(this);
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        submit.setOnClickListener((View v)-> {
                 new VerifyDialog().show(getChildFragmentManager(), LoginDialog.TAG);
-
-            }
         });
+
         //haidy:showing the login fragment
         new LoginDialog().show(getChildFragmentManager(), LoginDialog.TAG);
         return view;

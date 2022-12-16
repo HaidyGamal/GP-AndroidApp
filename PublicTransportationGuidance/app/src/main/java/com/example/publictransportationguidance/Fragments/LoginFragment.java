@@ -1,6 +1,5 @@
 package com.example.publictransportationguidance.Fragments;
 
-
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
@@ -25,13 +24,7 @@ public class LoginFragment extends DialogFragment {
         View view =inflater.inflate(R.layout.fragment_login, container, false);
 
         log = view.findViewById(R.id.login);
-        log.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
+        log.setOnClickListener((View v)-> {});
 
         return view;
 

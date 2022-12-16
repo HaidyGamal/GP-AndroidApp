@@ -16,7 +16,7 @@ import com.example.publictransportationguidance.API.POJO.StopsResponse.StopModel
 public abstract class RoomDB extends RoomDatabase {
     private static RoomDB instance;
     public abstract DAO Dao();
-    private static String DATABASE_NAME="cachedData";     /* Found in  com.example.ProjectName/data/data/database/databaseName  */
+    private static String DATABASE_NAME="cachedData";     /* M Osama: Found in  com.example.ProjectName/data/data/database/databaseName  */
 
     public static synchronized RoomDB getInstance(Context context) {
         if (instance == null) {

@@ -9,6 +9,7 @@ import com.example.publictransportationguidance.API.POJO.StopsResponse.AllStops;
 import com.example.publictransportationguidance.API.POJO.StopsResponse.StopModel;
 import com.example.publictransportationguidance.API.RetrofitClient;
 import com.example.publictransportationguidance.R;
+import com.example.publictransportationguidance.Room.DAO;
 import com.example.publictransportationguidance.Room.RoomDB;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -44,13 +45,13 @@ public class MainActivity extends AppCompatActivity{
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         setSupportActionBar(binding.appBarMain.toolbar);
-
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
 
+        DAO dao=RoomDB.getInstance(getApplicationContext()).Dao();
 
+        /* M Osama: Sending Request to return with all available stops */
         RetrofitClient.getInstance().getApi().getAllStops().enqueue(new Callback<AllStops>() {
             @Override
             public void onResponse(Call<AllStops> call, Response<AllStops> response) {
@@ -58,14 +59,12 @@ public class MainActivity extends AppCompatActivity{
                 List<StopModel> stops=allStops.getAllNodes();
 
                 // M Osama: delete old data if new greater data is received
-                if(stops.size()>RoomDB.getInstance(getApplicationContext()).Dao().getNumberOfRowsInStopTable()) {
-                    RoomDB.getInstance(getApplicationContext()).Dao().deleteAllStops();
+                if(stops.size()>dao.getNumberOfRowsInStopTable()) {
+                   dao.deleteAllStops();
+
                     // M Osama: caching Stops in Room (only if StopsTable is empty)
-                    if (RoomDB.getInstance(getApplicationContext()).Dao().getNumberOfRowsInStopTable() == 0) {
-                        for (StopModel st : stops) {
-                            RoomDB.getInstance(getApplicationContext()).Dao().insertStop(st);
-                        }
-                    }
+                    if (dao.getNumberOfRowsInStopTable() == 0) { for (StopModel st : stops)  dao.insertStop(st); }
+
                 }
 
             }

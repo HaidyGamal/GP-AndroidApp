@@ -42,5 +42,4 @@ public class VerificationCodeDialog extends DialogFragment {
 //        }
 //    }
 
-//
 }

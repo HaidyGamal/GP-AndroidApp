@@ -5,7 +5,7 @@ import static com.example.publictransportationguidance.API.Api.BASE_URL;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/* Single Retrofit instance because Retrofit consumes large resources */
+/* M Osama: Single Retrofit instance because Retrofit consumes large resources */
 public class RetrofitClient {
     public static RetrofitClient instance =null;
     private Api api;

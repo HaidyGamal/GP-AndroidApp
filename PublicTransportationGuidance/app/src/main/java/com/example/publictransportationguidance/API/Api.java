@@ -15,10 +15,11 @@ public interface Api {
     /* M Osama: BaseURL used in every Api request */
     String BASE_URL="https://samplepublictransportationsapi.onrender.com/";
 
-    /* M Osama: RequestURL is the same as BaseURL */
-    @GET(".")
+    /* M Osama: Request return all the available stops we have in GraphDB */
+    @GET(".")               /* M Osama: RequestURL is the same as BaseURL */
     Call<AllStops> getAllStops();
 
+    /* M Osama: Request return all the available paths between two nodes (Ordered by Cost) */
     @FormUrlEncoded
     @POST("orderByCost")
     Call<List<List<ShortestPath>>> getShortestByCost(
@@ -26,6 +27,7 @@ public interface Api {
             @Field("Destination") String Destination
     );
 
+    /* M Osama: Request return all the available paths between two nodes (Ordered by Distance) */
     @FormUrlEncoded
     @POST("orderByDistance")
     Call<List<List<ShortestPath>>> getShortestByDistance(

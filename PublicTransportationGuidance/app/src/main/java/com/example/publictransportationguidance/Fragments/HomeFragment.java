@@ -27,16 +27,15 @@ import java.util.List;
 public class HomeFragment extends Fragment {
     public HomeFragment() {}
 
-    RadioButton costRadioBtn;
-    RadioButton distanceRadioBtn;
+    RadioButton costRadioBtn,distanceRadioBtn;
+    AutoCompleteTextView tvLocation, tvDestination;
+    Button findResults;
 
-    String footer = "Set Location On The Map";
+    String footer = "اختيار من الخريطة";
 
     String[] stops;
     ArrayList<String> stopsTemp =new ArrayList<>();
 
-    AutoCompleteTextView tvLocation, tvDestination;
-    Button findResults;
 
     /* M Osama: OnCreateView used to connect the fragment java class with it's xml layout */
     @Override
@@ -50,9 +49,9 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
+        findResults = view.findViewById(R.id.btn_ok);
         tvLocation = view.findViewById(R.id.tv_location);
         tvDestination = view.findViewById(R.id.tv_destination);
-
         costRadioBtn=view.findViewById(R.id.costRB_homeFragment);
         distanceRadioBtn=view.findViewById(R.id.distanceRB_homeFragment);
 
@@ -92,12 +91,11 @@ public class HomeFragment extends Fragment {
 
         });
 
-        findResults = view.findViewById(R.id.btn_ok);
         findResults.setOnClickListener((View v) -> {
             String location = tvLocation.getText()+"";
             String destination = tvDestination.getText()+"";
             if(location!="" && destination!=""){
-                if(stopsTemp.contains(location) && stopsTemp.contains(destination)) {
+                if(stopsTemp.contains(location) && stopsTemp.contains(destination)) {   /* Location & Destination are stored in our DB */
                     Intent intent = new Intent(getActivity(), PathResults.class);
                     intent.putExtra("LOCATION", location);
                     intent.putExtra("DESTINATION", destination);
@@ -111,7 +109,6 @@ public class HomeFragment extends Fragment {
         distanceRadioBtn.setOnClickListener((View v)-> {
                 Toast.makeText(getActivity(), "يتم الترتيب طبقا للمسافة", Toast.LENGTH_SHORT).show();
         });
-
         costRadioBtn.setOnClickListener((View v) -> {
                 Toast.makeText(getActivity(), "يتم الترتيب طبقا للسعر", Toast.LENGTH_SHORT).show();
         });
