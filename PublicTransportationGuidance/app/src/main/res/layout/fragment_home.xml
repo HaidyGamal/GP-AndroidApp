@@ -10,26 +10,34 @@
     <AutoCompleteTextView
         android:id="@+id/tv_location"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_margin="32dp"
         android:gravity="center"
         android:hint="Location"
+        android:textColorHint="@color/gray"
+        android:textColor="@color/white"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline4">
+        app:layout_constraintTop_toTopOf="@+id/guideline4"
+        android:background="@drawable/button_background_red1">
 
     </AutoCompleteTextView>
 
     <AutoCompleteTextView
         android:id="@+id/tv_destination"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_margin="32dp"
         android:gravity="center"
         android:hint="Destination"
+        android:textColorHint="@color/gray"
+        android:textColor="@color/white"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline5">
+        app:layout_constraintTop_toTopOf="@+id/guideline5"
+        android:background="@drawable/button_background_red1">
 
     </AutoCompleteTextView>
 
@@ -99,9 +107,12 @@
             android:layout_margin="32dp"
             android:checked="false"
             android:padding="4dp"
-            android:text="Cost"
+            android:textColor="@color/dark_red"
+            android:textStyle="bold"
+            android:text="@string/cost"
             android:textAlignment="center"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:background="@drawable/button_background_red2"/>
 
         <!--adding a radio button -->
         <RadioButton
@@ -112,9 +123,12 @@
             android:checked="false"
             android:padding="4dp"
             android:layout_margin="32dp"
-            android:text="Distance"
+            android:textColor="@color/dark_red"
+            android:textStyle="bold"
+            android:text="@string/distance"
             android:textAlignment="center"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:background="@drawable/button_background_red2"/>
 
     </RadioGroup>
 

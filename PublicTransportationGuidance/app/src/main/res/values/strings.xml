@@ -6,7 +6,7 @@
     <string name="nav_header_subtitle">gp.batch56@helwan.com</string>
     <string name="nav_header_desc">Navigation header</string>
 
-    <string name="action_settings">To Be Edited</string>
+    <string name="action_settings">في حالة إضافية features جديدة</string>
 
     <string name="menu_home">Home</string>
     <string name="menu_settings">Settings</string>
@@ -51,7 +51,7 @@
     <string name="transport">Transportation</string>
     <string name="bus">Bus</string>
     <string name="mic_bus">Microbus</string>
-    <string name="cost">Cost(Optional)</string>
+    <string name="cost">التكلفة</string>
     <string name="submit">Submit</string>
     <string name="verify">Your Request Will Be Reviewed</string>
     <string name="verification">Verification Code Sent</string>
@@ -64,6 +64,9 @@
     <string name="NotAvailable">غير متوفر</string>
     <string name="NoAvailablePathsToBePresented">عذرا، لا يوجد طريق متوفر</string>
     <string name="GoingToGoogleMaps">جاري الذهاب إلي جوجل</string>
+    <string name="we_will_checked">جاري التحقق</string>
+    <string name="distance">المسافة</string>
+    <string name="paths_sorted_by">الطرق المتاحة مرتبة حسب:</string>
     <!-- Strings related to spinner -->
     <string-array name="transportations">
         <item>Microbus</item>

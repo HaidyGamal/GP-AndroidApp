@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.PathResults">
+    tools:context=".UI.PathResults"
+    android:background="@drawable/sub_background">
 
     <!--displaying a radio group on below line-->
 
@@ -20,8 +21,10 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
         android:gravity="center"
-        android:text="Path depending on: "
-        android:textColor="@color/black"
+        android:text="@string/paths_sorted_by"
+        android:textColor="@color/dark_red"
+        android:textStyle="bold"
+        android:background="@drawable/button_background_red2"
         android:textSize="40dp"
         app:layout_constraintBottom_toTopOf="@+id/radioGroup_pathResults"
         tools:layout_editor_absoluteX="0dp"></TextView>
@@ -45,9 +48,12 @@
             android:layout_margin="32dp"
             android:checked="false"
             android:padding="4dp"
-            android:text="Cost"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:text="@string/cost"
             android:textAlignment="center"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:background="@drawable/button_background_red1"/>
 
         <!--adding a radio button -->
         <RadioButton
@@ -58,9 +64,12 @@
             android:layout_margin="32dp"
             android:checked="false"
             android:padding="4dp"
-            android:text="Distance"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:text="@string/distance"
             android:textAlignment="center"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:background="@drawable/button_background_red1"/>
 
     </RadioGroup>
 
@@ -70,8 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="4dp"
-        android:text="Cost"
-        android:hint="Cost"
+        android:hint="@string/cost"
         android:layout_marginStart="40dp"
         android:textAlignment="center"
         android:textSize="25sp"
@@ -85,7 +93,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="4dp"
-        android:hint="Distance"
+        android:hint="@string/distance"
         android:layout_marginEnd="28dp"
         android:textAlignment="center"
         android:textSize="25sp"

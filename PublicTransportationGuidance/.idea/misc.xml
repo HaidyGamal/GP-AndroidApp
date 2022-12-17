@@ -27,7 +27,34 @@
         <entry key="..\:/GP/GP-AndroidApp-main/PublicTransportationGuidance/app/src/main/res/menu/activity_main_drawer.xml" value="0.20416666666666666" />
         <entry key="..\:/GP/GP-AndroidApp-main/PublicTransportationGuidance/app/src/main/res/menu/main.xml" value="0.20416666666666666" />
         <entry key="..\:/GP/GP-AndroidApp-main/PublicTransportationGuidance/app/src/main/res/menu/settings.xml" value="0.20416666666666666" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/drawable-v24/bottom_background_light_green.xml" value="0.2555" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/drawable-v24/button_background_green1.xml" value="0.2555" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/drawable-v24/button_background_red2.xml" value="0.2555" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/drawable-v24/ic_blind_mode.xml" value="0.1075" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/drawable-v24/ic_nav_settings.xml" value="0.1075" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/drawable/cornered_rectangle.xml" value="0.1075" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/drawable/ic_account.xml" value="0.1075" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/drawable/ic_bedtime.xml" value="0.1075" />
         <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/drawable/side_nav_bar.xml" value="0.1075" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/layout/activity_path_results.xml" value="0.25" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/layout/app_bar_main.xml" value="0.25" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/layout/content_main.xml" value="0.25" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/layout/fragment_about.xml" value="0.25" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/layout/fragment_add_new_route.xml" value="0.25" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/layout/fragment_contact_us.xml" value="0.25" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/layout/fragment_home.xml" value="0.13596491228070176" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/layout/fragment_login.xml" value="0.25" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/layout/fragment_settings.xml" value="0.25" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/layout/fragment_signup.xml" value="0.25" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/layout/fragment_submit_route.xml" value="0.25" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/layout/live_location.xml" value="0.25" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/layout/nav_header_main.xml" value="0.25" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/layout/selected_path.xml" value="0.25" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/layout/verification.xml" value="0.25" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/menu/activity_main_drawer.xml" value="0.25" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/menu/main.xml" value="0.25" />
+        <entry key="..\:/PublicTransportationGuidance/GP-AndroidApp/PublicTransportationGuidance/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.19" />
         <entry key="..\:/PublicTransportationGuidance/PublicTransportationGuidance/app/src/main/res/drawable/cornered_rectangle.xml" value="0.1425" />
         <entry key="..\:/PublicTransportationGuidance/PublicTransportationGuidance/app/src/main/res/layout/activity_path_results.xml" value="0.25" />
         <entry key="..\:/PublicTransportationGuidance/PublicTransportationGuidance/app/src/main/res/layout/app_bar_main.xml" value="0.25" />

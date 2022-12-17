@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity{
         setSupportActionBar(binding.appBarMain.toolbar);
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
+        navigationView.setBackgroundColor(getResources().getColor(R.color.light_green));
 
         DAO dao=RoomDB.getInstance(getApplicationContext()).Dao();
 

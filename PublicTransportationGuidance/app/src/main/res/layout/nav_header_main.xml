@@ -20,7 +20,7 @@
         android:contentDescription="@string/nav_header_desc"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:layout_weight="10"
-        app:srcCompat="@drawable/ic_nav_header" />
+        app:srcCompat="@drawable/icon" />
 
     <TextView
         android:layout_width="match_parent"
