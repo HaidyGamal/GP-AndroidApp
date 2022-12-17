@@ -67,6 +67,9 @@
     <string name="we_will_checked">جاري التحقق</string>
     <string name="distance">المسافة</string>
     <string name="paths_sorted_by">الطرق المتاحة مرتبة حسب:</string>
+    <string name="Location">نقطة الانطلاق</string>
+    <string name="Destination">نقطة الانتهاء</string>
+    <string name="search_for_paths">بحث</string>
     <!-- Strings related to spinner -->
     <string-array name="transportations">
         <item>Microbus</item>

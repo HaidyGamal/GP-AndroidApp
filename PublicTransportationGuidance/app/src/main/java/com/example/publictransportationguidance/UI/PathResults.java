@@ -3,6 +3,7 @@ package com.example.publictransportationguidance.UI;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.NumberPicker;
@@ -54,6 +55,22 @@ public class PathResults extends AppCompatActivity {
         tvDistance=findViewById(R.id.distance);
         costRadioBtn=findViewById(R.id.costRB_pathResults);
         distanceRadioBtn=findViewById(R.id.distanceRB_pathResults);
+
+        resultsWheel.setWrapSelectorWheel(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            resultsWheel.setTextSize(60F);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            resultsWheel.setSelectionDividerHeight(0x1c);
+        }
+
+        resultsWheel.setMinimumHeight(0xff);
+
+        resultsWheel.setDividerPadding(10000);
+
+        resultsWheel.setElevation(100F);
+
 
         /* M Osama: reading values from homeFragment */
         Bundle extras = getIntent().getExtras();

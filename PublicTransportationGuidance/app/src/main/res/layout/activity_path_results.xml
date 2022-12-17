@@ -22,10 +22,10 @@
         android:layout_marginBottom="12dp"
         android:gravity="center"
         android:text="@string/paths_sorted_by"
-        android:textColor="@color/dark_red"
+        android:textColor="@color/white"
         android:textStyle="bold"
-        android:background="@drawable/button_background_red2"
-        android:textSize="40dp"
+        android:background="@drawable/button_background_red1"
+        android:textSize="32dp"
         app:layout_constraintBottom_toTopOf="@+id/radioGroup_pathResults"
         tools:layout_editor_absoluteX="0dp"></TextView>
 
@@ -48,12 +48,12 @@
             android:layout_margin="32dp"
             android:checked="false"
             android:padding="4dp"
-            android:textColor="@color/white"
+            android:textColor="@color/dark_red"
             android:textStyle="bold"
             android:text="@string/cost"
             android:textAlignment="center"
             android:textSize="20sp"
-            android:background="@drawable/button_background_red1"/>
+            android:background="@drawable/button_background_red2"/>
 
         <!--adding a radio button -->
         <RadioButton
@@ -64,12 +64,12 @@
             android:layout_margin="32dp"
             android:checked="false"
             android:padding="4dp"
-            android:textColor="@color/white"
+            android:textColor="@color/dark_red"
             android:textStyle="bold"
             android:text="@string/distance"
             android:textAlignment="center"
             android:textSize="20sp"
-            android:background="@drawable/button_background_red1"/>
+            android:background="@drawable/button_background_red2"/>
 
     </RadioGroup>
 
@@ -80,6 +80,10 @@
         android:layout_gravity="center"
         android:padding="4dp"
         android:hint="@string/cost"
+        android:textColorHint="@color/white"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:background="@color/purple_200"
         android:layout_marginStart="40dp"
         android:textAlignment="center"
         android:textSize="25sp"
@@ -97,6 +101,10 @@
         android:layout_marginEnd="28dp"
         android:textAlignment="center"
         android:textSize="25sp"
+        android:textColorHint="@color/white"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:background="@color/purple_200"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline13"
         app:layout_constraintTop_toTopOf="@+id/guideline7" />
