@@ -57,23 +57,8 @@ public class MainActivity extends AppCompatActivity{
             public void onResponse(Call<AllStops> call, Response<AllStops> response) {
                 AllStops allStops=response.body();
                 List<StopModel> stops=allStops.getAllNodes();
-
-                dao.deleteAllStops();
-                Toast.makeText(MainActivity.this, "MainActivity: after cleaning StopTable"+dao.getNumberOfRowsInStopTable()+"", Toast.LENGTH_SHORT).show();
-
+                dao.deleteAllStops();                             /* M Osama: cache latest Stops in the App's first open */
                 for (StopModel st : stops)  dao.insertStop(st);
-                Toast.makeText(MainActivity.this, "MainActivity: after adding response"+dao.getNumberOfRowsInStopTable()+"", Toast.LENGTH_SHORT).show();
-
-//
-//                // M Osama: delete old data if new greater data is received
-//                if(stops.size()>dao.getNumberOfRowsInStopTable()) {
-//                   dao.deleteAllStops();
-//
-//                    // M Osama: caching Stops in Room (only if StopsTable is empty)
-//                    if (dao.getNumberOfRowsInStopTable() == 0) { for (StopModel st : stops)  dao.insertStop(st); }
-
-//                }
-
             }
 
             @Override

@@ -36,8 +36,5 @@ public class SettingsFragment extends Fragment{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        DAO dao = RoomDB.getInstance(getContext()).Dao();
-        Toast.makeText(getContext(), "SettingsFragment:" +dao.getNumberOfRowsInStopTable()+"", Toast.LENGTH_SHORT).show();
-
     }
 }

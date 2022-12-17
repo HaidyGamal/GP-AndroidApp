@@ -95,11 +95,11 @@ public class PathResults extends AppCompatActivity {
                         PathInfo info = dao.getPathToPopulateWheel(pathNum);
                         transportationsTemp.add(info.getPath());
                     }
-                    transportations=Shortest.arrayListToArray(transportationsTemp);
+                    transportations=Shortest.listToArray(transportationsTemp);
 
                     /* M Osama: Identifying wheel settings*/
                     resultsWheel.setMinValue(0);                            /* M Osama: wheel populated starting from index0 from source*/
-                    resultsWheel.setMaxValue(transportations.length - 1);     /* M Osama: wheel populated till index(len-1)*/
+                    resultsWheel.setMaxValue(transportations.length - 1);   /* M Osama: wheel populated till index(len-1)*/
                     resultsWheel.setValue(0);                               /* M Osama: index0 content represent best result; to be edited after building database & mapping */
                     resultsWheel.setDisplayedValues(transportations);       /* M Osama: populating wheel with data */
 
@@ -120,19 +120,19 @@ public class PathResults extends AppCompatActivity {
 
                     /* M Osama: Sort by cost */
                     costRadioBtn.setOnClickListener((View view) -> {
-                        Toast.makeText(PathResults.this, "يتم الترتيب طبقا للتكلفة", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PathResults.this, R.string.PathsSortedAccordingToCost, Toast.LENGTH_SHORT).show();
                     });
 
                     /* M Osama: Sort by distance */
                     distanceRadioBtn.setOnClickListener((View view) -> {
-                        Toast.makeText(PathResults.this, "يتم الترتيب طبقا للمسافة", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PathResults.this, R.string.PathsSortedAccordingToDistance, Toast.LENGTH_SHORT).show();
                     });
 
                 }
                 else{
-                    tvCost.setText("غير متوفر");
-                    tvDistance.setText("غير متوفر");
-                    String[] temp={"عذرا، لا يوجد طريق متوفر"};
+                    tvCost.setText(R.string.NotAvailable);
+                    tvDistance.setText(R.string.NotAvailable);
+                    String[] temp={getString(R.string.NoAvailablePathsToBePresented)};
                     resultsWheel.setDisplayedValues(temp);
 
                     /* M Osama: Sort by cost */
@@ -149,9 +149,9 @@ public class PathResults extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<List<ShortestPath>>> call, Throwable t) {
-                tvCost.setText("غير متوفر");
-                tvDistance.setText("غير متوفر");
-                String[] temp={"عذرا، لا يوجد طريق متوفر"};
+                tvCost.setText(R.string.NotAvailable);
+                tvDistance.setText(R.string.NotAvailable);
+                String[] temp={getString(R.string.NoAvailablePathsToBePresented)};
                 resultsWheel.setDisplayedValues(temp);
             }
         });

@@ -55,6 +55,15 @@
     <string name="submit">Submit</string>
     <string name="verify">Your Request Will Be Reviewed</string>
     <string name="verification">Verification Code Sent</string>
+    <string name="AvailableStopsAreUpdated">الأماكن المتوفرة محدثة أولا بأول</string>
+    <string name="CheckInternetConnection">نرجو التحقق من جودة النت لديكم</string>
+    <string name="PathsSortedAccordingToDistance">يتم الترتيب طبقا للمسافة</string>
+    <string name="PathsSortedAccordingToCost">يتم الترتيب طبقا للسعر</string>
+    <string name="LocationAndDestinationMustBeSpecified">يجب تحديد نقطة للانطلاق وكذلك نقطة انتهاء أولا</string>
+    <string name="PleaseChooseTwoAvailableStops">عفوا يجب اختيار نقطتين متوفرتين لدينا</string>
+    <string name="NotAvailable">غير متوفر</string>
+    <string name="NoAvailablePathsToBePresented">عذرا، لا يوجد طريق متوفر</string>
+    <string name="GoingToGoogleMaps">جاري الذهاب إلي جوجل</string>
     <!-- Strings related to spinner -->
     <string-array name="transportations">
         <item>Microbus</item>

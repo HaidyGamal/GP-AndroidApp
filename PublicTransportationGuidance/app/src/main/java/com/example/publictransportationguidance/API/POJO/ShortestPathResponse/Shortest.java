@@ -84,7 +84,7 @@ public class Shortest {
         return transportations;
     }
 
-    public static String[] arrayListToArray(ArrayList<String> arrayList){
+    public static String[] listToArray(List<String> arrayList){
         return arrayList.toArray(new String[0]);
     }
 

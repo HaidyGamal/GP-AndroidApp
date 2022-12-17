@@ -41,8 +41,8 @@ public interface DAO {
     @Delete
     void deleteStop(StopModel stop);
 
-//    @Query("SELECT * FROM Stops ORDER BY name")
-//    List<StopModel> getAllStops();
+    @Query("SELECT * FROM Stops ORDER BY name")
+    List<StopModel> getAllStopsInfo();
 
     @Query("SELECT * FROM Paths WHERE id =:pathNum")
     PathInfo getPathToPopulateWheel(int pathNum);
