@@ -5,10 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.publictransportationguidance.R;
+import com.example.publictransportationguidance.Room.DAO;
+import com.example.publictransportationguidance.Room.RoomDB;
+import com.example.publictransportationguidance.UI.MainActivity;
 
 public class SettingsFragment extends Fragment{
     Button mode;
@@ -24,8 +30,14 @@ public class SettingsFragment extends Fragment{
             if(mode.getText()=="OFF") mode.setText("ON");
             else mode.setText("OFF");
         });
-
         return view;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        DAO dao = RoomDB.getInstance(getContext()).Dao();
+        Toast.makeText(getContext(), "SettingsFragment:" +dao.getNumberOfRowsInStopTable()+"", Toast.LENGTH_SHORT).show();
+
+    }
 }

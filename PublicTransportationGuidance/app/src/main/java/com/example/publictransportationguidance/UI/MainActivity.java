@@ -58,14 +58,21 @@ public class MainActivity extends AppCompatActivity{
                 AllStops allStops=response.body();
                 List<StopModel> stops=allStops.getAllNodes();
 
-                // M Osama: delete old data if new greater data is received
-                if(stops.size()>dao.getNumberOfRowsInStopTable()) {
-                   dao.deleteAllStops();
+                dao.deleteAllStops();
+                Toast.makeText(MainActivity.this, "MainActivity: after cleaning StopTable"+dao.getNumberOfRowsInStopTable()+"", Toast.LENGTH_SHORT).show();
 
-                    // M Osama: caching Stops in Room (only if StopsTable is empty)
-                    if (dao.getNumberOfRowsInStopTable() == 0) { for (StopModel st : stops)  dao.insertStop(st); }
+                for (StopModel st : stops)  dao.insertStop(st);
+                Toast.makeText(MainActivity.this, "MainActivity: after adding response"+dao.getNumberOfRowsInStopTable()+"", Toast.LENGTH_SHORT).show();
 
-                }
+//
+//                // M Osama: delete old data if new greater data is received
+//                if(stops.size()>dao.getNumberOfRowsInStopTable()) {
+//                   dao.deleteAllStops();
+//
+//                    // M Osama: caching Stops in Room (only if StopsTable is empty)
+//                    if (dao.getNumberOfRowsInStopTable() == 0) { for (StopModel st : stops)  dao.insertStop(st); }
+
+//                }
 
             }
 

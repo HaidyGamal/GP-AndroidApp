@@ -17,7 +17,9 @@ import androidx.fragment.app.Fragment;
 
 import com.example.publictransportationguidance.API.POJO.StopsResponse.StopModel;
 import com.example.publictransportationguidance.Adapters.CustomAutoCompleteAdapter;
+import com.example.publictransportationguidance.Room.DAO;
 import com.example.publictransportationguidance.Room.RoomDB;
+import com.example.publictransportationguidance.UI.MainActivity;
 import com.example.publictransportationguidance.UI.PathResults;
 import com.example.publictransportationguidance.R;
 
@@ -34,8 +36,7 @@ public class HomeFragment extends Fragment {
     String footer = "اختيار من الخريطة";
 
     String[] stops;
-    ArrayList<String> stopsTemp =new ArrayList<>();
-
+    List<String> stopsTemp =new ArrayList<>();
 
     /* M Osama: OnCreateView used to connect the fragment java class with it's xml layout */
     @Override
@@ -49,15 +50,26 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
+        DAO dao = RoomDB.getInstance(getContext()).Dao();
+
         findResults = view.findViewById(R.id.btn_ok);
         tvLocation = view.findViewById(R.id.tv_location);
         tvDestination = view.findViewById(R.id.tv_destination);
         costRadioBtn=view.findViewById(R.id.costRB_homeFragment);
         distanceRadioBtn=view.findViewById(R.id.distanceRB_homeFragment);
 
-        List<StopModel> stops = RoomDB.getInstance(getActivity()).Dao().getAllStops();  // M Osama: Reading the locations cached in Room
-        for (StopModel tempStop : stops){ stopsTemp.add(tempStop.getName());}           // M Osama: Populating the ArrayList with names from Room
+//        dao.deleteAllStops();
+//        Toast.makeText(getActivity(), "HomeFragment:"+dao.getNumberOfRowsInStopTable()+"", Toast.LENGTH_SHORT).show();
+
+        stopsTemp=dao.getAllStops();
         this.stops = stopsTemp.toArray(new String[0]);                                  // M Osama: ArrayList to Array
+        //        List<StopModel> stops = dao.getAllStops();  // M Osama: Reading the locations cached in Room
+//        for (StopModel tempStop : stops){ stopsTemp.add(tempStop.getName());}           // M Osama: Populating the ArrayList with names from Room
+
+
+
+        Toast.makeText(getContext(), "Before populating list"+dao.getNumberOfRowsInStopTable(), Toast.LENGTH_SHORT).show();
+
 
         /* M Osama: Give inital values to the text views */
         CustomAutoCompleteAdapter list = new CustomAutoCompleteAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, this.stops, footer);

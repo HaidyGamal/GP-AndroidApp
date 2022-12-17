@@ -9,6 +9,7 @@ import androidx.room.Update;
 import com.example.publictransportationguidance.API.POJO.PathInfo;
 import com.example.publictransportationguidance.API.POJO.StopsResponse.StopModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Dao
@@ -29,6 +30,9 @@ public interface DAO {
     @Query("SELECT COUNT(path) FROM Paths")
     int getNumberOfRowsOfPathsTable();
 
+    @Query("SELECT name FROM Stops")
+    List<String> getAllStops();
+
     @Query("SELECT * FROM Paths ORDER BY cost")
     PathInfo getPathInfoOrderedByCost();
     @Query("SELECT * FROM Paths ORDER BY distance")
@@ -37,8 +41,8 @@ public interface DAO {
     @Delete
     void deleteStop(StopModel stop);
 
-    @Query("SELECT * FROM Stops ORDER BY name")
-    List<StopModel> getAllStops();
+//    @Query("SELECT * FROM Stops ORDER BY name")
+//    List<StopModel> getAllStops();
 
     @Query("SELECT * FROM Paths WHERE id =:pathNum")
     PathInfo getPathToPopulateWheel(int pathNum);
