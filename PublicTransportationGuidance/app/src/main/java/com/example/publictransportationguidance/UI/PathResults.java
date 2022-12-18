@@ -56,20 +56,14 @@ public class PathResults extends AppCompatActivity {
         costRadioBtn=findViewById(R.id.costRB_pathResults);
         distanceRadioBtn=findViewById(R.id.distanceRB_pathResults);
 
+        /* Could be deleted */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { resultsWheel.setTextSize(60F); }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { resultsWheel.setSelectionDividerHeight(0x1c); }
         resultsWheel.setWrapSelectorWheel(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            resultsWheel.setTextSize(60F);
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            resultsWheel.setSelectionDividerHeight(0x1c);
-        }
-
         resultsWheel.setMinimumHeight(0xff);
-
         resultsWheel.setDividerPadding(10000);
-
         resultsWheel.setElevation(100F);
+        /* Could be deleted */
 
 
         /* M Osama: reading values from homeFragment */
