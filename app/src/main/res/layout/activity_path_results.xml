@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UI.PathResults"
+    android:background="@drawable/sub_background">
+
+    <!--displaying a radio group on below line-->
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.38" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:gravity="center"
+        android:text="@string/paths_sorted_by"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:background="@drawable/button_background_red1"
+        android:textSize="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/radioGroup_pathResults"
+        tools:layout_editor_absoluteX="0dp"></TextView>
+
+    <RadioGroup
+        android:id="@+id/radioGroup_pathResults"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/guideline7">
+
+        <!--adding a radio button -->
+        <RadioButton
+            android:id="@+id/costRB_pathResults"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="32dp"
+            android:checked="false"
+            android:padding="4dp"
+            android:textColor="@color/dark_red"
+            android:textStyle="bold"
+            android:text="@string/cost"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:background="@drawable/button_background_red2"/>
+
+        <!--adding a radio button -->
+        <RadioButton
+            android:id="@+id/distanceRB_pathResults"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="32dp"
+            android:checked="false"
+            android:padding="4dp"
+            android:textColor="@color/dark_red"
+            android:textStyle="bold"
+            android:text="@string/distance"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:background="@drawable/button_background_red2"/>
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/cost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="4dp"
+        android:hint="@string/cost"
+        android:textColorHint="@color/white"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:background="@color/purple_200"
+        android:layout_marginStart="40dp"
+        android:textAlignment="center"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline13"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline7" />
+
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="4dp"
+        android:hint="@string/distance"
+        android:layout_marginEnd="28dp"
+        android:textAlignment="center"
+        android:textSize="25sp"
+        android:textColorHint="@color/white"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:background="@color/purple_200"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline13"
+        app:layout_constraintTop_toTopOf="@+id/guideline7" />
+
+    <NumberPicker
+        android:id="@+id/wheel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.Picker"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup_pathResults"></NumberPicker>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.3" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="224dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>

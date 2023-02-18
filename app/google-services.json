@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "704436761029",
+    "project_id": "public-transportation-gu-bdeed",
+    "storage_bucket": "public-transportation-gu-bdeed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:704436761029:android:f0f0211152d2907ea15bac",
+        "android_client_info": {
+          "package_name": "com.example.publictransportationguidance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "704436761029-20d0qv0tehdeaf8dg470q3kb6q8q7q0l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.publictransportationguidance",
+            "certificate_hash": "855a9118fecefb3897c7535eb798094794061e7d"
+          }
+        },
+        {
+          "client_id": "704436761029-0jkds59af0ajv7qh0k0fu72ctehb755n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC07YGU8SeYIk3rlD4zNMj4FOndiVJwqrA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "704436761029-0jkds59af0ajv7qh0k0fu72ctehb755n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
