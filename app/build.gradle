@@ -1,6 +1,6 @@
 plugins {
-    id 'com.android.application'
     id 'com.google.gms.google-services'
+    id 'com.android.application' version '7.2.1'
 }
 
 android {
@@ -16,6 +16,9 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    task prepareKotlinBuildScriptModel {
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -29,6 +32,13 @@ android {
     buildFeatures {
         viewBinding true
     }
+    buildToolsVersion '32.0.0'
+    ndkVersion '32'
+
+    dataBinding{
+        enabled = true
+    }
+
 }
 
 dependencies {

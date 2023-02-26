@@ -1,7 +1,7 @@
 package com.example.publictransportationguidance.API;
 
-import com.example.publictransportationguidance.API.POJO.ShortestPathResponse.ShortestPath;
-import com.example.publictransportationguidance.API.POJO.StopsResponse.AllStops;
+import com.example.publictransportationguidance.POJO.ShortestPathResponse.ShortestPath;
+import com.example.publictransportationguidance.POJO.StopsResponse.AllStops;
 
 import java.util.List;
 

@@ -4,12 +4,10 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
-import androidx.room.Update;
 
-import com.example.publictransportationguidance.API.POJO.PathInfo;
-import com.example.publictransportationguidance.API.POJO.StopsResponse.StopModel;
+import com.example.publictransportationguidance.POJO.StopsResponse.StopModel;
+import com.example.publictransportationguidance.POJO.PathInfo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Dao

@@ -1,148 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Fragments.HomeFragment"
-    android:id="@+id/home_fragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:src="@drawable/icon"
-        app:layout_constraintBottom_toTopOf="@+id/guideline4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <data>
 
-    <AutoCompleteTextView
-        android:id="@+id/tv_location"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:layout_margin="32dp"
-        android:background="@drawable/button_background_red1"
-        android:gravity="center"
-        android:hint="@string/Location"
-        android:textColor="@color/white"
-        android:textColorHint="@color/gray"
-        android:textStyle="bold"
-        android:textSize="32dp"
-        app:layout_constraintBottom_toTopOf="@+id/tv_destination"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline4">
+    </data>
 
-    </AutoCompleteTextView>
-
-    <AutoCompleteTextView
-        android:id="@+id/tv_destination"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:layout_margin="32dp"
-        android:gravity="center"
-        android:hint="@string/Destination"
-        android:textColorHint="@color/gray"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:textSize="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline5"
-        android:background="@drawable/button_background_red1">
-
-    </AutoCompleteTextView>
-
-    <Button
-        android:id="@+id/btn_ok"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/search_for_paths"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline6" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.50121653" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.2" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.36" />
-
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/barrier2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="top"
-        app:constraint_referenced_ids="guideline5"
-        tools:layout_editor_absoluteY="176dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.8" />
-
-    <!--displaying a radio group on below line-->
-    <RadioGroup
-        android:id="@+id/radioGroup_homeFragment"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/btn_ok"
-        app:layout_constraintTop_toBottomOf="@+id/tv_destination">
+        android:layout_height="match_parent"
+        tools:context=".Fragments.HomeFragment"
+        android:id="@+id/home_fragment">
 
-        <!--adding a radio button -->
-        <RadioButton
-            android:id="@+id/costRB_homeFragment"
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/icon"
+            app:layout_constraintBottom_toTopOf="@+id/guideline4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <AutoCompleteTextView
+            android:id="@+id/tv_location"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_margin="32dp"
+            android:background="@drawable/button_background_red1"
+            android:gravity="center"
+            android:hint="@string/Location"
+            android:textColor="@color/white"
+            android:textColorHint="@color/gray"
+            android:textStyle="bold"
+            android:textSize="32dp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_destination"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline4">
+
+        </AutoCompleteTextView>
+
+        <AutoCompleteTextView
+            android:id="@+id/tv_destination"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_margin="32dp"
+            android:gravity="center"
+            android:hint="@string/Destination"
+            android:textColorHint="@color/gray"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline5"
+            android:background="@drawable/button_background_red1">
+
+        </AutoCompleteTextView>
+
+        <Button
+            android:id="@+id/btn_ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="32dp"
-            android:checked="false"
-            android:padding="4dp"
-            android:textColor="@color/dark_red"
-            android:textStyle="bold"
-            android:text="@string/cost"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:background="@drawable/button_background_red2"/>
+            android:text="@string/search_for_paths"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline6" />
 
-        <!--adding a radio button -->
-        <RadioButton
-            android:id="@+id/distanceRB_homeFragment"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.50121653" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.2" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.36" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="top"
+            app:constraint_referenced_ids="guideline5"
+            tools:layout_editor_absoluteY="176dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.8" />
+
+        <!--displaying a radio group on below line-->
+        <RadioGroup
+            android:id="@+id/radioGroup_homeFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:checked="false"
-            android:padding="4dp"
-            android:layout_margin="32dp"
-            android:textColor="@color/dark_red"
-            android:textStyle="bold"
-            android:text="@string/distance"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:background="@drawable/button_background_red2"/>
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/btn_ok"
+            app:layout_constraintTop_toBottomOf="@+id/tv_destination">
 
-    </RadioGroup>
+            <!--adding a radio button -->
+            <RadioButton
+                android:id="@+id/costRB_homeFragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="32dp"
+                android:checked="false"
+                android:padding="4dp"
+                android:textColor="@color/dark_red"
+                android:textStyle="bold"
+                android:text="@string/cost"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:background="@drawable/button_background_red2" />
+
+            <!--adding a radio button -->
+            <RadioButton
+                android:id="@+id/distanceRB_homeFragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:checked="false"
+                android:padding="4dp"
+                android:layout_margin="32dp"
+                android:textColor="@color/dark_red"
+                android:textStyle="bold"
+                android:text="@string/distance"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:background="@drawable/button_background_red2" />
+
+        </RadioGroup>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

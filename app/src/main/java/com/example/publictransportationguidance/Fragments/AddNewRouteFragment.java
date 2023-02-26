@@ -10,57 +10,53 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
 import com.example.publictransportationguidance.Authentication.LoginDialog;
-import com.example.publictransportationguidance.Authentication.SignUp;
 import com.example.publictransportationguidance.R;
+import com.example.publictransportationguidance.UI.MainActivity;
 import com.example.publictransportationguidance.UI.VerifyDialog;
+import com.example.publictransportationguidance.databinding.FragmentAddNewRouteBinding;
 
 public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     public AddNewRouteFragment() {}
-    Spinner spinner;
-    EditText input;
+    FragmentAddNewRouteBinding binding;
+
     ArrayAdapter<CharSequence> adapter;
-    Button submit;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_add_new_route, container, false);  // Inflate the layout for this fragment
+        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_add_new_route,container,false);
+        View rootView = binding.getRoot();
 
-        spinner = view.findViewById(R.id.spin);
-        // haidy: Creating an ArrayAdapter using the string array and a default spinner layout
-        adapter= ArrayAdapter.createFromResource(getActivity().getBaseContext(),
-                R.array.transportations, android.R.layout.simple_spinner_item);
-        // haidy:  Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // haidy: Applying the adapter to the spinner
-        spinner.setAdapter(adapter);
+        adapter= ArrayAdapter.createFromResource(getActivity().getBaseContext(), R.array.transportations, android.R.layout.simple_spinner_item);    // haidy: Creating an ArrayAdapter using the string array and a default spinner layout
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // haidy:  Specify the layout to use when the list of choices appears
+        binding.spin.setAdapter(adapter);    // haidy: Applying the adapter to the spinner
+        binding.spin.setOnItemSelectedListener(this);
+        binding.submitBtn.setOnClickListener((View v)-> { new VerifyDialog().show(getChildFragmentManager(), LoginDialog.TAG);});
 
-        input=view.findViewById(R.id.transport);
-        submit=view.findViewById(R.id.submit_btn);
-        spinner.setOnItemSelectedListener(this);
-        submit.setOnClickListener((View v)-> {
-                new VerifyDialog().show(getChildFragmentManager(), LoginDialog.TAG);
-        });
+        /* M Osama: ask the user to log in if he isn't loggedIn to be able to add new route*/
+        if(MainActivity.isLoggedIn==0) {
+            //haidy:showing the login dialog
+            LoginDialog dialog = new LoginDialog();
+            dialog.show(getChildFragmentManager(), LoginDialog.TAG);
+            dialog.setCancelable(false);
+        }
 
-        //haidy:showing the login fragment
-
-        LoginDialog dialog=new LoginDialog();
-        dialog.show(getChildFragmentManager(), LoginDialog.TAG);
-        dialog.setCancelable(false);
-        return view;
-}
+        return rootView;
+    }
     //haidy: enabling the transportation text input
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if(spinner.getSelectedItem().equals("Microbus"))  input.setEnabled(false);
-        else input.setEnabled(true);
+        if(binding.spin.getSelectedItem().equals("Microbus"))  binding.transportType.setEnabled(false);
+        else binding.transportType.setEnabled(true);
 
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        input.setEnabled(false);
+        binding.transportType.setEnabled(false);
     }
+
 }

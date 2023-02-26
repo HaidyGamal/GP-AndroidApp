@@ -26,7 +26,7 @@
             android:value="@string/places_api_key" />
 
         <activity
-            android:name=".UI.PathResults"
+            android:name=".Tracking.PathResults"
             android:exported="false" />
         <activity
             android:name=".Tracking.SelectedPath"
@@ -34,12 +34,11 @@
         <activity
             android:name=".Tracking.LiveLocation"
             android:exported="false" />
-
         <activity
             android:name=".Authentication.SignUp"
             android:exported="false" />
         <activity
-            android:name=".Fragments.Account"
+            android:name=".UI.Account"
             android:exported="false" />
 
         <activity
@@ -49,7 +48,6 @@
             android:theme="@style/Theme.PublicTransportationGuidance.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

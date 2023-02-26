@@ -5,22 +5,20 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import com.example.publictransportationguidance.R;
+import com.example.publictransportationguidance.databinding.LiveLocationBinding;
 
 public class LiveLocation extends AppCompatActivity {
-    Button stop;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.live_location);
+        LiveLocationBinding binding = DataBindingUtil.setContentView(this,R.layout.live_location);
 
-        stop=findViewById(R.id.stop_btn);
-        stop.setText("Stop");
-
-        stop.setOnClickListener((View v)-> {
-            if(stop.getText()=="Stop"){ stop.setText("Continue"); }
-            else stop.setText("Stop");
+        binding.stopBtn.setText("Stop");
+        binding.stopBtn.setOnClickListener((View v)-> {
+            if(binding.stopBtn.getText()=="Stop"){ binding.stopBtn.setText("Continue"); }
+            else binding.stopBtn.setText("Stop");
         });
 }}

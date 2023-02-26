@@ -9,8 +9,9 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.example.publictransportationguidance.API.POJO.PathInfo;
-import com.example.publictransportationguidance.API.POJO.StopsResponse.StopModel;
+import com.example.publictransportationguidance.POJO.PathInfo;
+import com.example.publictransportationguidance.POJO.StopsResponse.StopModel;
+
 
 @Database(entities = {StopModel.class, PathInfo.class}, version = 3)
 public abstract class RoomDB extends RoomDatabase {

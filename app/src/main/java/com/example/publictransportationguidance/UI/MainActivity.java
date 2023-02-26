@@ -5,13 +5,13 @@ import android.view.View;
 import android.view.Menu;
 import android.widget.Toast;
 
-import com.example.publictransportationguidance.API.POJO.ShortestPathResponse.Shortest;
-import com.example.publictransportationguidance.API.POJO.StopsResponse.AllStops;
-import com.example.publictransportationguidance.API.POJO.StopsResponse.StopModel;
 import com.example.publictransportationguidance.API.RetrofitClient;
+import com.example.publictransportationguidance.POJO.StopsResponse.AllStops;
+import com.example.publictransportationguidance.POJO.StopsResponse.StopModel;
 import com.example.publictransportationguidance.R;
 import com.example.publictransportationguidance.Room.DAO;
 import com.example.publictransportationguidance.Room.RoomDB;
+import com.example.publictransportationguidance.SharedPrefs.SharedPrefs;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
@@ -24,7 +24,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.publictransportationguidance.databinding.ActivityMainBinding;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -35,14 +34,20 @@ public class MainActivity extends AppCompatActivity{
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
+    public static NavController navController;
 
-    private final static int NORMAL_MODE=0;
-    private final static int BLIND_MODE=1;
-    public static int currentMode=NORMAL_MODE;
+    public static int onBlindMode;
+    public static int isLoggedIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPrefs.init(this);
+        SharedPrefs.write("ON_BLIND_MODE",0);   // This line is should be executed once for each device
+        SharedPrefs.write("IS_LOGGED_IN",0);    // This line is should be executed once for each device
+        onBlindMode=SharedPrefs.readMap("ON_BLIND_MODE",0);
+        isLoggedIn=SharedPrefs.readMap("IS_LOGGED_IN",0);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -51,6 +56,7 @@ public class MainActivity extends AppCompatActivity{
         NavigationView navigationView = binding.navView;
         navigationView.setBackgroundColor(getResources().getColor(R.color.light_green));
 
+        /* M Osama: instance to deal with Room */
         DAO dao=RoomDB.getInstance(getApplicationContext()).Dao();
 
         /* M Osama: Sending Request to return with all available stops */
@@ -64,16 +70,14 @@ public class MainActivity extends AppCompatActivity{
             }
 
             @Override
-            public void onFailure(Call<AllStops> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "هناك مشكلة في النت لديكم", Toast.LENGTH_SHORT).show();
-            }
+            public void onFailure(Call<AllStops> call, Throwable t) { Toast.makeText(MainActivity.this, "هناك مشكلة في النت لديكم", Toast.LENGTH_SHORT).show(); }
         });
 
 
         /* M Osama: Passing each menu ID as a set of Ids because each menu should be considered as top level destinations. */
         mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_settings, R.id.nav_add_new_route,R.id.nav_contact_us,R.id.nav_about)
-                .setOpenableLayout(drawer).build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+                                                    .setOpenableLayout(drawer).build();
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
@@ -82,7 +86,8 @@ public class MainActivity extends AppCompatActivity{
         /* M Osama: Return to Home Fragment once the Fab is clicked */
         binding.appBarMain.fab.setOnClickListener((View view)-> {
                 navController.navigate(R.id.nav_home);
-                if(currentMode==NORMAL_MODE){
+                onBlindMode=SharedPrefs.readMap("ON_BLIND_MODE",0);
+                if(onBlindMode==0){
                     Snackbar.make(view, "أنتم الآن في نظام التعامل مع الضريرين", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     binding.appBarMain.fab.setImageResource(0);
                     /*M Osama: to add code/sound assistant in blindMode */
@@ -91,7 +96,8 @@ public class MainActivity extends AppCompatActivity{
                     Snackbar.make(view, "أنتم الآن في نظام التعامل مع المبصرين", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     binding.appBarMain.fab.setImageResource(R.drawable.ic_blind_mode);
                 }
-                currentMode ^= 1; /*M Osama: toggle mode between Normal & Blind */
+                onBlindMode ^= 1;
+                SharedPrefs.write("ON_BLIND_MODE",onBlindMode); /*M Osama: toggle mode between Normal & Blind */
         });
 
     }
@@ -106,7 +112,7 @@ public class MainActivity extends AppCompatActivity{
     /* M Osama: Function To Support Navigation through fragments */
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
     }
 

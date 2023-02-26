@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/388225645/PublicTransportationGuidance.iml" filepath="$PROJECT_DIR$/.idea/modules/388225645/PublicTransportationGuidance.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/PublicTransportationGuidance.app.iml" filepath="$PROJECT_DIR$/.idea/modules/PublicTransportationGuidance.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/PublicTransportationGuidance.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/PublicTransportationGuidance.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/PublicTransportationGuidance.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/PublicTransportationGuidance.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/PublicTransportationGuidance.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/PublicTransportationGuidance.app.unitTest.iml" />
+    </modules>
+  </component>
+</project>

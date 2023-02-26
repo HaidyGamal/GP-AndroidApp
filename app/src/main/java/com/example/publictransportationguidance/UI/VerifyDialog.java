@@ -1,7 +1,5 @@
 package com.example.publictransportationguidance.UI;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,28 +7,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.publictransportationguidance.R;
-import com.example.publictransportationguidance.UI.MainActivity;
+import com.example.publictransportationguidance.databinding.FragmentSettingsBinding;
+import com.example.publictransportationguidance.databinding.FragmentSubmitRouteBinding;
 
 public class VerifyDialog extends DialogFragment {
-    Button ok;
-    Intent intent;
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view =inflater.inflate(R.layout.fragment_submit_route, container, false);
-//
-        ok = view.findViewById(R.id.ok_btn);
+        FragmentSubmitRouteBinding binding = DataBindingUtil.inflate(inflater,R.layout.fragment_submit_route,container,false);
+        View rootView = binding.getRoot();
 
-        ok.setOnClickListener((View v)-> {
-                dismiss();
-                intent=new Intent(getActivity().getBaseContext(), MainActivity.class);  //haidy: to return back to home page
-                startActivity(intent);
+        //haidy: to return back to home page
+        binding.okBtn.setOnClickListener(v -> {
+            dismiss();
+            startActivity(new Intent(getActivity().getBaseContext(), MainActivity.class));
         });
-        return view;
+
+        return rootView;
     }
     public static String TAG = "Dialog";
 }
