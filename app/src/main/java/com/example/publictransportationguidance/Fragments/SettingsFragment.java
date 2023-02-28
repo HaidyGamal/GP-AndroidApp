@@ -42,8 +42,8 @@ public class SettingsFragment extends Fragment{
             if(dark){ AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);    SharedPrefs.write("night",false); }
             else {    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);   SharedPrefs.write("night",true);  }
 
-            if(binding.modeBtn.getText()=="OFF")  binding.modeBtn.setText("ON");
-            else                                  binding.modeBtn.setText("OFF");
+            if(binding.modeBtn.getText()=="OFF")  { binding.modeBtn.setText("ON"); }
+            else                                  { binding.modeBtn.setText("OFF"); }
         });
         binding.accountBtn.setOnClickListener(v -> { startActivity(new Intent(getActivity(), com.example.publictransportationguidance.UI.Account.class)); });
 

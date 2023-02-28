@@ -72,7 +72,11 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<AllStops> call, Throwable t) { Toast.makeText(getContext(), R.string.CheckInternetConnection, Toast.LENGTH_SHORT).show(); }
+            public void onFailure(Call<AllStops> call, Throwable t) {
+                if(getActivity()!=null) {
+                    Toast.makeText(getActivity(), R.string.CheckInternetConnection, Toast.LENGTH_SHORT).show();
+                }
+            }
         });
 
         stopsTemp=dao.getAllStops();

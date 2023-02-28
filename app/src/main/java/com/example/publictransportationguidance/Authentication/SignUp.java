@@ -54,17 +54,12 @@ public class SignUp extends AppCompatActivity {
                     user.sendEmailVerification().addOnSuccessListener(unused -> Toast.makeText(SignUp.this, "Verification Email has been sent", Toast.LENGTH_LONG).show()).addOnFailureListener(e -> Log.d(TAG2,"ON Failure: Email Not sent"+e.getMessage()));
                     Toast.makeText(SignUp.this, "Successful Registration", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
-                    returnToLoginDialog();                  /* M Osama: Return user to LoginIn dialog after signing up*/
+                    finish();                   // M Osama: return to addNewRoute & logIn dialog after registration
                 }
                 else {  dialog.dismiss();  Toast.makeText(SignUp.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show(); }
             });
         }}
 
-    private void returnToLoginDialog(){
-        LoginDialog dialog=new LoginDialog();
-        dialog.show(getSupportFragmentManager(),LoginDialog.TAG);
-        dialog.setCancelable(false);
-    }
 
 }
 

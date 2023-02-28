@@ -43,9 +43,8 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        /* M Osama: Initalize SharedPrefs */
         SharedPrefs.init(this);
-        SharedPrefs.write("ON_BLIND_MODE",0);   // This line is should be executed once for each device
-        SharedPrefs.write("IS_LOGGED_IN",0);    // This line is should be executed once for each device
         onBlindMode=SharedPrefs.readMap("ON_BLIND_MODE",0);
         isLoggedIn=SharedPrefs.readMap("IS_LOGGED_IN",0);
 
@@ -55,6 +54,10 @@ public class MainActivity extends AppCompatActivity{
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         navigationView.setBackgroundColor(getResources().getColor(R.color.light_green));
+
+        /* M Osama: default -> BlindMode is Off */
+        if(onBlindMode==0)  binding.appBarMain.fab.setImageResource(R.drawable.ic_blind_mode);
+        else                binding.appBarMain.fab.setImageResource(0);
 
         /* M Osama: instance to deal with Room */
         DAO dao=RoomDB.getInstance(getApplicationContext()).Dao();
@@ -80,7 +83,6 @@ public class MainActivity extends AppCompatActivity{
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-
 
 
         /* M Osama: Return to Home Fragment once the Fab is clicked */
