@@ -1,5 +1,7 @@
 package com.example.publictransportationguidance.Authentication;
 
+import static com.example.publictransportationguidance.HelperClasses.Constants.IS_LOGGED_IN;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -47,8 +49,8 @@ public class LoginDialog extends DialogFragment {
         //haidy: to close the fragment
         binding.login.setOnClickListener((View v) ->{
             performLogin();
-            MainActivity.isLoggedIn=1;
-            SharedPrefs.write("IS_LOGGED_IN",MainActivity.isLoggedIn);
+            IS_LOGGED_IN =1;
+            SharedPrefs.write("IS_LOGGED_IN",IS_LOGGED_IN);
         });
 
         return rootView;

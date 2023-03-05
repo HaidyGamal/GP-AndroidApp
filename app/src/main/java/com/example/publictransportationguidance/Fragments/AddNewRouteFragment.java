@@ -1,21 +1,18 @@
 package com.example.publictransportationguidance.Fragments;
 
+import static com.example.publictransportationguidance.HelperClasses.Constants.IS_LOGGED_IN;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
-
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.example.publictransportationguidance.Authentication.LoginDialog;
 import com.example.publictransportationguidance.R;
-import com.example.publictransportationguidance.UI.MainActivity;
 import com.example.publictransportationguidance.UI.VerifyDialog;
 import com.example.publictransportationguidance.databinding.FragmentAddNewRouteBinding;
 
@@ -37,7 +34,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
         binding.submitBtn.setOnClickListener((View v)-> { new VerifyDialog().show(getChildFragmentManager(), LoginDialog.TAG);});
 
         /* M Osama: ask the user to log in if he isn't loggedIn to be able to add new route*/
-        if(MainActivity.isLoggedIn==0) {
+        if(IS_LOGGED_IN ==0) {
             //haidy:showing the login dialog
             LoginDialog dialog = new LoginDialog();
             dialog.show(getChildFragmentManager(), LoginDialog.TAG);

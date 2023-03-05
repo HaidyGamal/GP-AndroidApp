@@ -1,6 +1,10 @@
 plugins {
     id 'com.google.gms.google-services'
     id 'com.android.application' version '7.2.1'
+
+    // M Osama: Google MAPS API plugin
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+
 }
 
 android {
@@ -81,6 +85,9 @@ dependencies {
 
     // M Osama: LiveData & ViewModel dependencies
     implementation "androidx.lifecycle:lifecycle-extensions:2.1.0"
+
+    // M Osama: Places GoogleMaps API dependency
+    implementation 'com.google.android.libraries.places:places:3.0.0'
 
 }
 

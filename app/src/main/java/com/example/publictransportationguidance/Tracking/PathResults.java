@@ -12,8 +12,8 @@ import androidx.databinding.DataBindingUtil;
 
 import com.example.publictransportationguidance.POJO.PathInfo;
 import com.example.publictransportationguidance.API.RetrofitClient;
-import com.example.publictransportationguidance.Room.DAO;
 import com.example.publictransportationguidance.R;
+import com.example.publictransportationguidance.Room.DAO;
 import com.example.publictransportationguidance.Room.RoomDB;
 import com.example.publictransportationguidance.POJO.ShortestPathResponse.Shortest;
 import com.example.publictransportationguidance.POJO.ShortestPathResponse.ShortestPath;

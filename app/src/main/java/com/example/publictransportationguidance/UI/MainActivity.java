@@ -1,11 +1,15 @@
 package com.example.publictransportationguidance.UI;
 
+import static com.example.publictransportationguidance.HelperClasses.Constants.IS_LOGGED_IN;
+import static com.example.publictransportationguidance.HelperClasses.Constants.ON_BLIND_MODE;
+
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
 import android.widget.Toast;
 
 import com.example.publictransportationguidance.API.RetrofitClient;
+import com.example.publictransportationguidance.HelperClasses.Constants;
 import com.example.publictransportationguidance.POJO.StopsResponse.AllStops;
 import com.example.publictransportationguidance.POJO.StopsResponse.StopModel;
 import com.example.publictransportationguidance.R;
@@ -36,17 +40,14 @@ public class MainActivity extends AppCompatActivity{
     private ActivityMainBinding binding;
     public static NavController navController;
 
-    public static int onBlindMode;
-    public static int isLoggedIn;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         /* M Osama: Initalize SharedPrefs */
         SharedPrefs.init(this);
-        onBlindMode=SharedPrefs.readMap("ON_BLIND_MODE",0);
-        isLoggedIn=SharedPrefs.readMap("IS_LOGGED_IN",0);
+        ON_BLIND_MODE =SharedPrefs.readMap("ON_BLIND_MODE",0);
+        IS_LOGGED_IN =SharedPrefs.readMap("IS_LOGGED_IN",0);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity{
         navigationView.setBackgroundColor(getResources().getColor(R.color.light_green));
 
         /* M Osama: default -> BlindMode is Off */
-        if(onBlindMode==0)  binding.appBarMain.fab.setImageResource(R.drawable.ic_blind_mode);
+        if(ON_BLIND_MODE ==0)  binding.appBarMain.fab.setImageResource(R.drawable.ic_blind_mode);
         else                binding.appBarMain.fab.setImageResource(0);
 
         /* M Osama: instance to deal with Room */
@@ -88,8 +89,8 @@ public class MainActivity extends AppCompatActivity{
         /* M Osama: Return to Home Fragment once the Fab is clicked */
         binding.appBarMain.fab.setOnClickListener((View view)-> {
                 navController.navigate(R.id.nav_home);
-                onBlindMode=SharedPrefs.readMap("ON_BLIND_MODE",0);
-                if(onBlindMode==0){
+                ON_BLIND_MODE =SharedPrefs.readMap("ON_BLIND_MODE",0);
+                if(ON_BLIND_MODE ==0){
                     Snackbar.make(view, "أنتم الآن في نظام التعامل مع الضريرين", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     binding.appBarMain.fab.setImageResource(0);
                     /*M Osama: to add code/sound assistant in blindMode */
@@ -98,8 +99,8 @@ public class MainActivity extends AppCompatActivity{
                     Snackbar.make(view, "أنتم الآن في نظام التعامل مع المبصرين", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     binding.appBarMain.fab.setImageResource(R.drawable.ic_blind_mode);
                 }
-                onBlindMode ^= 1;
-                SharedPrefs.write("ON_BLIND_MODE",onBlindMode); /*M Osama: toggle mode between Normal & Blind */
+                ON_BLIND_MODE ^= 1;
+                SharedPrefs.write("ON_BLIND_MODE", ON_BLIND_MODE); /*M Osama: toggle mode between Normal & Blind */
         });
 
     }

@@ -5,13 +5,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.publictransportationguidance.R;
-import com.example.publictransportationguidance.databinding.FragmentSettingsBinding;
 import com.example.publictransportationguidance.databinding.FragmentSubmitRouteBinding;
 
 public class VerifyDialog extends DialogFragment {

@@ -1,6 +1,5 @@
 package com.example.publictransportationguidance.POJO.StopsResponse;
 
-import com.example.publictransportationguidance.POJO.StopsResponse.StopModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
