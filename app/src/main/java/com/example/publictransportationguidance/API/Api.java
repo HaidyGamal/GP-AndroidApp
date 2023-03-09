@@ -13,7 +13,7 @@ import retrofit2.http.POST;
 
 public interface Api {
     /* M Osama: BaseURL used in every Api request */
-    String BASE_URL="https://samplepublictransportationsapi.onrender.com/";
+    String BASE_URL="https://tawsila-api.onrender.com/";
 
     /* M Osama: Request return all the available stops we have in GraphDB */
     @GET(".")               /* M Osama: RequestURL is the same as BaseURL */

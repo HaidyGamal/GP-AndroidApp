@@ -1,6 +1,6 @@
 plugins {
     id 'com.google.gms.google-services'
-    id 'com.android.application' version '7.2.1'
+    id 'com.android.application'
 
     // M Osama: Google MAPS API plugin
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
