@@ -22,6 +22,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+<!--        <androidx.appcompat.widget.AppCompatButton-->
+<!--            android:id="@+id/pickCurrentLocationBtn"-->
+<!--            android:layout_width="40dp"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:layout_margin="4dp"-->
+<!--            android:padding="8dp"-->
+<!--            android:background="@color/dark_red"-->
+<!--            android:drawableLeft="@drawable/ic_current_location"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textStyle="bold"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/tv_location"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintHorizontal_bias="1.0"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/tv_destination"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/tv_location" />-->
+
         <AutoCompleteTextView
             android:id="@+id/tv_location"
             android:layout_width="0dp"

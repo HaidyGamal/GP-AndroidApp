@@ -1,5 +1,7 @@
 package com.example.publictransportationguidance.Tracking;
 
+import static com.example.publictransportationguidance.HelperClasses.Constants.TAG;
+
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import com.example.publictransportationguidance.POJO.ShortestPathResponse.Shorte
 import com.example.publictransportationguidance.POJO.ShortestPathResponse.ShortestPath;
 import com.example.publictransportationguidance.databinding.ActivityPathResultsBinding;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,11 +31,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PathResults extends AppCompatActivity {
+    ActivityPathResultsBinding binding;
 
     Intent txtIntent;
     String pickedValue;
-
-    public static final String TAG="route";
 
     String[] transportations={"Bus from Faisal to Zamalek","Metro from Zamalek to Sheraton","temp1","temp2","temp3","temp4"};
     ArrayList<String> transportationsTemp=new ArrayList<>();
@@ -43,16 +45,10 @@ public class PathResults extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityPathResultsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_path_results);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_path_results);
 
-        /* Could be deleted */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { binding.wheel.setTextSize(60F); }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { binding.wheel.setSelectionDividerHeight(0x1c); }
-        binding.wheel.setWrapSelectorWheel(true);
-        binding.wheel.setMinimumHeight(0xff);
-        binding.wheel.setDividerPadding(10000);
-        binding.wheel.setElevation(100F);
-        /* Could be deleted */
+        /* M Osama: to be adjusted */
+//        resultsWheelStyling();
 
         /* M Osama: reading values from homeFragment */
         Bundle extras = getIntent().getExtras();
@@ -63,6 +59,7 @@ public class PathResults extends AppCompatActivity {
 
         DAO dao = RoomDB.getInstance(getApplication()).Dao();
 
+        /* M Osama: find all possible paths between two nodes */
         RetrofitClient.getInstance().getApi().getShortestByCost(LOCATION, DESTINATION).enqueue(new Callback<List<List<ShortestPath>>>() {
             @Override
             public void onResponse(Call<List<List<ShortestPath>>> call, Response<List<List<ShortestPath>>> response) {
@@ -97,15 +94,18 @@ public class PathResults extends AppCompatActivity {
                     transportations=Shortest.listToArray(transportationsTemp);
 
                     /* M Osama: Identifying wheel settings*/
-                    binding.wheel.setMinValue(0);                            /* M Osama: wheel populated starting from index0 from source*/
-                    binding.wheel.setMaxValue(transportations.length - 1);   /* M Osama: wheel populated till index(len-1)*/
-                    binding.wheel.setValue(0);                               /* M Osama: index0 content represent best result; to be edited after building database & mapping */
-                    binding.wheel.setDisplayedValues(transportations);       /* M Osama: populating wheel with data */
+                    identifyingWheelSettings();
+
 
                     binding.wheel.setOnClickListener((View v) -> {
                         txtIntent = new Intent(PathResults.this, SelectedPath.class); /* haidy: to link between the 2 pages*/
                         pickedValue = transportations[binding.wheel.getValue()];     /*haidy: getting the text of the selected index in the NumberPicker*/
+
                         txtIntent.putExtra(TAG, pickedValue);
+                        txtIntent.putExtra("shortestPathInCost",(Serializable) shortestPathsInCost);    /* M Osama: Pass path to be able to Print it */
+                        txtIntent.putExtra("pathNum",binding.wheel.getValue());
+
+                        Toast.makeText(PathResults.this, pickedValue, Toast.LENGTH_SHORT).show();
                         startActivity(txtIntent);
                     });
 
@@ -155,6 +155,22 @@ public class PathResults extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void resultsWheelStyling(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { binding.wheel.setTextSize(60F); }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { binding.wheel.setSelectionDividerHeight(0x1c); }
+        binding.wheel.setWrapSelectorWheel(true);
+        binding.wheel.setMinimumHeight(0xff);
+        binding.wheel.setDividerPadding(10000);
+        binding.wheel.setElevation(100F);
+    }
+
+    public void identifyingWheelSettings(){
+        binding.wheel.setMinValue(0);                            /* M Osama: wheel populated starting from index0 from source*/
+        binding.wheel.setMaxValue(transportations.length - 1);   /* M Osama: wheel populated till index(len-1)*/
+        binding.wheel.setValue(0);                               /* M Osama: index0 content represent best result; to be edited after building database & mapping */
+        binding.wheel.setDisplayedValues(transportations);       /* M Osama: populating wheel with data */
     }
 
 }

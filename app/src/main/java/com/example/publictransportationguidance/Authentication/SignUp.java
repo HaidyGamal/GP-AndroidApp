@@ -34,7 +34,7 @@ public class SignUp extends AppCompatActivity {
         mUser=mAuth.getCurrentUser();
 
         //haidy:showing Verification Dialog
-        binding.sign.setOnClickListener((View v)-> { performAuth(); });
+        binding.sign.setOnClickListener((View v)-> performAuth());
     }
 
     private void performAuth() {

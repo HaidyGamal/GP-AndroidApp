@@ -91,7 +91,9 @@ public class Shortest {
             if(x%2==0){detailedPath+=" ثم "; x++;}
             else{x++;}
         }
-        return detailedPath.substring(0,detailedPath.length()-3);
+
+        String path = detailedPath.substring(0,detailedPath.length()-1);
+        return replaceLastOccurrence(path,"ثم","إلي");
     }
 
     public static ArrayList<String> getStringPathToPopulateRoom(HashMap pathMap){
@@ -166,6 +168,17 @@ public class Shortest {
         return arrayList.toArray(new String[0]);
     }
 
+    public static String replaceLastOccurrence(String inputString, String oldSubstring, String newSubstring) {
+        int lastIndex = inputString.lastIndexOf(oldSubstring);
+
+        if (lastIndex == -1) {
+            return inputString;  // oldSubstring not found in inputString
+        }
+
+        String result = inputString.substring(0, lastIndex) + newSubstring + inputString.substring(lastIndex + oldSubstring.length());
+
+        return result;
+    }
 
 }
 

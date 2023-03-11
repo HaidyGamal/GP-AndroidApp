@@ -16,7 +16,6 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.publictransportationguidance.R;
 import com.example.publictransportationguidance.SharedPrefs.SharedPrefs;
-import com.example.publictransportationguidance.UI.MainActivity;
 import com.example.publictransportationguidance.databinding.FragmentLoginBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

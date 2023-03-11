@@ -27,21 +27,21 @@ public class SettingsFragment extends Fragment{
 
         SharedPrefs.init(getContext());
 
-        binding.modeBtn.setText("OFF");
+        binding.modeBtn.setText(R.string.OFF);
 
         //haidy: we used Shared Preferences to save the mode if exit the app and go back again; m Ossama: we used SingletonSharedPrefs
         dark=SharedPrefs.readMap("night",false);   // light is default mode
 
-        if(dark){ binding.modeBtn.setText("ON"); binding.navMode.setChecked(true); AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES); }
+        if(dark){ binding.modeBtn.setText(R.string.ON); binding.navMode.setChecked(true); AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES); }
 
         binding.navMode.setOnClickListener((View v)-> {                  //haidy: to toggle switch text
             if(dark){ AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);    SharedPrefs.write("night",false); }
             else {    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);   SharedPrefs.write("night",true);  }
 
-            if(binding.modeBtn.getText()=="OFF")  { binding.modeBtn.setText("ON"); }
-            else                                  { binding.modeBtn.setText("OFF"); }
+            if(binding.modeBtn.getText()=="OFF")  { binding.modeBtn.setText(R.string.ON); }
+            else                                  { binding.modeBtn.setText(R.string.OFF); }
         });
-        binding.accountBtn.setOnClickListener(v -> { startActivity(new Intent(getActivity(), com.example.publictransportationguidance.UI.Account.class)); });
+        binding.accountBtn.setOnClickListener(v -> startActivity(new Intent(getActivity(), com.example.publictransportationguidance.UI.Account.class)));
 
         return rootView;
     }

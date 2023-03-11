@@ -31,7 +31,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // haidy:  Specify the layout to use when the list of choices appears
         binding.spin.setAdapter(adapter);    // haidy: Applying the adapter to the spinner
         binding.spin.setOnItemSelectedListener(this);
-        binding.submitBtn.setOnClickListener((View v)-> { new VerifyDialog().show(getChildFragmentManager(), LoginDialog.TAG);});
+        binding.submitBtn.setOnClickListener((View v)-> new VerifyDialog().show(getChildFragmentManager(), LoginDialog.TAG));
 
         /* M Osama: ask the user to log in if he isn't loggedIn to be able to add new route*/
         if(IS_LOGGED_IN ==0) {
@@ -47,7 +47,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if(binding.spin.getSelectedItem().equals("Microbus"))  binding.transportType.setEnabled(false);
-        else binding.transportType.setEnabled(true);
+        else                                                   binding.transportType.setEnabled(true);
 
     }
 

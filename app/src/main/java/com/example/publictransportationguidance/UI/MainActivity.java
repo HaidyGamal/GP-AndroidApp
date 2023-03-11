@@ -1,6 +1,9 @@
 package com.example.publictransportationguidance.UI;
 
 import static com.example.publictransportationguidance.HelperClasses.Constants.IS_LOGGED_IN;
+import static com.example.publictransportationguidance.HelperClasses.Constants.LATITUDE_KEY;
+import static com.example.publictransportationguidance.HelperClasses.Constants.LOCATION_NAME_KEY;
+import static com.example.publictransportationguidance.HelperClasses.Constants.LONGITUDE_KEY;
 import static com.example.publictransportationguidance.HelperClasses.Constants.ON_BLIND_MODE;
 
 import android.os.Bundle;
@@ -9,7 +12,6 @@ import android.view.Menu;
 import android.widget.Toast;
 
 import com.example.publictransportationguidance.API.RetrofitClient;
-import com.example.publictransportationguidance.HelperClasses.Constants;
 import com.example.publictransportationguidance.POJO.StopsResponse.AllStops;
 import com.example.publictransportationguidance.POJO.StopsResponse.StopModel;
 import com.example.publictransportationguidance.R;
@@ -19,6 +21,7 @@ import com.example.publictransportationguidance.SharedPrefs.SharedPrefs;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -38,13 +41,19 @@ public class MainActivity extends AppCompatActivity{
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
-    public static NavController navController;
+    public NavController navController;
+
+    public static double pickedLat;
+    public static double pickedLong;
+    public static String pickedLocName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /* M Osama: Initalize SharedPrefs */
+        readDataFromMap();
+
+        /* M Osama: Initialize SharedPrefs */
         SharedPrefs.init(this);
         ON_BLIND_MODE =SharedPrefs.readMap("ON_BLIND_MODE",0);
         IS_LOGGED_IN =SharedPrefs.readMap("IS_LOGGED_IN",0);
@@ -58,7 +67,7 @@ public class MainActivity extends AppCompatActivity{
 
         /* M Osama: default -> BlindMode is Off */
         if(ON_BLIND_MODE ==0)  binding.appBarMain.fab.setImageResource(R.drawable.ic_blind_mode);
-        else                binding.appBarMain.fab.setImageResource(0);
+        else                   binding.appBarMain.fab.setImageResource(0);
 
         /* M Osama: instance to deal with Room */
         DAO dao=RoomDB.getInstance(getApplicationContext()).Dao();
@@ -66,7 +75,7 @@ public class MainActivity extends AppCompatActivity{
         /* M Osama: Sending Request to return with all available stops */
         RetrofitClient.getInstance().getApi().getAllStops().enqueue(new Callback<AllStops>() {
             @Override
-            public void onResponse(Call<AllStops> call, Response<AllStops> response) {
+            public void onResponse(@NonNull Call<AllStops> call, @NonNull Response<AllStops> response) {
                 AllStops allStops=response.body();
                 List<StopModel> stops=allStops.getAllNodes();
                 dao.deleteAllStops();                             /* M Osama: cache latest Stops in the App's first open */
@@ -74,17 +83,43 @@ public class MainActivity extends AppCompatActivity{
             }
 
             @Override
-            public void onFailure(Call<AllStops> call, Throwable t) { Toast.makeText(MainActivity.this, "هناك مشكلة في النت لديكم", Toast.LENGTH_SHORT).show(); }
+            public void onFailure(@NonNull Call<AllStops> call, @NonNull Throwable t) { Toast.makeText(MainActivity.this, "هناك مشكلة في النت لديكم", Toast.LENGTH_SHORT).show(); }
         });
 
 
         /* M Osama: Passing each menu ID as a set of Ids because each menu should be considered as top level destinations. */
         mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_settings, R.id.nav_add_new_route,R.id.nav_contact_us,R.id.nav_about)
-                                                    .setOpenableLayout(drawer).build();
+                                        .setOpenableLayout(drawer).build();
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+
+        /* M Osama : receive Location picked by user from MapActivity & send them to HomeFragment*/
+
+
+
+//        Bundle dataFromMap = getIntent().getExtras();
+//        if(dataFromMap!=null){
+//            double lat = dataFromMap.getDouble("LATITUDE");
+//            double lng = dataFromMap.getDouble("LONGITUDE");
+//            String locationName= dataFromMap.getString("LOCATION_NAME");
+//            Toast.makeText(this, "Main at="+lat+",long="+lng+" | locationName="+locationName, Toast.LENGTH_SHORT).show();
+//
+//            Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show();    /* For checking only */
+//        }
+
+ /*  *****************************     */
+
+
+//        if(dataFromMap!=null){
+//            Bundle dataToHomeFragment = new Bundle();
+//            dataToHomeFragment.putDouble("LATITUDE",lat);
+//            dataToHomeFragment.putDouble("LONGITUDE",lng);
+//            dataToHomeFragment.putString("LOCATION_NAME",locationName);
+//            HomeFragment homeFragment = new HomeFragment();
+//            homeFragment.setArguments(dataToHomeFragment);
+//        }
 
         /* M Osama: Return to Home Fragment once the Fab is clicked */
         binding.appBarMain.fab.setOnClickListener((View view)-> {
@@ -104,6 +139,19 @@ public class MainActivity extends AppCompatActivity{
         });
 
     }
+
+    /* M Osama: receiving data from MapActivity */
+    public void readDataFromMap(){
+        SharedPrefs.init(this);
+        if(getIntent().getExtras()!=null) {
+            Bundle extras = getIntent().getExtras();
+            pickedLat = extras.getDouble(LATITUDE_KEY, 0.0);
+            pickedLong = extras.getDouble(LONGITUDE_KEY, 0.0);
+            pickedLocName = extras.getString(LOCATION_NAME_KEY, "");
+            Toast.makeText(this, "MainActivity 1- " + pickedLat + ",2- " + pickedLong + ",3- " + pickedLocName, Toast.LENGTH_SHORT).show();    /* To be deleted */
+        }
+    }
+
 
     /*M Osama: Inflate the menu(right at the right of action bar); this adds items to the action bar if it is present. */
     @Override

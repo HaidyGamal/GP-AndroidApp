@@ -15,5 +15,16 @@ public class Constants {
     /* M Osama: to track loggedIn */
     public static int IS_LOGGED_IN;
 
+    /* M Osama: to differentiate locationOnItemClick & destinationOnItemClick */
+    public static int LOCATION=0;
+    public static int DESTINATION=1;
+
+    /* M Osama : intents/bundles keys */
+    public static String LATITUDE_KEY="LATITUDE";
+    public static String LONGITUDE_KEY="LONGITUDE";
+    public static String LOCATION_NAME_KEY="LOCATION_NAME";
+
+    /* haidy: intent tag between pathResults & selectedPath */
+    public static final String TAG="route";
 
 }

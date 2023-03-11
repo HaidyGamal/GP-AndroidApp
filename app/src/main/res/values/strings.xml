@@ -69,6 +69,10 @@
     <string name="Location">نقطة الانطلاق</string>
     <string name="Destination">نقطة الانتهاء</string>
     <string name="search_for_paths">بحث</string>
+    <string name="OFF">OFF</string>
+    <string name="ON">ON</string>
+    <string name="Stop">Stop</string>
+    <string name="Continue">Continue</string>
     <!-- Strings related to spinner -->
     <string-array name="transportations">
         <item>Microbus</item>

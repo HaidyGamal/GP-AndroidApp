@@ -14,9 +14,9 @@ public class LiveLocation extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         LiveLocationBinding binding = DataBindingUtil.setContentView(this,R.layout.live_location);
 
-        binding.stopBtn.setText("Stop");
+        binding.stopBtn.setText(R.string.Stop);
         binding.stopBtn.setOnClickListener((View v)-> {
-            if(binding.stopBtn.getText()=="Stop"){ binding.stopBtn.setText("Continue"); }
-            else binding.stopBtn.setText("Stop");
+            if(binding.stopBtn.getText()=="Stop"){ binding.stopBtn.setText(R.string.Continue); }
+            else binding.stopBtn.setText(R.string.Stop);
         });
 }}
