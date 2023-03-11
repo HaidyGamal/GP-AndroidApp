@@ -27,4 +27,9 @@ public class Constants {
     /* haidy: intent tag between pathResults & selectedPath */
     public static final String TAG="route";
 
+    /* M Osama: requestCode from MapActivity */
+    public static final int REQUEST_CODE=1234;
+
+    /* M Osama: selected PickOnLocation tracker */
+    public static int LAST_CLICKED_FOOTER_VIEW=0;
 }

@@ -2,13 +2,19 @@ package com.example.publictransportationguidance.Fragments;
 
 import static com.example.publictransportationguidance.BuildConfig.MAPS_API_KEY;
 import static com.example.publictransportationguidance.HelperClasses.Constants.FOOTER;
+import static com.example.publictransportationguidance.HelperClasses.Constants.LAST_CLICKED_FOOTER_VIEW;
+import static com.example.publictransportationguidance.HelperClasses.Constants.LATITUDE_KEY;
 import static com.example.publictransportationguidance.HelperClasses.Constants.LOCATION;
+import static com.example.publictransportationguidance.HelperClasses.Constants.LOCATION_NAME_KEY;
+import static com.example.publictransportationguidance.HelperClasses.Constants.LONGITUDE_KEY;
+import static com.example.publictransportationguidance.HelperClasses.Constants.REQUEST_CODE;
 import static com.example.publictransportationguidance.HelperClasses.Functions.deleteFromSequence;
 import static com.example.publictransportationguidance.HelperClasses.Functions.getDataSourceIndex;
 import static com.example.publictransportationguidance.HelperClasses.Functions.getSelectedItem;
 import static com.example.publictransportationguidance.HelperClasses.Functions.getStopLatLong;
 import static com.example.publictransportationguidance.HelperClasses.Functions.listToArray;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
@@ -23,6 +29,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
@@ -114,7 +121,7 @@ public class HomeFragment extends Fragment{
         autoCompleteOnItemClick(binding.tvDestination,1);
 
         /* M Osama: autoComplete FooterClickListener */
-        autoCompleteOnFooterClick();
+        autoCompleteOnFooterClick(getView());
 
         binding.searchBtn.setOnClickListener(v -> {
             if(binding.tvLocation.getText()+""!="" && binding.tvDestination.getText()+""!="") searchForPaths(locationLats,destinationLats);
@@ -126,6 +133,30 @@ public class HomeFragment extends Fragment{
         binding.distanceRBHomeFragment.setOnClickListener((View v)-> Toast.makeText(getActivity(), R.string.PathsSortedAccordingToDistance, Toast.LENGTH_SHORT).show());
         binding.costRBHomeFragment.setOnClickListener((View v) -> Toast.makeText(getActivity(), R.string.PathsSortedAccordingToCost, Toast.LENGTH_SHORT).show());
 
+    }
+
+    /* M Osama: Update results obtained from MapActivity */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==REQUEST_CODE && resultCode== Activity.RESULT_OK){
+            /* Manage returned data from Activity here */
+
+            lats[0] = data.getExtras().getDouble(LATITUDE_KEY);
+            lats[1] = data.getExtras().getDouble(LONGITUDE_KEY);
+            String locationName = data.getExtras().getString(LOCATION_NAME_KEY);
+
+            /* M Osama: Update TextViews */
+            if(LAST_CLICKED_FOOTER_VIEW==R.id.tv_location){
+                binding.tvLocation.setText(locationName);
+                locationLats=getStopLatLong(lats[0],lats[1]);
+            }
+            else if(LAST_CLICKED_FOOTER_VIEW==R.id.tv_destination){
+                binding.tvDestination.setText(locationName);
+                destinationLats=getStopLatLong(lats[0],lats[1]);
+            }
+            else ;
+        }
     }
 
     /* M Osama: function to update the autoCompleteTextView on every change the user write */
@@ -151,24 +182,29 @@ public class HomeFragment extends Fragment{
             list = new CustomAutoCompleteAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, stopsArray, FOOTER);
             acTextView.setAdapter(list);
 
-            autoCompleteOnFooterClick();
+            autoCompleteOnFooterClick(acTextView);
 
         }).addOnFailureListener((exception) -> Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show());
 
     }
 
     /* M Osama: States what will happen incase user clicked on "Set Location On MapActivity" */
-    public void autoCompleteOnFooterClick(){
+    public void autoCompleteOnFooterClick(View view){
         list.setOnFooterClickListener(() -> {
-//            Toast.makeText(getContext(), getView().getId()+"", Toast.LENGTH_SHORT).show();
+            LAST_CLICKED_FOOTER_VIEW=view.getId();
+            Toast.makeText(getContext(), view.getId()+"", Toast.LENGTH_SHORT).show();           /* ToBeDeleted */
             Toast.makeText(getContext(), "جاري الذهاب إلي الخريطة", Toast.LENGTH_SHORT).show();
-            if(askUserToEnableLocation(getContext())==true)     startActivity(new Intent(getContext(), MapActivity.class));
+            if(askUserToEnableLocation(getContext())==true){
+                Intent toMap = new Intent(getActivity(),MapActivity.class);
+                startActivityForResult(toMap,REQUEST_CODE);
+            }
         });
     }
 
     /* M Osama: States what will happen incase user clicked clicked on specific plase */
     public void autoCompleteOnItemClick(AutoCompleteTextView acTextView,int stop){
         acTextView.setOnItemClickListener((parent, view, position, id) -> {
+//            Toast.makeText(getContext(), acTextView.getId()+"", Toast.LENGTH_SHORT).show();
             String selectedItem = getSelectedItem(parent,position);
             Toast.makeText(getContext(), selectedItem, Toast.LENGTH_SHORT).show();                                              /* M Osama: Only for checking the autoCompleteOnClick is working */
             getPlaceCoordinatesUsingID(stopsIDsArray[getDataSourceIndex(stopsArray,selectedItem)],stop);

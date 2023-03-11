@@ -43,15 +43,9 @@ public class MainActivity extends AppCompatActivity{
     private ActivityMainBinding binding;
     public NavController navController;
 
-    public static double pickedLat;
-    public static double pickedLong;
-    public static String pickedLocName;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        readDataFromMap();
 
         /* M Osama: Initialize SharedPrefs */
         SharedPrefs.init(this);
@@ -95,32 +89,6 @@ public class MainActivity extends AppCompatActivity{
         NavigationUI.setupWithNavController(navigationView, navController);
 
 
-        /* M Osama : receive Location picked by user from MapActivity & send them to HomeFragment*/
-
-
-
-//        Bundle dataFromMap = getIntent().getExtras();
-//        if(dataFromMap!=null){
-//            double lat = dataFromMap.getDouble("LATITUDE");
-//            double lng = dataFromMap.getDouble("LONGITUDE");
-//            String locationName= dataFromMap.getString("LOCATION_NAME");
-//            Toast.makeText(this, "Main at="+lat+",long="+lng+" | locationName="+locationName, Toast.LENGTH_SHORT).show();
-//
-//            Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show();    /* For checking only */
-//        }
-
- /*  *****************************     */
-
-
-//        if(dataFromMap!=null){
-//            Bundle dataToHomeFragment = new Bundle();
-//            dataToHomeFragment.putDouble("LATITUDE",lat);
-//            dataToHomeFragment.putDouble("LONGITUDE",lng);
-//            dataToHomeFragment.putString("LOCATION_NAME",locationName);
-//            HomeFragment homeFragment = new HomeFragment();
-//            homeFragment.setArguments(dataToHomeFragment);
-//        }
-
         /* M Osama: Return to Home Fragment once the Fab is clicked */
         binding.appBarMain.fab.setOnClickListener((View view)-> {
                 navController.navigate(R.id.nav_home);
@@ -139,19 +107,6 @@ public class MainActivity extends AppCompatActivity{
         });
 
     }
-
-    /* M Osama: receiving data from MapActivity */
-    public void readDataFromMap(){
-        SharedPrefs.init(this);
-        if(getIntent().getExtras()!=null) {
-            Bundle extras = getIntent().getExtras();
-            pickedLat = extras.getDouble(LATITUDE_KEY, 0.0);
-            pickedLong = extras.getDouble(LONGITUDE_KEY, 0.0);
-            pickedLocName = extras.getString(LOCATION_NAME_KEY, "");
-            Toast.makeText(this, "MainActivity 1- " + pickedLat + ",2- " + pickedLong + ",3- " + pickedLocName, Toast.LENGTH_SHORT).show();    /* To be deleted */
-        }
-    }
-
 
     /*M Osama: Inflate the menu(right at the right of action bar); this adds items to the action bar if it is present. */
     @Override

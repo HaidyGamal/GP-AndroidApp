@@ -10,9 +10,11 @@ import static com.example.publictransportationguidance.HelperClasses.Constants.W
 import static com.example.publictransportationguidance.HelperClasses.Functions.getLocationName;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -46,11 +48,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         binding.confirmPickUp.setOnClickListener(v -> {
 
             /* M Osama : pass picked lat/long to HomeFragment's parent class */
-            Intent toMainActivity = new Intent(this, MainActivity.class);
-            toMainActivity.putExtra(LATITUDE_KEY,latitude);
-            toMainActivity.putExtra(LONGITUDE_KEY,longitude);
-            toMainActivity.putExtra(LOCATION_NAME_KEY,getLocationName(getApplicationContext(),latitude,longitude)+"");
-            startActivity(toMainActivity);
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra(LATITUDE_KEY,latitude);
+            resultIntent.putExtra(LONGITUDE_KEY,longitude);
+            resultIntent.putExtra(LOCATION_NAME_KEY,getLocationName(getApplicationContext(),latitude,longitude)+"");
+            setResult(Activity.RESULT_OK,resultIntent);
+            finish();
+//            startActivity(resultIntent);
             Toast.makeText(this, "MapActivity 1- " + latitude + ",2- " + longitude + ",3- " + getLocationName(getApplicationContext(),latitude,longitude)+"", Toast.LENGTH_SHORT).show();    /* To be deleted */
             Toast.makeText(getApplicationContext(), "تم الاختيار بنجاح", Toast.LENGTH_SHORT).show();
         });
@@ -60,7 +64,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             finish();
         });
 
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
