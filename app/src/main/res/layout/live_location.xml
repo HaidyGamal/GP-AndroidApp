@@ -28,5 +28,11 @@
             android:layout_marginLeft="115dp"
             android:text="Stop"
             android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/locationTxt"
+            android:layout_width="match_parent"
+            android:layout_height="155dp"
+            android:text="أنت الان في ....." />
     </LinearLayout>
 </layout>

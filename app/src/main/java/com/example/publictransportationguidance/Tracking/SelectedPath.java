@@ -1,11 +1,17 @@
 package com.example.publictransportationguidance.Tracking;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
 import com.example.publictransportationguidance.POJO.ShortestPathResponse.Shortest;
@@ -16,8 +22,9 @@ import com.example.publictransportationguidance.databinding.SelectedPathBinding;
 import java.util.List;
 
 public class SelectedPath extends AppCompatActivity {
-
     SelectedPathBinding binding;
+    private final static int REQUEST_CODE =100;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,10 +39,37 @@ public class SelectedPath extends AppCompatActivity {
         Toast.makeText(this, detailedPath, Toast.LENGTH_SHORT).show();
 
         binding.selectedPath.setText(detailedPath);
-
-        binding.startLiveLocationBtn.setOnClickListener((View v)-> { startActivity(new Intent(SelectedPath.this, LiveLocation.class)); });
-
-
+        binding.startLiveLocationBtn.setOnClickListener(new View.OnClickListener(){
+           @Override
+           public void onClick(View view) {
+               nextActivity();
+           }
+        });
+    }
+    private void nextActivity(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            binding.startLiveLocationBtn.setOnClickListener((View v)-> { startActivity(new Intent(SelectedPath.this, LiveLocation.class)); });
+        }
+        else {
+            askPermission();
+        }
     }
 
+    private void askPermission() {
+        ActivityCompat.requestPermissions(SelectedPath.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_CODE);
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull @org.jetbrains.annotations.NotNull String[] permissions, @NonNull @org.jetbrains.annotations.NotNull int[] grantResults) {
+
+        if (requestCode == REQUEST_CODE){
+
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                binding.startLiveLocationBtn.setOnClickListener((View v)-> { startActivity(new Intent(SelectedPath.this, LiveLocation.class)); });
+            }else {
+
+                Toast.makeText(SelectedPath.this,"من فضلك أضغط على زر سماح للموقع",Toast.LENGTH_SHORT).show();
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 }
