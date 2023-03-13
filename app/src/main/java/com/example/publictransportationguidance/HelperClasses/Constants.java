@@ -1,5 +1,7 @@
 package com.example.publictransportationguidance.HelperClasses;
 
+import android.Manifest;
+
 public class Constants {
     /* M Osama: Cairo dimensions */
     public static final double SOUTH=29.696354;
@@ -32,4 +34,15 @@ public class Constants {
 
     /* M Osama: selected PickOnLocation tracker */
     public static int LAST_CLICKED_FOOTER_VIEW=0;
+
+    /* M Osama: locationTracker constants */
+    public static final int GPS_TIME_INTERVAL = 1000 * 60 * 2;                             // get gps location every 1 min
+    public static final int GPS_DISTANCE = 1000;                                           // set the distance value in meter
+    public static final int HANDLER_DELAY = 1000 * 60 * 2;
+    public static final int START_HANDLER_DELAY = 0;
+    public static final String[] PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+    public static final int PERMISSION_ALL = 1;
+    public static String TRACKER_BASE_TXT="أنت الآن في ";
+
+    public final static int NAVIGATING_TO_LIVE_LOCATION_REQUEST_CODE =100;
 }

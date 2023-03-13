@@ -7,32 +7,57 @@
 
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@drawable/sub_background">
+        android:background="@drawable/sub_background"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/liveLocation"
-            android:layout_width="329dp"
-            android:layout_height="232dp"
-            android:layout_marginLeft="7dp"
-            android:layout_marginTop="100dp"
-            app:srcCompat="@drawable/location" />
+        <!--        <ImageView-->
+        <!--            android:id="@+id/liveLocation"-->
+        <!--            android:layout_width="329dp"-->
+        <!--            android:layout_height="232dp"-->
+        <!--            android:layout_marginLeft="7dp"-->
+        <!--            android:layout_marginTop="100dp"-->
+        <!--            app:srcCompat="@drawable/location" />-->
 
-        <Button
-            android:id="@+id/stop_btn"
-            android:layout_width="152dp"
-            android:layout_height="69dp"
-            android:layout_marginLeft="115dp"
-            android:text="Stop"
-            android:textAlignment="center" />
+        <!--        <Button-->
+        <!--            android:id="@+id/stop_btn"-->
+        <!--            android:layout_width="152dp"-->
+        <!--            android:layout_height="69dp"-->
+        <!--            android:layout_marginLeft="115dp"-->
+        <!--            android:text="Stop"-->
+        <!--            android:textAlignment="center" />-->
+
+        <!--    M Osama: to be substituted with fragment to navigate GoogleMaps-->
+        <fragment
+            android:id="@+id/tracker"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/locationTxt"
+            app:layout_constraintTop_toTopOf="parent" />
+        <!--    M Osama: to be substituted with fragment to navigate GoogleMaps-->
 
         <TextView
             android:id="@+id/locationTxt"
             android:layout_width="match_parent"
-            android:layout_height="155dp"
-            android:text="أنت الان في ....." />
-    </LinearLayout>
+            android:layout_height="0dp"
+            android:autoSizeTextType="uniform"
+            android:padding="28dp"
+            android:gravity="right"
+            android:text="أنت الآن في"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline2" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.85"/>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

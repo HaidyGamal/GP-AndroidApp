@@ -64,27 +64,6 @@ public class Functions {
         try {
             myList = myLocation.getFromLocation(latitude,longitude, 1);
             Address address = (Address) myList.get(0);
-//            String[] str=address.getAddressLine(0).split("،");
-//            String addressStr = "(1:"+address.getFeatureName()+")"+" (2:"+address.getLocality()+")"+" (3:"+str[0]+")"+" (4:"+str[1]+")";
-//            String addressStr = ""+address.getAddressLine(0);
-//            addressStr=extractAddress(addressStr);
-
-//            String location="";
-//            if(freeOfNumbers(address.getFeatureName())==true) location=address.getFeatureName()+"، "+address.getLocality();
-//            else {
-//                if (address.getLocality() == str[0])          location = address.getLocality() + "، " + str[1];
-//                else if (address.getLocality() == str[1])     location = address.getLocality() + "، " + str[0];
-//                else                                          location = address.getLocality();
-//            }
-//
-//            Log.i("OsOsOs","------");
-//            Log.i("OsOsOs","Location: "+location);
-//            Log.i("OsOsOs","str[0]: "+str[0]);
-//            Log.i("OsOsOs","str[1]: "+str[1]);
-//            Log.i("OsOsOs","getFeatureName: "+address.getFeatureName());
-//            Log.i("OsOsOs","getLocality: "+address.getLocality());
-//            Log.i("OsOsOs","getSubLocality: "+address.getSubLocality());
-//            Log.i("OsOsOs","getAddressLine: "+address.getAddressLine(0)+"");
             Toast.makeText(context, address.getLocality()+"", Toast.LENGTH_SHORT).show();
             return address.getLocality();
         } catch (IOException e) {  e.printStackTrace();   return "هناك مشكلة في الانترنت"; }
