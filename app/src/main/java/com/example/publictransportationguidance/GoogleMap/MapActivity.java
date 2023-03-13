@@ -26,6 +26,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -73,11 +74,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(com.google.android.gms.maps.GoogleMap googleMap) {
+
         this.googleMap = googleMap;
-        LatLng maadi = new LatLng(29.9743704, 31.2741588);               // Add a marker in Maadi and move the camera
-        this.googleMap.addMarker(new MarkerOptions().position(maadi).draggable(true).title("Marker in Maadi"));
-        this.googleMap.moveCamera(CameraUpdateFactory.newLatLng(maadi));
-        this.googleMap.getUiSettings().setZoomControlsEnabled(true);            // Enable the zoom controls for the map
+        LatLng cairo = new LatLng(30.0444, 31.2357);                                                // M Osama: Update with Cairo's coordinates
+        this.googleMap.addMarker(new MarkerOptions().position(cairo).draggable(true).title("Marker in Cairo"));     // M Osama: Add a marker in Cairo & move Camera
+
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(cairo).zoom(12).build();
+        this.googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));                           // M Osama: Camera Zoomed to Cairo
+        this.googleMap.getUiSettings().setZoomControlsEnabled(true);                                                // M Osama: Enable user to zoom
+
         googleMap.setOnMarkerDragListener(new com.google.android.gms.maps.GoogleMap.OnMarkerDragListener(){
             @Override
             public void onMarkerDragStart(@NonNull Marker marker) {}
