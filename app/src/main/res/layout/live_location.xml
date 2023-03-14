@@ -30,15 +30,27 @@
         <!--            android:textAlignment="center" />-->
 
         <!--    M Osama: to be substituted with fragment to navigate GoogleMaps-->
+        <!--        <fragment-->
+<!--            android:id="@+id/tracker"-->
+<!--            android:name="com.google.android.gms.maps.SupportMapFragment"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            app:layout_constraintBottom_toTopOf="@+id/locationTxt"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+        <!--    M Osama: to be substituted with fragment to navigate GoogleMaps-->
 
-        <fragment
-            android:id="@+id/tracker"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
+        <ImageView
+            android:id="@+id/gifImageView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/my_gif"
             app:layout_constraintBottom_toTopOf="@+id/locationTxt"
-            app:layout_constraintTop_toTopOf="parent" />
-        <!--    M Osama: to be substituted with fragment to navigate GoogleMaps-->
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
 
         <TextView
             android:id="@+id/locationTxt"
@@ -48,6 +60,8 @@
             android:padding="32dp"
             android:text="أنت الآن في"
             android:textSize="30dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
@@ -56,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.85"/>
+            app:layout_constraintGuide_percent="0.47" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -34,7 +34,7 @@ public class SelectedPath extends AppCompatActivity {
         int size = shortestPath.size();
 
         String detailedPath = Shortest.getStringDetailedPathToPopulateRoom(shortestPath,size).get(pathNum);
-        Toast.makeText(this, detailedPath, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, detailedPath, Toast.LENGTH_SHORT).show();
 
         binding.selectedPath.setText(detailedPath);
 

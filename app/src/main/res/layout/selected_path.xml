@@ -19,6 +19,7 @@
             android:padding="15dp"
             android:paddingStart="40dp"
             android:paddingEnd="40dp"
+            android:paddingVertical="80dp"
             android:text="Selected Path"
             android:textStyle="bold"
             android:autoSizeTextType="uniform"
@@ -40,6 +41,6 @@
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.700" />
+            app:layout_constraintVertical_bias="0.574" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -18,10 +18,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.style.URLSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +40,7 @@ import com.example.publictransportationguidance.GoogleMap.MapActivity;
 import com.example.publictransportationguidance.HelperClasses.Constants;
 import com.example.publictransportationguidance.Adapters.CustomAutoCompleteAdapter;
 import com.example.publictransportationguidance.R;
+import com.example.publictransportationguidance.Tracking.LiveLocation;
 import com.example.publictransportationguidance.Tracking.PathResults;
 import com.example.publictransportationguidance.databinding.FragmentHomeBinding;
 import com.google.android.gms.common.api.ApiException;
@@ -49,9 +53,17 @@ import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HomeFragment extends Fragment{
     public HomeFragment() {}
@@ -80,6 +92,7 @@ public class HomeFragment extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_home,container,false);
         View rootView = binding.getRoot();
+
         return rootView;
     }
 
@@ -87,7 +100,7 @@ public class HomeFragment extends Fragment{
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
 
-        /* M Osama: inital list value to prevent NullPointerException */
+        /* M Osama: initial list value to prevent NullPointerException */
         list = new CustomAutoCompleteAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, stopsArray, FOOTER);
 
         /* M Osama: Instance to deal with Google MAPS Api */
@@ -124,10 +137,16 @@ public class HomeFragment extends Fragment{
         autoCompleteOnFooterClick(getView());
 
         binding.searchBtn.setOnClickListener(v -> {
-            if(binding.tvLocation.getText()+""!="" && binding.tvDestination.getText()+""!="") searchForPaths(locationLats,destinationLats);
+            if(binding.tvLocation.getText()+""!="" && binding.tvDestination.getText()+""!="") {
+                searchForPaths(locationLats,destinationLats);
+                Intent intent = new Intent(getActivity(), LiveLocation.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("data", binding.tvDestination.getText().toString());
+                intent.putExtras(bundle);
+            }
             else                    Toast.makeText(getContext(), "لا يمكن ترك أحد نقطتي الانطلاق أو الانتهاء فارغة", Toast.LENGTH_SHORT).show();
 
-            Toast.makeText(getContext(), lats[0]+","+lats[1], Toast.LENGTH_SHORT).show();       //M Osama: for checking it will be deleted
+           // Toast.makeText(getContext(), lats[0]+","+lats[1], Toast.LENGTH_SHORT).show();       //M Osama: for checking it will be deleted
         });
 
         binding.distanceRBHomeFragment.setOnClickListener((View v)-> Toast.makeText(getActivity(), R.string.PathsSortedAccordingToDistance, Toast.LENGTH_SHORT).show());
@@ -176,7 +195,7 @@ public class HomeFragment extends Fragment{
                 stopsIDsList.add(p.getPlaceId());
             }
 
-            /* M Osama: Initalize AutoCompleteTextView */
+            /* M Osama: Initialize AutoCompleteTextView */
             stopsArray = listToArray(stopsList);
             stopsIDsArray= listToArray(stopsIDsList);
             list = new CustomAutoCompleteAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, stopsArray, FOOTER);
@@ -188,7 +207,7 @@ public class HomeFragment extends Fragment{
 
     }
 
-    /* M Osama: States what will happen incase user clicked on "Set Location On MapActivity" */
+    /* M Osama: States what will happen in case user clicked on "Set Location On MapActivity" */
     public void autoCompleteOnFooterClick(View view){
         list.setOnFooterClickListener(() -> {
             LAST_CLICKED_FOOTER_VIEW=view.getId();
@@ -201,7 +220,7 @@ public class HomeFragment extends Fragment{
         });
     }
 
-    /* M Osama: States what will happen incase user clicked clicked on specific plase */
+    /* M Osama: States what will happen in case user clicked clicked on specific please */
     public void autoCompleteOnItemClick(AutoCompleteTextView acTextView,int stop){
         acTextView.setOnItemClickListener((parent, view, position, id) -> {
 //            Toast.makeText(getContext(), acTextView.getId()+"", Toast.LENGTH_SHORT).show();
@@ -223,7 +242,7 @@ public class HomeFragment extends Fragment{
             if(stopID==LOCATION) locationLats=getStopLatLong(lats[0],lats[1]);
             else                 destinationLats=getStopLatLong(lats[0],lats[1]);
 
-            Toast.makeText(getContext(), "ID="+stopID+" "+lats[0]+","+lats[1], Toast.LENGTH_SHORT).show();                /* M Osama: Only for checking that getPlaceCoordinatesUsingID is working */
+           // Toast.makeText(getContext(), "ID="+stopID+" "+lats[0]+","+lats[1], Toast.LENGTH_SHORT).show();                /* M Osama: Only for checking that getPlaceCoordinatesUsingID is working */
 
         }).addOnFailureListener((exception) -> {
             if (exception instanceof ApiException) Toast.makeText(getContext(), ((ApiException) exception).getStatusCode(), Toast.LENGTH_SHORT).show();
@@ -253,8 +272,6 @@ public class HomeFragment extends Fragment{
             return true;
         }
     }
-
-
 
 }
 

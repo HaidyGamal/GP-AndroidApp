@@ -6,6 +6,7 @@ import static com.example.publictransportationguidance.HelperClasses.Constants.L
 import static com.example.publictransportationguidance.HelperClasses.Constants.LONGITUDE_KEY;
 import static com.example.publictransportationguidance.HelperClasses.Constants.ON_BLIND_MODE;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
@@ -46,6 +47,11 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//haidy: to use the passed URL that the user clicked on
+        Uri uri = getIntent().getData();
+        if (uri != null) {
+            String url = uri.toString();
+            Toast.makeText(getApplicationContext(),"url >> "+url, Toast.LENGTH_SHORT).show();}
 
         /* M Osama: Initialize SharedPrefs */
         SharedPrefs.init(this);
@@ -83,7 +89,7 @@ public class MainActivity extends AppCompatActivity{
 
         /* M Osama: Passing each menu ID as a set of Ids because each menu should be considered as top level destinations. */
         mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_settings, R.id.nav_add_new_route,R.id.nav_contact_us,R.id.nav_about)
-                                        .setOpenableLayout(drawer).build();
+                .setOpenableLayout(drawer).build();
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
@@ -91,19 +97,19 @@ public class MainActivity extends AppCompatActivity{
 
         /* M Osama: Return to Home Fragment once the Fab is clicked */
         binding.appBarMain.fab.setOnClickListener((View view)-> {
-                navController.navigate(R.id.nav_home);
-                ON_BLIND_MODE =SharedPrefs.readMap("ON_BLIND_MODE",0);
-                if(ON_BLIND_MODE ==0){
-                    Snackbar.make(view, "أنتم الآن في نظام التعامل مع الضريرين", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                    binding.appBarMain.fab.setImageResource(0);
-                    /*M Osama: to add code/sound assistant in blindMode */
-                }
-                else{
-                    Snackbar.make(view, "أنتم الآن في نظام التعامل مع المبصرين", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                    binding.appBarMain.fab.setImageResource(R.drawable.ic_blind_mode);
-                }
-                ON_BLIND_MODE ^= 1;
-                SharedPrefs.write("ON_BLIND_MODE", ON_BLIND_MODE); /*M Osama: toggle mode between Normal & Blind */
+            navController.navigate(R.id.nav_home);
+            ON_BLIND_MODE =SharedPrefs.readMap("ON_BLIND_MODE",0);
+            if(ON_BLIND_MODE ==0){
+                Snackbar.make(view, "أنتم الآن في نظام التعامل مع الضريرين", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                binding.appBarMain.fab.setImageResource(0);
+                /*M Osama: to add code/sound assistant in blindMode */
+            }
+            else{
+                Snackbar.make(view, "أنتم الآن في نظام التعامل مع المبصرين", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                binding.appBarMain.fab.setImageResource(R.drawable.ic_blind_mode);
+            }
+            ON_BLIND_MODE ^= 1;
+            SharedPrefs.write("ON_BLIND_MODE", ON_BLIND_MODE); /*M Osama: toggle mode between Normal & Blind */
         });
 
     }

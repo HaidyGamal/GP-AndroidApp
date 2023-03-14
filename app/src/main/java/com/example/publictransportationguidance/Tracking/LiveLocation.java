@@ -4,7 +4,7 @@ import static com.example.publictransportationguidance.HelperClasses.Constants.P
 import static com.example.publictransportationguidance.HelperClasses.Constants.PERMISSION_ALL;
 import static com.example.publictransportationguidance.HelperClasses.Constants.TRACKER_BASE_TXT;
 import static com.example.publictransportationguidance.HelperClasses.Functions.getLocationName;
-
+import com.bumptech.glide.Glide;
 import com.example.publictransportationguidance.R;
 import com.example.publictransportationguidance.databinding.LiveLocationBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -20,20 +20,23 @@ import androidx.databinding.DataBindingUtil;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.PackageManager;
 
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.os.Vibrator;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 public class LiveLocation extends AppCompatActivity{
 
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest mLocationRequest;
     private LocationCallback mLocationCallback;
-
+    ImageView gifImageView;
     LiveLocationBinding binding;
 
     double tempLatitude=0.000;
@@ -42,14 +45,16 @@ public class LiveLocation extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.live_location);
 
+        binding = DataBindingUtil.setContentView(this, R.layout.live_location);
+        gifImageView = (ImageView)findViewById(R.id.gifImageView);
+        Glide.with(this).load(R.drawable.my_gif).into(gifImageView);
+        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (Build.VERSION.SDK_INT >= 23) { requestPermissions(PERMISSIONS, PERMISSION_ALL); }
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mLocationRequest = new LocationRequest();                                                          /* M Osama:  Create a LocationRequest object to specify the desired interval for location updates */
         mLocationRequest.setInterval(10000);                                                               /* M Osama: Update Location Every 10 sec */
-
         /* M Osama: Callback Function handling location continues updates */
         mLocationCallback = new LocationCallback() {
             @Override
@@ -66,6 +71,20 @@ public class LiveLocation extends AppCompatActivity{
 
                     /* M Osama: Update the TextView with the latitude and longitude of the new location */
                     binding.locationTxt.setText(TRACKER_BASE_TXT+getLocationName(getApplicationContext(),tempLatitude,tempLongitude));
+                    //haidy:to check if location has been changed
+                    String newLoc=binding.locationTxt.getText().toString();
+                    if(binding.locationTxt.getText().toString().equals(newLoc)==false){
+                        Toast.makeText(getApplicationContext(),"changed", Toast.LENGTH_SHORT).show();
+                        vibrator.vibrate(500);                     // haidy: vibrates for 500 milliseconds
+
+                    }
+                    Bundle bundle = getIntent().getExtras();
+                    if (bundle != null) {
+                        String destination = bundle.getString("data");   // haidy:Receive destination from fragment
+                    if(binding.locationTxt.getText().toString().equals(destination)){
+                        vibrator.vibrate(2000);
+                        Toast.makeText(getApplicationContext(),"You Have Reached Your Destination", Toast.LENGTH_SHORT).show();
+                    }}
                 }
             }
         };

@@ -67,7 +67,7 @@ public class Shortest {
                 mean=path.get(stopNum).getTransportationType();
                 switch (mean){
                     case "microbus": mean="ميكروباص";  mean+=" ";                mean+=path.get(stopNum).getLineNumber();  pathMeans.add(mean);  break;
-                    case "bus":      mean="أوتوبيس";   mean+=" ";  mean+="رقم";  mean+=path.get(stopNum).getLineNumber();  pathMeans.add(mean);  break;
+                    case "bus":      mean="أوتوبيس";   mean+=" ";  mean+="رقم ";  mean+=path.get(stopNum).getLineNumber();  pathMeans.add(mean);  break;
                     default:                                                                                                                     break;
                 }
             }
@@ -88,12 +88,12 @@ public class Shortest {
         int x=1;
         for (String s: str){
             detailedPath+=(s+" ");
-            if(x%2==0){detailedPath+=" ثم "; x++;}
+            if(x%2==0){detailedPath+=" ثم من "; x++;}
             else{x++;}
         }
 
         String path = detailedPath.substring(0,detailedPath.length()-1);
-        return replaceLastOccurrence(path,"ثم","إلي");
+        return replaceLastOccurrence(path,"ثم من","إلي");
     }
 
     public static ArrayList<String> getStringPathToPopulateRoom(HashMap pathMap){

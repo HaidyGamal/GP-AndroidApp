@@ -1,6 +1,6 @@
 plugins {
     id 'com.google.gms.google-services'
-    id 'com.android.application'// version '7.2.1'
+    id 'com.android.application'
 
     // M Osama: Google MAPS API plugin
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
@@ -9,11 +9,9 @@ plugins {
 
 android {
     compileSdk 32
-
     packagingOptions {
         resources.excludes.add("META-INF/*")
     }
-
     defaultConfig {
         applicationId "com.example.publictransportationguidance"
         minSdk 23
@@ -46,11 +44,11 @@ android {
     dataBinding{
         enabled = true
     }
-    namespace 'com.example.publictransportationguidance'
 
 }
 
 dependencies {
+
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -93,17 +91,10 @@ dependencies {
     // M Osama: Places GoogleMaps API dependency
     implementation 'com.google.android.libraries.places:places:3.0.0'
 
-    //Afnan: dependencies of Google API Text-to-Speech
-    implementation platform('com.google.cloud:libraries-bom:26.1.4')
-    implementation 'com.google.cloud:google-cloud-texttospeech'
+    //haid:glide (image loader library)dependency
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+    
 
-    //   implementation group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
-    implementation group: 'com.jtransc', name: 'jtransc-rt', version: '0.6.8'  //javax
-    implementation group: 'org.openjfx', name: 'javafx-media', version: '14.0.2' //javafx
-
-    //   implementation group: 'org.openjfx', name: 'javafx-controls', version: '12'
-    //   implementation group: 'org.openjfx', name: 'javafx-fxml', version: '12 '
-
-    implementation group: 'javazoom', name: 'jlayer', version: '1.0.1'
 }
 

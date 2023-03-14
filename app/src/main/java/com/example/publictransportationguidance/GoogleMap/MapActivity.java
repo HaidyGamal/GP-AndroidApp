@@ -34,8 +34,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    double latitude;
-    double longitude;
+    double latitude=30.0444;
+    double longitude=31.2357;
     com.google.android.gms.maps.GoogleMap googleMap;
 
     @Override
