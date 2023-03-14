@@ -31,6 +31,10 @@ import android.os.Vibrator;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class LiveLocation extends AppCompatActivity{
 
     private FusedLocationProviderClient mFusedLocationClient;
@@ -38,7 +42,8 @@ public class LiveLocation extends AppCompatActivity{
     private LocationCallback mLocationCallback;
     ImageView gifImageView;
     LiveLocationBinding binding;
-
+    String tempLoc;
+    private String tempLocation = "";
     double tempLatitude=0.000;
     double tempLongitude=0.000;
 
@@ -56,6 +61,7 @@ public class LiveLocation extends AppCompatActivity{
         mLocationRequest = new LocationRequest();                                                          /* M Osama:  Create a LocationRequest object to specify the desired interval for location updates */
         mLocationRequest.setInterval(10000);                                                               /* M Osama: Update Location Every 10 sec */
         /* M Osama: Callback Function handling location continues updates */
+        tempLocation=binding.locationTxt.getText().toString();
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
@@ -72,18 +78,18 @@ public class LiveLocation extends AppCompatActivity{
                     /* M Osama: Update the TextView with the latitude and longitude of the new location */
                     binding.locationTxt.setText(TRACKER_BASE_TXT+getLocationName(getApplicationContext(),tempLatitude,tempLongitude));
                     //haidy:to check if location has been changed
-                    String newLoc=binding.locationTxt.getText().toString();
-                    if(binding.locationTxt.getText().toString().equals(newLoc)==false){
-                        Toast.makeText(getApplicationContext(),"changed", Toast.LENGTH_SHORT).show();
-                        vibrator.vibrate(500);                     // haidy: vibrates for 500 milliseconds
+                    if(!binding.locationTxt.getText().toString().equals(tempLocation)){
+                        Toast.makeText(getApplicationContext(),"Location has been changed", Toast.LENGTH_SHORT).show();
+                        vibrator.vibrate(500);                           // haidy: vibrates for 500 milliseconds
 
                     }
                     Bundle bundle = getIntent().getExtras();
                     if (bundle != null) {
                         String destination = bundle.getString("data");   // haidy:Receive destination from fragment
                     if(binding.locationTxt.getText().toString().equals(destination)){
-                        vibrator.vibrate(2000);
+                        vibrator.vibrate(1500);
                         Toast.makeText(getApplicationContext(),"You Have Reached Your Destination", Toast.LENGTH_SHORT).show();
+                        finish();
                     }}
                 }
             }
