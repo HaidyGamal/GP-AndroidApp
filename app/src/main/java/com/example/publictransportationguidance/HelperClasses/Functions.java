@@ -60,7 +60,7 @@ public class Functions {
 
     public static String getLocationName(Context context, Double latitude, Double longitude){
         Geocoder myLocation = new Geocoder(context, new Locale("ar"));
-        List<Address> myList = null;
+        List<Address> myList;
         try {
             myList = myLocation.getFromLocation(latitude,longitude, 1);
             Address address = (Address) myList.get(0);

@@ -18,7 +18,6 @@ public class AboutFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FragmentAboutBinding binding = DataBindingUtil.inflate(inflater,R.layout.fragment_about,container,false);
-        View rootView = binding.getRoot();
-        return rootView;
+        return binding.getRoot();
     }
 }

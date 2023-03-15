@@ -56,8 +56,8 @@
     <string name="verification">Verification Code Sent</string>
     <string name="AvailableStopsAreUpdated">الأماكن المتوفرة محدثة أولا بأول</string>
     <string name="CheckInternetConnection">نرجو التحقق من جودة النت لديكم</string>
-    <string name="PathsSortedAccordingToDistance">يتم الترتيب طبقا للمسافة</string>
-    <string name="PathsSortedAccordingToCost">يتم الترتيب طبقا للسعر</string>
+    <string name="PathsSortedAccordingToDistance">سيتم الترتيب طبقا للمسافة</string>
+    <string name="PathsSortedAccordingToCost">سيتم الترتيب طبقا للسعر</string>
     <string name="LocationAndDestinationMustBeSpecified">يجب تحديد نقطة للانطلاق وكذلك نقطة انتهاء أولا</string>
     <string name="PleaseChooseTwoAvailableStops">عفوا يجب اختيار نقطتين متوفرتين لدينا</string>
     <string name="NotAvailable">غير متوفر</string>
@@ -73,6 +73,23 @@
     <string name="ON">ON</string>
     <string name="Stop">Stop</string>
     <string name="Continue">Continue</string>
+    <string name="NoPathsToSort">لا يوجد طرق لترتيبهم</string>
+    <string name="SuccessfulRegistration">تم تسجيل الدخول بنجاح</string>
+    <string name="EnterCorrectEmail">يرجي اضافة ايميل صحيح</string>
+    <string name="EnterCorrectPassword">يرجي اضافة كلمة مرور صحيحة</string>
+    <string name="VerificationEmailHasBeenSent">تم ارسال رسالة تحقق لايميلك</string>
+    <string name="SuccessfulLogin">تم تسجيل الدخول بنجاح</string>
+    <string name="YourLocationHasBeenChanged">مكانك تغير</string>
+    <string name="YouReachedYourDestination">انتهت الرحلة</string>
+    <string name="PleaseKeepLocationPermission">يرجي ترك خاصية استخدام المكان</string>
+    <string name="SearchingForPaths">جاري البحث عن الطرق</string>
+    <string name="Login">تسجيل الدخول</string>
+    <string name="PleaseWait">نرجو الانتظار</string>
+    <string name="Error">هناك مشكلة</string>
+    <string name="ThisAccountIsNotVerified">هذا الحساب لم يتم التحقق منه بعد</string>
+    <string name="InCorrectEmailOrPassword">خطأ في الايميل أو كلمة المرور</string>
+    <string name="Registration">تسجيل حساب</string>
+    <string name="Sec">ثانية</string>
     <!-- Strings related to spinner -->
     <string-array name="transportations">
         <item>Microbus</item>

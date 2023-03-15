@@ -18,7 +18,6 @@ public class ContactUsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FragmentContactUsBinding binding = DataBindingUtil.inflate(inflater,R.layout.fragment_contact_us,container,false);
-        View rootView = binding.getRoot();
-        return rootView;
+        return binding.getRoot();
     }
 }

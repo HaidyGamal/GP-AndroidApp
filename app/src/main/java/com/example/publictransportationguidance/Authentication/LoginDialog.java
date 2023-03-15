@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
@@ -29,7 +30,7 @@ public class LoginDialog extends DialogFragment {
     FirebaseAuth mAuth;
     FirebaseUser mUser;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_login,container,false);
         View rootView = binding.getRoot();
         SharedPrefs.init(getActivity());
@@ -43,7 +44,7 @@ public class LoginDialog extends DialogFragment {
         // haidy:Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
-        binding.signup.setOnClickListener((View v)-> { startActivity(new Intent(getActivity().getBaseContext(), SignUp.class)); });
+        binding.signup.setOnClickListener((View v)-> startActivity(new Intent(getActivity().getBaseContext(), SignUp.class)));
 
         //haidy: to close the fragment
         binding.login.setOnClickListener((View v) ->{
@@ -59,11 +60,11 @@ public class LoginDialog extends DialogFragment {
         email = binding.email.getText().toString();
         password = binding.password.getText().toString();
 
-        if (!email.matches(emailPattern)) { binding.email.setError("Enter correct Email"); }
-        else if (password.isEmpty() || password.length() < 6) { binding.password.setError("Enter correct password");}
+        if (!email.matches(emailPattern)) { binding.email.setError(getResources().getString(R.string.EnterCorrectEmail)); }
+        else if (password.isEmpty() || password.length() < 6) { binding.password.setError(getResources().getString(R.string.EnterCorrectPassword));}
         else {
-            dialog.setMessage("Please wait ...");
-            dialog.setTitle("LogIn");
+            dialog.setMessage(getString(R.string.PleaseWait));
+            dialog.setTitle(getString(R.string.Login));
             dialog.setCanceledOnTouchOutside(false);
             dialog.show();
 
@@ -73,17 +74,17 @@ public class LoginDialog extends DialogFragment {
                     mUser=mAuth.getCurrentUser();
                     if(mUser!=null) {
                         if (!mUser.isEmailVerified()) {
-                            LoginDialogBuilder.setMessage("This Account is Not verified");
-                            LoginDialogBuilder.setTitle("Error");
+                            LoginDialogBuilder.setMessage(R.string.ThisAccountIsNotVerified);
+                            LoginDialogBuilder.setTitle(R.string.Error);
                             LoginDialogBuilder.show();              //haidy: The dialog is automatically dismissed when a dialog button is clicked.
                             LoginDialogBuilder.setPositiveButton(android.R.string.ok, (dialog, which) -> { /* Continue with delete operation */ });
                         } else {
                             dismiss();
-                            Toast.makeText(getActivity(), "Successful Login", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.SuccessfulLogin , Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
-                else { binding.login.setError("");    dialog.dismiss();    Toast.makeText(getActivity(), "Incorrect Email Or Password" , Toast.LENGTH_LONG).show(); }
+                else { binding.login.setError("");    dialog.dismiss();    Toast.makeText(getActivity(), R.string.InCorrectEmailOrPassword , Toast.LENGTH_LONG).show(); }
             });
         }
     }

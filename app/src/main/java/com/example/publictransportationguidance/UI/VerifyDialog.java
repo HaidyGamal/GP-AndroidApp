@@ -26,5 +26,5 @@ public class VerifyDialog extends DialogFragment {
 
         return rootView;
     }
-    public static String TAG = "Dialog";
+
 }

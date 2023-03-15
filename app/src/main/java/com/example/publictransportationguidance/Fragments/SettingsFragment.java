@@ -21,7 +21,7 @@ public class SettingsFragment extends Fragment{
     public SettingsFragment() {}
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FragmentSettingsBinding binding =  DataBindingUtil.inflate(inflater,R.layout.fragment_settings,container,false);
         View rootView = binding.getRoot();
 

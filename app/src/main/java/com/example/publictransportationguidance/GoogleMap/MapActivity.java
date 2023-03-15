@@ -20,7 +20,6 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.example.publictransportationguidance.R;
-import com.example.publictransportationguidance.UI.MainActivity;
 import com.example.publictransportationguidance.databinding.ActivityMapBinding;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -36,6 +35,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     double latitude=30.0444;
     double longitude=31.2357;
+
     com.google.android.gms.maps.GoogleMap googleMap;
 
     @Override
@@ -47,7 +47,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         binding.confirmPickUp.setOnClickListener(v -> {
-
             /* M Osama : pass picked lat/long to HomeFragment's parent class */
             Intent resultIntent = new Intent();
             resultIntent.putExtra(LATITUDE_KEY,latitude);
@@ -55,8 +54,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             resultIntent.putExtra(LOCATION_NAME_KEY,getLocationName(getApplicationContext(),latitude,longitude)+"");
             setResult(Activity.RESULT_OK,resultIntent);
             finish();
-//            startActivity(resultIntent);
-            Toast.makeText(this, "MapActivity 1- " + latitude + ",2- " + longitude + ",3- " + getLocationName(getApplicationContext(),latitude,longitude)+"", Toast.LENGTH_SHORT).show();    /* To be deleted */
+//            Toast.makeText(this, "MapActivity 1- " + latitude + ",2- " + longitude + ",3- " + getLocationName(getApplicationContext(),latitude,longitude)+"", Toast.LENGTH_SHORT).show();    /* M Osama: For debugging only */
             Toast.makeText(getApplicationContext(), "تم الاختيار بنجاح", Toast.LENGTH_SHORT).show();
         });
 

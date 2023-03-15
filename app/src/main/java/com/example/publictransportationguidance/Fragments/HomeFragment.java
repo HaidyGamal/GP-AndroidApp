@@ -8,6 +8,8 @@ import static com.example.publictransportationguidance.HelperClasses.Constants.L
 import static com.example.publictransportationguidance.HelperClasses.Constants.LOCATION_NAME_KEY;
 import static com.example.publictransportationguidance.HelperClasses.Constants.LONGITUDE_KEY;
 import static com.example.publictransportationguidance.HelperClasses.Constants.REQUEST_CODE;
+import static com.example.publictransportationguidance.HelperClasses.Constants.SEARCH_BY_COST;
+import static com.example.publictransportationguidance.HelperClasses.Constants.SEARCH_BY_DISTANCE;
 import static com.example.publictransportationguidance.HelperClasses.Functions.deleteFromSequence;
 import static com.example.publictransportationguidance.HelperClasses.Functions.getDataSourceIndex;
 import static com.example.publictransportationguidance.HelperClasses.Functions.getSelectedItem;
@@ -18,13 +20,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.style.URLSpan;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,16 +54,9 @@ import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class HomeFragment extends Fragment{
     public HomeFragment() {}
@@ -86,8 +79,6 @@ public class HomeFragment extends Fragment{
     /* M Osama: Place AutoComplete instance */
     PlacesClient placesClient;
 
-
-    /* M Osama: OnCreateView used to connect the fragment java class with it's xml layout */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_home,container,false);
@@ -96,7 +87,6 @@ public class HomeFragment extends Fragment{
         return rootView;
     }
 
-    /* M Osama: OnViewCreated used to write the code we want to execute in a fragment */
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
 
@@ -144,13 +134,24 @@ public class HomeFragment extends Fragment{
                 bundle.putString("data", binding.tvDestination.getText().toString());
                 intent.putExtras(bundle);
             }
-            else                    Toast.makeText(getContext(), "لا يمكن ترك أحد نقطتي الانطلاق أو الانتهاء فارغة", Toast.LENGTH_SHORT).show();
+            else  Toast.makeText(getContext(), "لا يمكن ترك أحد نقطتي الانطلاق أو الانتهاء فارغة", Toast.LENGTH_SHORT).show();
 
-           // Toast.makeText(getContext(), lats[0]+","+lats[1], Toast.LENGTH_SHORT).show();       //M Osama: for checking it will be deleted
+           // Toast.makeText(getContext(), lats[0]+","+lats[1], Toast.LENGTH_SHORT).show();       //M Osama: for debugging only
         });
 
-        binding.distanceRBHomeFragment.setOnClickListener((View v)-> Toast.makeText(getActivity(), R.string.PathsSortedAccordingToDistance, Toast.LENGTH_SHORT).show());
-        binding.costRBHomeFragment.setOnClickListener((View v) -> Toast.makeText(getActivity(), R.string.PathsSortedAccordingToCost, Toast.LENGTH_SHORT).show());
+        /* M Osama: activate sorting using distance */
+        binding.distanceRBHomeFragment.setOnClickListener(v -> {
+            SEARCH_BY_DISTANCE=true;
+            SEARCH_BY_COST=false;
+            Toast.makeText(getActivity(), R.string.PathsSortedAccordingToDistance, Toast.LENGTH_SHORT).show();
+        });
+
+        /* M Osama: activate sorting using cost */
+        binding.costRBHomeFragment.setOnClickListener(v -> {
+            SEARCH_BY_COST=true;
+            SEARCH_BY_DISTANCE=false;
+            Toast.makeText(getActivity(), R.string.PathsSortedAccordingToCost, Toast.LENGTH_SHORT).show();
+        });
 
     }
 
@@ -159,8 +160,8 @@ public class HomeFragment extends Fragment{
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==REQUEST_CODE && resultCode== Activity.RESULT_OK){
-            /* Manage returned data from Activity here */
 
+            /* Manage returned data from Activity here */
             lats[0] = data.getExtras().getDouble(LATITUDE_KEY);
             lats[1] = data.getExtras().getDouble(LONGITUDE_KEY);
             String locationName = data.getExtras().getString(LOCATION_NAME_KEY);
@@ -174,7 +175,7 @@ public class HomeFragment extends Fragment{
                 binding.tvDestination.setText(locationName);
                 destinationLats=getStopLatLong(lats[0],lats[1]);
             }
-            else ;
+            else;
         }
     }
 
@@ -203,7 +204,7 @@ public class HomeFragment extends Fragment{
 
             autoCompleteOnFooterClick(acTextView);
 
-        }).addOnFailureListener((exception) -> Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show());
+        }).addOnFailureListener((exception) -> Toast.makeText(getContext(), R.string.CheckInternetConnection, Toast.LENGTH_SHORT).show());
 
     }
 

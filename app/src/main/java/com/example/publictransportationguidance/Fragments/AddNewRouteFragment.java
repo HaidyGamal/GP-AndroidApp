@@ -35,8 +35,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
 
         /* M Osama: ask the user to log in if he isn't loggedIn to be able to add new route*/
         if(IS_LOGGED_IN ==0) {
-            //haidy:showing the login dialog
-            LoginDialog dialog = new LoginDialog();
+            LoginDialog dialog = new LoginDialog();                     //haidy:showing the login dialog
             dialog.show(getChildFragmentManager(), LoginDialog.TAG);
             dialog.setCancelable(false);
         }
@@ -46,9 +45,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
     //haidy: enabling the transportation text input
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if(binding.spin.getSelectedItem().equals("Microbus"))  binding.transportType.setEnabled(false);
-        else                                                   binding.transportType.setEnabled(true);
-
+        binding.transportType.setEnabled(!binding.spin.getSelectedItem().equals("Microbus"));
     }
 
     @Override

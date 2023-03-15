@@ -3,6 +3,7 @@ package com.example.publictransportationguidance.HelperClasses;
 import android.Manifest;
 
 public class Constants {
+
     /* M Osama: Cairo dimensions */
     public static final double SOUTH=29.696354;
     public static final double WEST=31.133331;
@@ -45,4 +46,8 @@ public class Constants {
     public static String TRACKER_BASE_TXT="أنت الآن في ";
 
     public final static int NAVIGATING_TO_LIVE_LOCATION_REQUEST_CODE =100;
+
+    /* M Osama: search by distance or cost */
+    public static boolean SEARCH_BY_COST = true;
+    public static boolean SEARCH_BY_DISTANCE = false;
 }

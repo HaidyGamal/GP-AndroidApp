@@ -1,6 +1,7 @@
 package com.example.publictransportationguidance.UI;
 
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
@@ -14,4 +15,5 @@ public class Account extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AccountBinding binding = DataBindingUtil.setContentView(this,R.layout.account);
+
 }}

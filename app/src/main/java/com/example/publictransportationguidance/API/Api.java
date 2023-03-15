@@ -35,4 +35,12 @@ public interface Api {
             @Field("Destination") String Destination
     );
 
+    /* M Osama: Request shortestPaths if current location isn't available */
+    @FormUrlEncoded
+    @POST("nearby")
+    Call<List<List<ShortestPath>>> getNearby(
+            @Field("Location") String Location,
+            @Field("Destination") String Destination
+    );
+
 }

@@ -1,9 +1,6 @@
 package com.example.publictransportationguidance.UI;
 
 import static com.example.publictransportationguidance.HelperClasses.Constants.IS_LOGGED_IN;
-import static com.example.publictransportationguidance.HelperClasses.Constants.LATITUDE_KEY;
-import static com.example.publictransportationguidance.HelperClasses.Constants.LOCATION_NAME_KEY;
-import static com.example.publictransportationguidance.HelperClasses.Constants.LONGITUDE_KEY;
 import static com.example.publictransportationguidance.HelperClasses.Constants.ON_BLIND_MODE;
 
 import android.net.Uri;
@@ -47,7 +44,8 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//haidy: to use the passed URL that the user clicked on
+
+        //haidy: to use the passed URL that the user clicked on
         Uri uri = getIntent().getData();
         if (uri != null) {
             String url = uri.toString();

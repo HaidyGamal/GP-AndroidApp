@@ -4,6 +4,7 @@ import static com.example.publictransportationguidance.HelperClasses.Constants.P
 import static com.example.publictransportationguidance.HelperClasses.Constants.PERMISSION_ALL;
 import static com.example.publictransportationguidance.HelperClasses.Constants.TRACKER_BASE_TXT;
 import static com.example.publictransportationguidance.HelperClasses.Functions.getLocationName;
+
 import com.bumptech.glide.Glide;
 import com.example.publictransportationguidance.R;
 import com.example.publictransportationguidance.databinding.LiveLocationBinding;
@@ -28,21 +29,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.Vibrator;
-import android.util.Log;
-import android.widget.ImageView;
 import android.widget.Toast;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class LiveLocation extends AppCompatActivity{
 
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest mLocationRequest;
     private LocationCallback mLocationCallback;
-    ImageView gifImageView;
     LiveLocationBinding binding;
-    String tempLoc;
     private String tempLocation = "";
     double tempLatitude=0.000;
     double tempLongitude=0.000;
@@ -50,19 +44,21 @@ public class LiveLocation extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = DataBindingUtil.setContentView(this, R.layout.live_location);
-        gifImageView = (ImageView)findViewById(R.id.gifImageView);
-        Glide.with(this).load(R.drawable.my_gif).into(gifImageView);
+
+        Glide.with(this).load(R.drawable.my_gif).into(binding.gifImageView);
         Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
         if (Build.VERSION.SDK_INT >= 23) { requestPermissions(PERMISSIONS, PERMISSION_ALL); }
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mLocationRequest = new LocationRequest();                                                          /* M Osama:  Create a LocationRequest object to specify the desired interval for location updates */
         mLocationRequest.setInterval(10000);                                                               /* M Osama: Update Location Every 10 sec */
+
         /* M Osama: Callback Function handling location continues updates */
         tempLocation=binding.locationTxt.getText().toString();
         mLocationCallback = new LocationCallback() {
+            @SuppressLint("MissingPermission")
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 if (locationResult != null) {                                                          // Display the latitude and longitude of the user's current location in the TextView
@@ -72,23 +68,24 @@ public class LiveLocation extends AppCompatActivity{
                     tempLongitude = location.getLongitude();
 
                     /* M Osama: For Testing & debugging only */
-                    Toast.makeText(getApplicationContext(), "Current location: " + tempLatitude + ", " + tempLongitude, Toast.LENGTH_SHORT).show();
-                    Log.d("OsOs", "Current location: " + tempLatitude + ", " + tempLongitude);                                                // Log the latitude and longitude of the new location to LogCat
+//                    Toast.makeText(getApplicationContext(), "Current location: " + tempLatitude + ", " + tempLongitude, Toast.LENGTH_SHORT).show();   /* M Osama: for debuggin only */
+//                    Log.d("OsOs", "Current location: " + tempLatitude + ", " + tempLongitude);                                                        /* M Osama: for debuggin only */
 
                     /* M Osama: Update the TextView with the latitude and longitude of the new location */
                     binding.locationTxt.setText(TRACKER_BASE_TXT+getLocationName(getApplicationContext(),tempLatitude,tempLongitude));
+
                     //haidy:to check if location has been changed
                     if(!binding.locationTxt.getText().toString().equals(tempLocation)){
-                        Toast.makeText(getApplicationContext(),"Location has been changed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), R.string.YourLocationHasBeenChanged, Toast.LENGTH_SHORT).show();
                         vibrator.vibrate(500);                           // haidy: vibrates for 500 milliseconds
-
                     }
+
                     Bundle bundle = getIntent().getExtras();
                     if (bundle != null) {
                         String destination = bundle.getString("data");   // haidy:Receive destination from fragment
                     if(binding.locationTxt.getText().toString().equals(destination)){
                         vibrator.vibrate(1500);
-                        Toast.makeText(getApplicationContext(),"You Have Reached Your Destination", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), R.string.YouReachedYourDestination, Toast.LENGTH_SHORT).show();
                         finish();
                     }}
                 }
@@ -128,5 +125,12 @@ public class LiveLocation extends AppCompatActivity{
     protected void onStop() {
         super.onStop();
         mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+    }
+
+    /* M Osama: Inform User to keep Location Opened to be able to track Him */
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Toast.makeText(this, R.string.PleaseKeepLocationPermission, Toast.LENGTH_SHORT).show();
     }
 }

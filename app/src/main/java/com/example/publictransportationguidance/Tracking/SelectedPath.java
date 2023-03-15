@@ -33,29 +33,20 @@ public class SelectedPath extends AppCompatActivity {
         List<List<ShortestPath>> shortestPath = (List<List<ShortestPath>>) incoming.getSerializableExtra("shortestPathInCost");
         int size = shortestPath.size();
 
-        String detailedPath = Shortest.getStringDetailedPathToPopulateRoom(shortestPath,size).get(pathNum);
-        //Toast.makeText(this, detailedPath, Toast.LENGTH_SHORT).show();
+//        String detailedPath = Shortest.getStringDetailedPathToPopulateRoom(shortestPath,size).get(pathNum);       /* M Osama: for debugging only */
+        String unDetailedPath = Shortest.getStringUnDetailedPathToPopulateRoom(shortestPath,size).get(pathNum);
 
-        binding.selectedPath.setText(detailedPath);
+//        Toast.makeText(this, unDetailedPath, Toast.LENGTH_SHORT).show();                                          /* M Osama: for debugging only */
+        binding.selectedPath.setText(unDetailedPath);
 
         binding.startLiveLocationBtn.setOnClickListener(view -> startActivity(new Intent(SelectedPath.this, LiveLocation.class)) );
     }
-
-//    private void trackLiveLocation(){
-//        askPermission();
-//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) { startActivity(new Intent(SelectedPath.this, LiveLocation.class)); }
-//        else  askPermission();
-//    }
-//
-//    private void askPermission() {
-//        ActivityCompat.requestPermissions(SelectedPath.this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_CODE);
-//    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull @org.jetbrains.annotations.NotNull String[] permissions, @NonNull @org.jetbrains.annotations.NotNull int[] grantResults) {
 
         if (requestCode == NAVIGATING_TO_LIVE_LOCATION_REQUEST_CODE){
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){ binding.startLiveLocationBtn.setOnClickListener((View v)-> { startActivity(new Intent(SelectedPath.this, LiveLocation.class)); }); }
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){ binding.startLiveLocationBtn.setOnClickListener((View v)-> startActivity(new Intent(SelectedPath.this, LiveLocation.class))); }
             else { Toast.makeText(SelectedPath.this,"من فضلك أضغط على زر سماح للموقع",Toast.LENGTH_SHORT).show(); }
         }
 
