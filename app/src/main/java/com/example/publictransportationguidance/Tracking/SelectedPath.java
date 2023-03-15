@@ -32,11 +32,6 @@ public class SelectedPath extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this,R.layout.selected_path);
 
         Intent incoming=getIntent();
-//        int pathNum = incoming.getIntExtra("pathNum",0);
-//        List<List<ShortestPath>> shortestPath = (List<List<ShortestPath>>) incoming.getSerializableExtra("shortestPathInCost");
-//        int size = shortestPath.size();
-//        String detailedPath = Shortest.getStringDetailedPathToPopulateRoom(shortestPath,size).get(pathNum);       /* M Osama: for debugging only */
-
 
         String choosenPath  = incoming.getStringExtra("path");
 

@@ -137,7 +137,7 @@ public class HomeFragment extends Fragment{
             }
             else  Toast.makeText(getContext(), "لا يمكن ترك أحد نقطتي الانطلاق أو الانتهاء فارغة", Toast.LENGTH_SHORT).show();
 
-           // Toast.makeText(getContext(), lats[0]+","+lats[1], Toast.LENGTH_SHORT).show();       //M Osama: for debugging only
+            // Toast.makeText(getContext(), lats[0]+","+lats[1], Toast.LENGTH_SHORT).show();       //M Osama: for debugging only
         });
 
         /* M Osama: activate sorting using distance */
@@ -244,7 +244,7 @@ public class HomeFragment extends Fragment{
             if(stopID==LOCATION) locationLats=getStopLatLong(lats[0],lats[1]);
             else                 destinationLats=getStopLatLong(lats[0],lats[1]);
 
-           // Toast.makeText(getContext(), "ID="+stopID+" "+lats[0]+","+lats[1], Toast.LENGTH_SHORT).show();                /* M Osama: Only for checking that getPlaceCoordinatesUsingID is working */
+            // Toast.makeText(getContext(), "ID="+stopID+" "+lats[0]+","+lats[1], Toast.LENGTH_SHORT).show();                /* M Osama: Only for checking that getPlaceCoordinatesUsingID is working */
 
         }).addOnFailureListener((exception) -> {
             if (exception instanceof ApiException) Toast.makeText(getContext(), ((ApiException) exception).getStatusCode(), Toast.LENGTH_SHORT).show();
