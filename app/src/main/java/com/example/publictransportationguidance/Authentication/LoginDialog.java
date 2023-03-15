@@ -11,12 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.publictransportationguidance.Fragments.HomeFragment;
 import com.example.publictransportationguidance.R;
 import com.example.publictransportationguidance.SharedPrefs.SharedPrefs;
+import com.example.publictransportationguidance.UI.MainActivity;
 import com.example.publictransportationguidance.databinding.FragmentLoginBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -51,6 +54,13 @@ public class LoginDialog extends DialogFragment {
             performLogin();
             IS_LOGGED_IN =1;
             SharedPrefs.write("IS_LOGGED_IN",IS_LOGGED_IN);
+        });
+
+        binding.back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), MainActivity.class));
+            }
         });
 
         return rootView;
@@ -88,5 +98,6 @@ public class LoginDialog extends DialogFragment {
             });
         }
     }
+
     public static String TAG = "Dialog";
 }

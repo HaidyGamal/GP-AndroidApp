@@ -78,9 +78,7 @@ public class Shortest {
 
     public static String pathToPrint(List<String> str){
         String path="";
-        for (String stop : str){
-           path+=(stop+" -> ");
-        }
+        for (String stop : str){path+=(stop+" -> ");}
         return path.substring(0,path.length()-3);
     }
     public static String detailedPathToPrint(List<String> str){
@@ -162,7 +160,7 @@ public class Shortest {
         List<String> pathDetailedMeans=getPathMeansDetailed(listOfList,pathNumber);
         int numOfStops = getNumberOfPathStops(path);
         for(int stopNum=0;stopNum<(numOfStops-1);stopNum++){
-            if(pathDetailedMeans.get(stopNum).equals(prevMean)) ;
+            if(pathDetailedMeans.get(stopNum).equals(prevMean));
             else{ concatedStopsAndMeans.add(pathStops.get(stopNum));  concatedStopsAndMeans.add(pathDetailedMeans.get(stopNum)); }
             prevMean=pathDetailedMeans.get(stopNum);
         }
@@ -205,6 +203,24 @@ public class Shortest {
 
         return result;
     }
+
+
+    public static List<String> stopsAndMeans(List<List<ShortestPath>> listOfList , int pathNumber){
+        List<String> stops=getPathStops(listOfList,pathNumber);
+        List<String> means=getPathMeansDetailed(listOfList,pathNumber);
+        int size = stops.size();
+        List<String> stopsAndMeans= new ArrayList<>();
+        String prevMean="";
+
+        for(int temp=0;temp<size-1;temp++){
+            if(means.get(temp).equals(prevMean));
+            else{ stopsAndMeans.add(stops.get(temp)); stopsAndMeans.add(means.get(temp));}
+            prevMean=means.get(temp);
+        }
+        stopsAndMeans.add(stops.get(size-1));
+        return stopsAndMeans;
+    }
+
 
 }
 

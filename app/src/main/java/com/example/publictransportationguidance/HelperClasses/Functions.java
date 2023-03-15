@@ -69,6 +69,68 @@ public class Functions {
         } catch (IOException e) {  e.printStackTrace();   return "هناك مشكلة في الانترنت"; }
     }
 
+    public static String removeEgyptWithSpaceBefore(String input) {
+        return input.replaceAll(" \\bEgypt\\b", "");
+    }
+    public static String removeNonAlphabeticCharacters(String input) {
+        // Check if the string is free from English characters
+        boolean isArabic = input.matches("\\p{InArabic}+");
+        if (!isArabic) { return input; }
+
+        // Remove any non-alphabetic characters from the string
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+            if (Character.isAlphabetic(c)) { sb.append(c); }
+        }
+
+        return sb.toString();
+    }
+    public static String removeCommaWithSpaceAfter(String input) {
+        return input.replaceAll("[,،]\\s", " ");
+    }
+    public static String removeSingleComma(String input) {
+        // Count the number of commas in the input string
+        int commaCount = input.length() - input.replaceAll("[,،]", "").length();
+
+        // If there is only one comma in the string, remove it
+        if (commaCount == 1) {
+            return input.replaceAll("[,،]", "");
+        }
+
+        return input;
+    }
+    public static String removeVerticalBarWithSpaces(String input) {
+        // Remove the vertical bar if it's preceded by one space and followed by two spaces
+        String temp = input.replaceAll("\\s\\|\\s{2}", "");
+
+        // Trim any spaces from the beginning or end of the string
+        temp = temp.trim();
+
+        // Remove the word "Egypt" if it appears at the end of the string
+        temp = temp.replaceAll("(?i)Egypt$", "");
+
+        return temp;
+    }
+    public static String deleteSinglePipe(String string) {
+        if (string.indexOf('|') == string.lastIndexOf('|')) {
+            string = string.replace("|", "");
+        }
+        return string;
+    }
+    public static String deleteSinglePipeIfSucceededByTwoSpaces(String string) {
+        int index = string.indexOf("|  ");
+        if (index != -1 && index == string.lastIndexOf("|  ")) {
+            string = string.replace("|  ", "");
+        }
+        return string;
+    }
+
+
+    public static String stringEnhancer(String str){
+        return removeVerticalBarWithSpaces(removeSingleComma(removeCommaWithSpaceAfter(removeNonAlphabeticCharacters(removeEgyptWithSpaceBefore(str)))));
+    }
+
 
 
 }

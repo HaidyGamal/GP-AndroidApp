@@ -1,6 +1,9 @@
 package com.example.publictransportationguidance.Tracking;
 
+import static com.example.publictransportationguidance.Fragments.HomeFragment.destinationLats;
+import static com.example.publictransportationguidance.Fragments.HomeFragment.locationLats;
 import static com.example.publictransportationguidance.HelperClasses.Constants.NAVIGATING_TO_LIVE_LOCATION_REQUEST_CODE;
+import static com.example.publictransportationguidance.POJO.ShortestPathResponse.Shortest.getStringUnDetailedPathToPopulateRoom;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -29,15 +32,15 @@ public class SelectedPath extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this,R.layout.selected_path);
 
         Intent incoming=getIntent();
-        int pathNum = incoming.getIntExtra("pathNum",0);
-        List<List<ShortestPath>> shortestPath = (List<List<ShortestPath>>) incoming.getSerializableExtra("shortestPathInCost");
-        int size = shortestPath.size();
-
+//        int pathNum = incoming.getIntExtra("pathNum",0);
+//        List<List<ShortestPath>> shortestPath = (List<List<ShortestPath>>) incoming.getSerializableExtra("shortestPathInCost");
+//        int size = shortestPath.size();
 //        String detailedPath = Shortest.getStringDetailedPathToPopulateRoom(shortestPath,size).get(pathNum);       /* M Osama: for debugging only */
-        String unDetailedPath = Shortest.getStringUnDetailedPathToPopulateRoom(shortestPath,size).get(pathNum);
 
-//        Toast.makeText(this, unDetailedPath, Toast.LENGTH_SHORT).show();                                          /* M Osama: for debugging only */
-        binding.selectedPath.setText(unDetailedPath);
+
+        String choosenPath  = incoming.getStringExtra("path");
+
+        binding.selectedPath.setText(choosenPath);
 
         binding.startLiveLocationBtn.setOnClickListener(view -> startActivity(new Intent(SelectedPath.this, LiveLocation.class)) );
     }
@@ -52,4 +55,6 @@ public class SelectedPath extends AppCompatActivity {
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
+
+
 }

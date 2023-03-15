@@ -2,17 +2,21 @@ package com.example.publictransportationguidance.Fragments;
 
 import static com.example.publictransportationguidance.HelperClasses.Constants.IS_LOGGED_IN;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+
+import androidx.activity.OnBackPressedCallback;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.example.publictransportationguidance.Authentication.LoginDialog;
 import com.example.publictransportationguidance.R;
+import com.example.publictransportationguidance.UI.MainActivity;
 import com.example.publictransportationguidance.UI.VerifyDialog;
 import com.example.publictransportationguidance.databinding.FragmentAddNewRouteBinding;
 
@@ -42,6 +46,8 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
 
         return rootView;
     }
+
+
     //haidy: enabling the transportation text input
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

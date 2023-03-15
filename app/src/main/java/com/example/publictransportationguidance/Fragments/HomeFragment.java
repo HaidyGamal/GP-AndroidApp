@@ -15,6 +15,7 @@ import static com.example.publictransportationguidance.HelperClasses.Functions.g
 import static com.example.publictransportationguidance.HelperClasses.Functions.getSelectedItem;
 import static com.example.publictransportationguidance.HelperClasses.Functions.getStopLatLong;
 import static com.example.publictransportationguidance.HelperClasses.Functions.listToArray;
+import static com.example.publictransportationguidance.HelperClasses.Functions.stringEnhancer;
 
 import android.app.Activity;
 import android.content.Context;
@@ -64,8 +65,8 @@ public class HomeFragment extends Fragment{
 
     /* M Osama: to store stop lat/long & to build location & destination Strings to be send to API request to search DB */
     double [] lats=new double[2];
-    String locationLats;
-    String destinationLats;
+    public static String locationLats="0.000";            /* M Osama: to prevent bugs */
+    public static String destinationLats="0.000";
 
     /* M Osama: Google Maps API -> stops -> AutoCompleteTextView */
     String[] stopsArray ={};
@@ -128,7 +129,7 @@ public class HomeFragment extends Fragment{
 
         binding.searchBtn.setOnClickListener(v -> {
             if(binding.tvLocation.getText()+""!="" && binding.tvDestination.getText()+""!="") {
-                searchForPaths(locationLats,destinationLats);
+                searchForPaths(locationLats, destinationLats);
                 Intent intent = new Intent(getActivity(), LiveLocation.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("data", binding.tvDestination.getText().toString());
@@ -192,7 +193,7 @@ public class HomeFragment extends Fragment{
 
         placesClient.findAutocompletePredictions(request).addOnSuccessListener(response -> {
             for (AutocompletePrediction p : response.getAutocompletePredictions()) {
-                stopsList.add(p.getPrimaryText(null) + " | " + p.getSecondaryText(null));
+                stopsList.add(stringEnhancer(p.getPrimaryText(null) + " | " + p.getSecondaryText(null)));
                 stopsIDsList.add(p.getPlaceId());
             }
 
@@ -212,7 +213,7 @@ public class HomeFragment extends Fragment{
     public void autoCompleteOnFooterClick(View view){
         list.setOnFooterClickListener(() -> {
             LAST_CLICKED_FOOTER_VIEW=view.getId();
-            Toast.makeText(getContext(), view.getId()+"", Toast.LENGTH_SHORT).show();           /* ToBeDeleted */
+//            Toast.makeText(getContext(), view.getId()+"", Toast.LENGTH_SHORT).show();           /* M Osama: For debugging only */
             Toast.makeText(getContext(), "جاري الذهاب إلي الخريطة", Toast.LENGTH_SHORT).show();
             if(askUserToEnableLocation(getContext())==true){
                 Intent toMap = new Intent(getActivity(),MapActivity.class);
@@ -224,12 +225,12 @@ public class HomeFragment extends Fragment{
     /* M Osama: States what will happen in case user clicked clicked on specific please */
     public void autoCompleteOnItemClick(AutoCompleteTextView acTextView,int stop){
         acTextView.setOnItemClickListener((parent, view, position, id) -> {
-//            Toast.makeText(getContext(), acTextView.getId()+"", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getContext(), acTextView.getId()+"", Toast.LENGTH_SHORT).show();                                      /* M Osama: Only For debugging */
             String selectedItem = getSelectedItem(parent,position);
             Toast.makeText(getContext(), selectedItem, Toast.LENGTH_SHORT).show();                                              /* M Osama: Only for checking the autoCompleteOnClick is working */
             getPlaceCoordinatesUsingID(stopsIDsArray[getDataSourceIndex(stopsArray,selectedItem)],stop);
             acTextView.setText(deleteFromSequence(selectedItem," |"));
-            Toast.makeText(getContext(),stopsIDsArray[getDataSourceIndex(stopsArray,selectedItem)], Toast.LENGTH_SHORT).show();  /* M Osama: Only for checking the autoCompleteOnClick is working */
+//            Toast.makeText(getContext(),stopsIDsArray[getDataSourceIndex(stopsArray,selectedItem)], Toast.LENGTH_SHORT).show();  /* M Osama: Only For debugging */
         });
     }
 
@@ -264,14 +265,10 @@ public class HomeFragment extends Fragment{
 
         // Check if location services are enabled
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            // If location services are not enabled, prompt the user to enable them
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);                   // If location services are not enabled, prompt the user to enable them
             context.startActivity(intent);
             return true;
-        } else {
-            // If location services are already enabled, return true
-            return true;
-        }
+        } else { return true; }                   // If location services are already enabled, return true
     }
 
 }

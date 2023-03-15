@@ -50,4 +50,8 @@ public class Constants {
     /* M Osama: search by distance or cost */
     public static boolean SEARCH_BY_COST = true;
     public static boolean SEARCH_BY_DISTANCE = false;
+
+//    /* M Osama: track whether user clicked on a location or choosed from map */
+//    public static boolean LOCATION_CHOOSEN_OR_PICKED=false;
+//    public static boolean DESTINATION_CHOOSEN_OR_PICKED=false;
 }

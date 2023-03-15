@@ -115,14 +115,31 @@
             app:layout_constraintStart_toStartOf="@+id/guideline13"
             app:layout_constraintTop_toTopOf="@+id/guideline7" />
 
-        <NumberPicker
+<!--        <NumberPicker-->
+<!--            android:id="@+id/wheel"-->
+<!--            android:textSize="4sp"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="20dp"-->
+<!--            android:theme="@style/AppTheme.Picker"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/radioGroup_pathResults"></NumberPicker>-->
+
+        <com.shawnlin.numberpicker.NumberPicker
             android:id="@+id/wheel"
-            android:textSize="4sp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_margin="10dp"
+            app:np_textSize="@dimen/places_autocomplete_progress_size"
+            android:textSize="4sp"
             android:theme="@style/AppTheme.Picker"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/radioGroup_pathResults"></NumberPicker>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cost"
+            app:np_dividerDistance="140dp"
+            app:np_height="180dp"
+            app:np_wrapSelectorWheel="true"
+            app:np_itemSpacing="8dp"/>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline7"
