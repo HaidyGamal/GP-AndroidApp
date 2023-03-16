@@ -37,9 +37,12 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import com.example.publictransportationguidance.API.RetrofitClient;
 import com.example.publictransportationguidance.GoogleMap.MapActivity;
 import com.example.publictransportationguidance.HelperClasses.Constants;
 import com.example.publictransportationguidance.Adapters.CustomAutoCompleteAdapter;
+import com.example.publictransportationguidance.HelperClasses.Functions;
+import com.example.publictransportationguidance.POJO.Nearby.Nearby;
 import com.example.publictransportationguidance.R;
 import com.example.publictransportationguidance.Tracking.LiveLocation;
 import com.example.publictransportationguidance.Tracking.PathResults;
@@ -58,6 +61,10 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeFragment extends Fragment{
     public HomeFragment() {}
@@ -129,11 +136,7 @@ public class HomeFragment extends Fragment{
 
         binding.searchBtn.setOnClickListener(v -> {
             if(binding.tvLocation.getText()+""!="" && binding.tvDestination.getText()+""!="") {
-                searchForPaths(locationLats, destinationLats);
-                Intent intent = new Intent(getActivity(), LiveLocation.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("data", binding.tvDestination.getText().toString());
-                intent.putExtras(bundle);
+                getNearby(locationLats,destinationLats);
             }
             else  Toast.makeText(getContext(), "لا يمكن ترك أحد نقطتي الانطلاق أو الانتهاء فارغة", Toast.LENGTH_SHORT).show();
 
@@ -213,7 +216,6 @@ public class HomeFragment extends Fragment{
     public void autoCompleteOnFooterClick(View view){
         list.setOnFooterClickListener(() -> {
             LAST_CLICKED_FOOTER_VIEW=view.getId();
-//            Toast.makeText(getContext(), view.getId()+"", Toast.LENGTH_SHORT).show();           /* M Osama: For debugging only */
             Toast.makeText(getContext(), "جاري الذهاب إلي الخريطة", Toast.LENGTH_SHORT).show();
             if(askUserToEnableLocation(getContext())==true){
                 Intent toMap = new Intent(getActivity(),MapActivity.class);
@@ -224,13 +226,11 @@ public class HomeFragment extends Fragment{
 
     /* M Osama: States what will happen in case user clicked clicked on specific please */
     public void autoCompleteOnItemClick(AutoCompleteTextView acTextView,int stop){
-        acTextView.setOnItemClickListener((parent, view, position, id) -> {
-//            Toast.makeText(getContext(), acTextView.getId()+"", Toast.LENGTH_SHORT).show();                                      /* M Osama: Only For debugging */
+        acTextView.setOnItemClickListener((parent, view, position, id) -> {             /* M Osama: Only For debugging */
             String selectedItem = getSelectedItem(parent,position);
             Toast.makeText(getContext(), selectedItem, Toast.LENGTH_SHORT).show();                                              /* M Osama: Only for checking the autoCompleteOnClick is working */
             getPlaceCoordinatesUsingID(stopsIDsArray[getDataSourceIndex(stopsArray,selectedItem)],stop);
             acTextView.setText(deleteFromSequence(selectedItem," |"));
-//            Toast.makeText(getContext(),stopsIDsArray[getDataSourceIndex(stopsArray,selectedItem)], Toast.LENGTH_SHORT).show();  /* M Osama: Only For debugging */
         });
     }
 
@@ -268,7 +268,64 @@ public class HomeFragment extends Fragment{
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);                   // If location services are not enabled, prompt the user to enable them
             context.startActivity(intent);
             return true;
-        } else { return true; }                   // If location services are already enabled, return true
+        } else { return true; }                                                                     // If location services are already enabled, return true
+    }
+
+    public void getNearby(String location,String destination){
+        RetrofitClient.getInstance().getApi().getNearby(location,destination).enqueue(new Callback<List<Nearby>>() {
+            @Override
+            public void onResponse(Call<List<Nearby>> call, Response<List<Nearby>> response) {
+                List<Nearby> nearbies = response.body();
+                if(response.body()!=null){
+                    if(nearbies.size()>0){
+                        List<Nearby> nearbyLocations=new ArrayList<>();
+                        List<Nearby> nearbyDestinations=new ArrayList<>();
+
+                        /* M Osama: splitting locations from destinations */
+                        for(Nearby n : nearbies){
+                            if(n.getInputField().equals("Location"))  nearbyLocations.add(n);
+                            else nearbyDestinations.add(n);
+                        }
+
+                        /* M Osama: sorting nearbyLocations & nearbyDestinations */
+                        Toast.makeText(getContext(), nearbyLocations.get(0).getName()+","+nearbyDestinations.get(0).getName(), Toast.LENGTH_SHORT).show();
+                        nearbyLocations = Functions.sortByDistance(nearbyLocations);
+                        nearbyDestinations = Functions.sortByDistance(nearbyDestinations);
+
+                        /* M Osama: closestNearbyLocation , closestNearbyDestination */
+                        Nearby closestLocation = nearbyLocations.get(0);
+                        Nearby closestDestination = nearbyDestinations.get(0);
+
+                        String locationLatsNear =closestLocation.getLatitude()+","+closestLocation.getLongitude();
+                        String destinationLatsNear = closestDestination.getLatitude()+","+closestDestination.getLongitude();
+
+                        if(locationLatsNear.equals(locationLats) && destinationLatsNear.equals(destinationLats));
+                        else if (locationLatsNear.equals(locationLatsNear)==false){ locationLats=locationLatsNear; }
+                        else{ destinationLats=destinationLatsNear; }
+
+                    }
+                    else { Toast.makeText(getContext(), "Size=0", Toast.LENGTH_SHORT).show();}       /* M Osama; for debugging to be deleted */
+                }
+                else { Toast.makeText(getContext(), "Null", Toast.LENGTH_SHORT).show(); }           /* M Osama; for debugging to be deleted */
+
+                navigateToPathResults();
+            }
+
+            @Override
+            public void onFailure(Call<List<Nearby>> call, Throwable t) {
+                navigateToPathResults();
+                Toast.makeText(getContext(), "Failure", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+    }
+
+    public void navigateToPathResults(){
+        searchForPaths(locationLats, destinationLats);
+        Intent intent = new Intent(getActivity(), LiveLocation.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("data", binding.tvDestination.getText().toString());
+        intent.putExtras(bundle);
     }
 
 }

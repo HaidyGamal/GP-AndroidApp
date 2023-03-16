@@ -62,8 +62,6 @@ public class PathResults extends AppCompatActivity {
 
         dao = RoomDB.getInstance(getApplication()).Dao();
 
-        getNearby(locNear,destNear);
-
         if (SEARCH_BY_COST)  getShortestPathsSortedByCost(LOCATION, DESTINATION);
         else                 getShortestPathsSortedByDistance(LOCATION, DESTINATION);
 
@@ -133,48 +131,7 @@ public class PathResults extends AppCompatActivity {
         binding.wheel.setDisplayedValues(wheelTransportations);       /* M Osama: populating wheel with data */
     }
 
-    public void getNearby(String location,String destination){
-        RetrofitClient.getInstance().getApi().getNearby(location,destination).enqueue(new Callback<List<Nearby>>() {
-            @Override
-            public void onResponse(Call<List<Nearby>> call, Response<List<Nearby>> response) {
-                List<Nearby> nearbies = response.body();
-                if(response.body()!=null){
-                    if(nearbies.size()>0){
-                        List<Nearby> nearbyLocations=new ArrayList<>();
-                        List<Nearby> nearbyDestinations=new ArrayList<>();
 
-                        /* M Osama: splitting locations from destinations */
-                        for(Nearby n : nearbies){
-                            if(n.getInputField().equals("Location"))  nearbyLocations.add(n);
-                            else nearbyDestinations.add(n);
-                        }
-
-                        /* M Osama: sorting nearbyLocations & nearbyDestinations */
-                        Toast.makeText(getApplicationContext(), nearbyLocations.get(0).getName()+","+nearbyDestinations.get(0).getName(), Toast.LENGTH_SHORT).show();
-                        nearbyLocations = Functions.sortByDistance(nearbyLocations);
-                        nearbyDestinations = Functions.sortByDistance(nearbyDestinations);
-
-                        /* M Osama: closestNearbyLocation , closestNearbyDestination */
-                        Nearby closestLocation = nearbyLocations.get(0);
-                        Nearby closestDestination = nearbyDestinations.get(0);
-                        Toast.makeText(getApplicationContext(), closestLocation.getName()+","+closestDestination.getName(), Toast.LENGTH_SHORT).show();
-
-                    }
-                    else {
-                        Toast.makeText(getApplicationContext(), "Size=0", Toast.LENGTH_SHORT).show();       /* M Osama; for debugging to be deleted */
-                    }
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "Null", Toast.LENGTH_SHORT).show();             /* M Osama; for debugging to be deleted */
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Nearby>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Failure", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     public void noPathsFound(){
         binding.cost.setText(R.string.NotAvailable);
