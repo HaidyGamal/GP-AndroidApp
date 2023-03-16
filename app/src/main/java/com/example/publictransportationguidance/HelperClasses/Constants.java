@@ -51,6 +51,9 @@ public class Constants {
     public static boolean SEARCH_BY_COST = true;
     public static boolean SEARCH_BY_DISTANCE = false;
 
+    /* M Osama: path TAG for intent between PathResults & SelectedPaths */
+    public static String PATH="path";
+
 //    /* M Osama: track whether user clicked on a location or choosed from map */
 //    public static boolean LOCATION_CHOOSEN_OR_PICKED=false;
 //    public static boolean DESTINATION_CHOOSEN_OR_PICKED=false;

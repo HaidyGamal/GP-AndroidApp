@@ -1,5 +1,6 @@
 package com.example.publictransportationguidance.API;
 
+import com.example.publictransportationguidance.POJO.Nearby.Nearby;
 import com.example.publictransportationguidance.POJO.ShortestPathResponse.ShortestPath;
 import com.example.publictransportationguidance.POJO.StopsResponse.AllStops;
 
@@ -38,7 +39,7 @@ public interface Api {
     /* M Osama: Request shortestPaths if current location isn't available */
     @FormUrlEncoded
     @POST("nearby")
-    Call<List<List<ShortestPath>>> getNearby(
+    Call<List<Nearby>> getNearby(
             @Field("Location") String Location,
             @Field("Destination") String Destination
     );
