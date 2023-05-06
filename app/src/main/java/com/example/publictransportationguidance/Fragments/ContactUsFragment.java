@@ -2,6 +2,7 @@ package com.example.publictransportationguidance.Fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
@@ -16,7 +17,7 @@ public class ContactUsFragment extends Fragment {
     public ContactUsFragment() {}
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FragmentContactUsBinding binding = DataBindingUtil.inflate(inflater,R.layout.fragment_contact_us,container,false);
         return binding.getRoot();
     }

@@ -1,8 +1,7 @@
 package com.example.publictransportationguidance.Fragments;
 
-import static com.example.publictransportationguidance.HelperClasses.Constants.IS_LOGGED_IN;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.IS_LOGGED_IN;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,14 +9,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
-import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.example.publictransportationguidance.Authentication.LoginDialog;
 import com.example.publictransportationguidance.R;
-import com.example.publictransportationguidance.UI.MainActivity;
-import com.example.publictransportationguidance.UI.VerifyDialog;
+import com.example.publictransportationguidance.ui.VerifyDialog;
 import com.example.publictransportationguidance.databinding.FragmentAddNewRouteBinding;
 
 public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemSelectedListener {
@@ -27,7 +25,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
     ArrayAdapter<CharSequence> adapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_add_new_route,container,false);
         View rootView = binding.getRoot();
 

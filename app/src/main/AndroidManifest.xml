@@ -4,19 +4,14 @@
     package="com.example.publictransportationguidance">
     <!-- M Osama: Permissions to use Interned & Locations -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-
-    <uses-permission android:name="android.permission.VIBRATE" />
-
-    <uses-permission android:name="android.permission.VIBRATE" />
-
-    <uses-permission android:name="android.permission.VIBRATE" />
-
-    <uses-permission android:name="android.permission.VIBRATE" />
-
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
@@ -31,41 +26,43 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".GoogleMap.MapActivity"
-            android:exported="false" />
-        <!-- M Osama: MetaData for google API key -->
+            android:name=".googleMap.MapActivity"
+            android:exported="false" /> <!-- M Osama: MetaData for google API key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
 
         <activity
-            android:name=".Tracking.PathResults"
+            android:name=".tracking.PathResults"
             android:exported="false" />
         <activity
-            android:name=".Tracking.SelectedPath"
+            android:name=".tracking.SelectedPath"
             android:exported="false" />
         <activity
-            android:name=".Tracking.LiveLocation"
+            android:name=".tracking.TrackLiveLocation"
             android:exported="false" />
         <activity
             android:name=".Authentication.SignUp"
             android:exported="false" />
         <activity
-            android:name=".UI.Account"
+            android:name=".ui.Account"
             android:exported="false" />
         <activity
-            android:name=".UI.MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.PublicTransportationGuidance.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="http" />
                 <data android:scheme="https" />
             </intent-filter>

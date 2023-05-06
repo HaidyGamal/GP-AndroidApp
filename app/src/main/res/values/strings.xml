@@ -90,6 +90,9 @@
     <string name="InCorrectEmailOrPassword">خطأ في الايميل أو كلمة المرور</string>
     <string name="Registration">تسجيل حساب</string>
     <string name="Sec">ثانية</string>
+    <string name="EnableGpsMessage">يبدو إنك غير مفعل امكانية استخدام مكانك، هل يمكنك تفعيلها ؟</string>
+    <string name="Yes">نعم</string>
+    <string name="No">لأ</string>
     <!-- Strings related to spinner -->
     <string-array name="transportations">
         <item>Microbus</item>
@@ -97,5 +100,6 @@
         <item>Metro</item>
 
     </string-array>
+    <string name="title_activity_live_location">LiveLocation</string>
 
 </resources>

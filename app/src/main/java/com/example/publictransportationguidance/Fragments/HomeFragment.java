@@ -1,22 +1,8 @@
 package com.example.publictransportationguidance.Fragments;
 
 import static com.example.publictransportationguidance.BuildConfig.MAPS_API_KEY;
-import static com.example.publictransportationguidance.HelperClasses.Constants.FOOTER;
-import static com.example.publictransportationguidance.HelperClasses.Constants.LAST_CLICKED_FOOTER_VIEW;
-import static com.example.publictransportationguidance.HelperClasses.Constants.LATITUDE_KEY;
-import static com.example.publictransportationguidance.HelperClasses.Constants.LOCATION;
-import static com.example.publictransportationguidance.HelperClasses.Constants.LOCATION_NAME_KEY;
-import static com.example.publictransportationguidance.HelperClasses.Constants.LONGITUDE_KEY;
-import static com.example.publictransportationguidance.HelperClasses.Constants.REQUEST_CODE;
-import static com.example.publictransportationguidance.HelperClasses.Constants.SEARCH_BY_COST;
-import static com.example.publictransportationguidance.HelperClasses.Constants.SEARCH_BY_DISTANCE;
-import static com.example.publictransportationguidance.HelperClasses.Functions.deleteFromSequence;
-import static com.example.publictransportationguidance.HelperClasses.Functions.getDataSourceIndex;
-import static com.example.publictransportationguidance.HelperClasses.Functions.getSelectedItem;
-import static com.example.publictransportationguidance.HelperClasses.Functions.getStopLatLong;
-import static com.example.publictransportationguidance.HelperClasses.Functions.listToArray;
-import static com.example.publictransportationguidance.HelperClasses.Functions.stringEnhancer;
-
+import static com.example.publictransportationguidance.helpers.GlobalVariables.*;
+import static com.example.publictransportationguidance.helpers.Functions.*;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -37,15 +23,15 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
-import com.example.publictransportationguidance.API.RetrofitClient;
-import com.example.publictransportationguidance.GoogleMap.MapActivity;
-import com.example.publictransportationguidance.HelperClasses.Constants;
-import com.example.publictransportationguidance.Adapters.CustomAutoCompleteAdapter;
-import com.example.publictransportationguidance.HelperClasses.Functions;
-import com.example.publictransportationguidance.POJO.Nearby.Nearby;
+import com.example.publictransportationguidance.api.RetrofitClient;
+import com.example.publictransportationguidance.googleMap.MapActivity;
+import com.example.publictransportationguidance.helpers.GlobalVariables;
+import com.example.publictransportationguidance.adapters.CustomAutoCompleteAdapter;
+import com.example.publictransportationguidance.helpers.Functions;
+import com.example.publictransportationguidance.pojo.nearby.Nearby;
 import com.example.publictransportationguidance.R;
-import com.example.publictransportationguidance.Tracking.LiveLocation;
-import com.example.publictransportationguidance.Tracking.PathResults;
+import com.example.publictransportationguidance.tracking.PathResults;
+import com.example.publictransportationguidance.tracking.TrackLiveLocation;
 import com.example.publictransportationguidance.databinding.FragmentHomeBinding;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.model.LatLng;
@@ -188,7 +174,7 @@ public class HomeFragment extends Fragment{
         stopsList.clear();
         stopsIDsList.clear();
         FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder() /*  Use the builder to create a FindAutocompletePredictionsRequest. */
-                .setLocationBias(RectangularBounds.newInstance(new LatLng(Constants.SOUTH, Constants.WEST), new LatLng(Constants.NORTH, Constants.EAST)))
+                .setLocationBias(RectangularBounds.newInstance(new LatLng(GlobalVariables.SOUTH, GlobalVariables.WEST), new LatLng(GlobalVariables.NORTH, GlobalVariables.EAST)))
                 .setCountry("EGY")
                 .setSessionToken(AutocompleteSessionToken.newInstance())
                 .setQuery(acTextView.getText().toString())
@@ -274,7 +260,7 @@ public class HomeFragment extends Fragment{
     public void getNearby(String location,String destination){
         RetrofitClient.getInstance().getApi().getNearby(location,destination).enqueue(new Callback<List<Nearby>>() {
             @Override
-            public void onResponse(Call<List<Nearby>> call, Response<List<Nearby>> response) {
+            public void onResponse(@NonNull Call<List<Nearby>> call, @NonNull Response<List<Nearby>> response) {
                 List<Nearby> nearbies = response.body();
                 if(response.body()!=null){
                     if(nearbies.size()>0){
@@ -312,9 +298,9 @@ public class HomeFragment extends Fragment{
             }
 
             @Override
-            public void onFailure(Call<List<Nearby>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<Nearby>> call, @NonNull Throwable t) {
                 navigateToPathResults();
-                Toast.makeText(getContext(), "Failure", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "يرجي التحقق من جودة النت والمحاولة مرة أخري", Toast.LENGTH_SHORT).show();
             }
 
         });
@@ -322,7 +308,7 @@ public class HomeFragment extends Fragment{
 
     public void navigateToPathResults(){
         searchForPaths(locationLats, destinationLats);
-        Intent intent = new Intent(getActivity(), LiveLocation.class);
+        Intent intent = new Intent(getActivity(), TrackLiveLocation.class);
         Bundle bundle = new Bundle();
         bundle.putString("data", binding.tvDestination.getText().toString());
         intent.putExtras(bundle);

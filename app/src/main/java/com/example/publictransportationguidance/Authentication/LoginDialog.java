@@ -1,6 +1,6 @@
 package com.example.publictransportationguidance.Authentication;
 
-import static com.example.publictransportationguidance.HelperClasses.Constants.IS_LOGGED_IN;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.IS_LOGGED_IN;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -11,15 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.publictransportationguidance.Fragments.HomeFragment;
 import com.example.publictransportationguidance.R;
-import com.example.publictransportationguidance.SharedPrefs.SharedPrefs;
-import com.example.publictransportationguidance.UI.MainActivity;
+import com.example.publictransportationguidance.sharedPrefs.SharedPrefs;
+import com.example.publictransportationguidance.ui.MainActivity;
 import com.example.publictransportationguidance.databinding.FragmentLoginBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -56,12 +54,7 @@ public class LoginDialog extends DialogFragment {
             SharedPrefs.write("IS_LOGGED_IN",IS_LOGGED_IN);
         });
 
-        binding.back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getContext(), MainActivity.class));
-            }
-        });
+        binding.back.setOnClickListener(v -> startActivity(new Intent(getContext(), MainActivity.class)));
 
         return rootView;
     }

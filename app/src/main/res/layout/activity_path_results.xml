@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".Tracking.PathResults"
+        tools:context=".tracking.PathResults"
         android:background="@drawable/sub_background">
 
         <!--displaying a radio group on below line-->

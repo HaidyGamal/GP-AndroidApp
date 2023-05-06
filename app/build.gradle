@@ -4,6 +4,7 @@ plugins {
 
     // M Osama: Google MAPS API plugin
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+    id 'org.jetbrains.kotlin.android'
 
 }
 

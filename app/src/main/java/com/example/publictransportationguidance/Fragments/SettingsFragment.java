@@ -13,7 +13,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.example.publictransportationguidance.R;
-import com.example.publictransportationguidance.SharedPrefs.SharedPrefs;
+import com.example.publictransportationguidance.sharedPrefs.SharedPrefs;
 import com.example.publictransportationguidance.databinding.FragmentSettingsBinding;
 
 public class SettingsFragment extends Fragment{
@@ -41,7 +41,7 @@ public class SettingsFragment extends Fragment{
             if(binding.modeBtn.getText()=="OFF")  { binding.modeBtn.setText(R.string.ON); }
             else                                  { binding.modeBtn.setText(R.string.OFF); }
         });
-        binding.accountBtn.setOnClickListener(v -> startActivity(new Intent(getActivity(), com.example.publictransportationguidance.UI.Account.class)));
+        binding.accountBtn.setOnClickListener(v -> startActivity(new Intent(getActivity(), com.example.publictransportationguidance.ui.Account.class)));
 
         return rootView;
     }
