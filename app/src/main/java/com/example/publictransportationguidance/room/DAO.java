@@ -4,7 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.example.publictransportationguidance.pojo.PathInfo;
+import com.example.publictransportationguidance.pojo.pathsResponse.PathInfo;
 
 @Dao
 public interface DAO {

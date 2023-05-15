@@ -23,15 +23,11 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
-import com.example.publictransportationguidance.api.RetrofitClient;
 import com.example.publictransportationguidance.googleMap.MapActivity;
 import com.example.publictransportationguidance.helpers.GlobalVariables;
 import com.example.publictransportationguidance.adapters.CustomAutoCompleteAdapter;
-import com.example.publictransportationguidance.helpers.Functions;
-import com.example.publictransportationguidance.pojo.nearby.Nearby;
 import com.example.publictransportationguidance.R;
 import com.example.publictransportationguidance.tracking.PathResults;
-import com.example.publictransportationguidance.tracking.TrackLiveLocation;
 import com.example.publictransportationguidance.databinding.FragmentHomeBinding;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.model.LatLng;
@@ -47,10 +43,6 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class HomeFragment extends Fragment{
     public HomeFragment() {}
@@ -76,9 +68,7 @@ public class HomeFragment extends Fragment{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_home,container,false);
-        View rootView = binding.getRoot();
-
-        return rootView;
+        return binding.getRoot();
     }
 
     @Override
@@ -122,7 +112,7 @@ public class HomeFragment extends Fragment{
 
         binding.searchBtn.setOnClickListener(v -> {
             if(binding.tvLocation.getText()+""!="" && binding.tvDestination.getText()+""!="") {
-                getNearby(locationLats,destinationLats);
+                searchForPaths(locationLats,destinationLats);
             }
             else  Toast.makeText(getContext(), "لا يمكن ترك أحد نقطتي الانطلاق أو الانتهاء فارغة", Toast.LENGTH_SHORT).show();
 
@@ -250,68 +240,11 @@ public class HomeFragment extends Fragment{
         final LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
         // Check if location services are enabled
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);                   // If location services are not enabled, prompt the user to enable them
             context.startActivity(intent);
             return true;
         } else { return true; }                                                                     // If location services are already enabled, return true
-    }
-
-    public void getNearby(String location,String destination){
-        RetrofitClient.getInstance().getApi().getNearby(location,destination).enqueue(new Callback<List<Nearby>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<Nearby>> call, @NonNull Response<List<Nearby>> response) {
-                List<Nearby> nearbies = response.body();
-                if(response.body()!=null){
-                    if(nearbies.size()>0){
-                        List<Nearby> nearbyLocations=new ArrayList<>();
-                        List<Nearby> nearbyDestinations=new ArrayList<>();
-
-                        /* M Osama: splitting locations from destinations */
-                        for(Nearby n : nearbies){
-                            if(n.getInputField().equals("Location"))  nearbyLocations.add(n);
-                            else nearbyDestinations.add(n);
-                        }
-
-                        /* M Osama: sorting nearbyLocations & nearbyDestinations */
-                        Toast.makeText(getContext(), nearbyLocations.get(0).getName()+","+nearbyDestinations.get(0).getName(), Toast.LENGTH_SHORT).show();
-                        nearbyLocations = Functions.sortByDistance(nearbyLocations);
-                        nearbyDestinations = Functions.sortByDistance(nearbyDestinations);
-
-                        /* M Osama: closestNearbyLocation , closestNearbyDestination */
-                        Nearby closestLocation = nearbyLocations.get(0);
-                        Nearby closestDestination = nearbyDestinations.get(0);
-
-                        String locationLatsNear =closestLocation.getLatitude()+","+closestLocation.getLongitude();
-                        String destinationLatsNear = closestDestination.getLatitude()+","+closestDestination.getLongitude();
-
-                        if(locationLatsNear.equals(locationLats) && destinationLatsNear.equals(destinationLats));
-                        else if (locationLatsNear.equals(locationLatsNear)==false){ locationLats=locationLatsNear; }
-                        else{ destinationLats=destinationLatsNear; }
-
-                    }
-                    else { Toast.makeText(getContext(), "Size=0", Toast.LENGTH_SHORT).show();}       /* M Osama; for debugging to be deleted */
-                }
-                else { Toast.makeText(getContext(), "Null", Toast.LENGTH_SHORT).show(); }           /* M Osama; for debugging to be deleted */
-
-                navigateToPathResults();
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<Nearby>> call, @NonNull Throwable t) {
-                navigateToPathResults();
-                Toast.makeText(getContext(), "يرجي التحقق من جودة النت والمحاولة مرة أخري", Toast.LENGTH_SHORT).show();
-            }
-
-        });
-    }
-
-    public void navigateToPathResults(){
-        searchForPaths(locationLats, destinationLats);
-        Intent intent = new Intent(getActivity(), TrackLiveLocation.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("data", binding.tvDestination.getText().toString());
-        intent.putExtras(bundle);
     }
 
 }

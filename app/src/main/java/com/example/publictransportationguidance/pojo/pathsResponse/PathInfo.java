@@ -1,4 +1,4 @@
-package com.example.publictransportationguidance.pojo;
+package com.example.publictransportationguidance.pojo.pathsResponse;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;

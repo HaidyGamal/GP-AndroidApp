@@ -5,11 +5,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.widget.AdapterView;
 import android.widget.Toast;
-
-import com.example.publictransportationguidance.pojo.nearby.Nearby;
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -134,20 +130,20 @@ public class Functions {
         return removeVerticalBarWithSpaces(removeSingleComma(removeCommaWithSpaceAfter(removeNonAlphabeticCharacters(removeEgyptWithSpaceBefore(str)))));
     }
 
-    public static List<Nearby> sortByDistance(List<Nearby> nearbyList) {
-        int n = nearbyList.size();
-        List<Nearby> sortedList = new ArrayList<>(nearbyList);
-        for (int i = 0; i < n-1; i++) {
-            for (int j = 0; j < n-i-1; j++) {
-                if (sortedList.get(j).getDistance() > sortedList.get(j+1).getDistance()) {
-                    Nearby temp = sortedList.get(j);
-                    sortedList.set(j, sortedList.get(j+1));
-                    sortedList.set(j+1, temp);
-                }
-            }
-        }
-        return sortedList;
-    }
+//    public static List<Nearby> sortByDistance(List<Nearby> nearbyList) {
+//        int n = nearbyList.size();
+//        List<Nearby> sortedList = new ArrayList<>(nearbyList);
+//        for (int i = 0; i < n-1; i++) {
+//            for (int j = 0; j < n-i-1; j++) {
+//                if (sortedList.get(j).getDistance() > sortedList.get(j+1).getDistance()) {
+//                    Nearby temp = sortedList.get(j);
+//                    sortedList.set(j, sortedList.get(j+1));
+//                    sortedList.set(j+1, temp);
+//                }
+//            }
+//        }
+//        return sortedList;
+//    }
 
 
 }

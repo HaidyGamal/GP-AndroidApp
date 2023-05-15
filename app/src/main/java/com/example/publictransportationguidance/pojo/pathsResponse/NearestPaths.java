@@ -1,10 +1,10 @@
-package com.example.publictransportationguidance.pojo.shortestPathResponse;
+package com.example.publictransportationguidance.pojo.pathsResponse;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
-public class ShortestPath implements Serializable {
+public class NearestPaths implements Serializable {
 
     @SerializedName("name")
     @Expose
@@ -44,9 +44,9 @@ public class ShortestPath implements Serializable {
 
     private final static long serialVersionUID = 2142764386547270924L;
 
-    public ShortestPath() {}
+    public NearestPaths() {}
 
-    public ShortestPath(String name, Double latitude, Double longitude, Integer cost, Double distance, String transportationType, String lineNumber, Integer totalCost, Double totalDistance) {
+    public NearestPaths(String name, Double latitude, Double longitude, Integer cost, Double distance, String transportationType, String lineNumber, Integer totalCost, Double totalDistance) {
         super(); this.name = name; this.latitude = latitude; this.longitude = longitude;
         this.cost = cost; this.distance = distance; this.transportationType = transportationType; this.lineNumber = lineNumber;
         this.totalCost = totalCost; this.totalDistance = totalDistance;

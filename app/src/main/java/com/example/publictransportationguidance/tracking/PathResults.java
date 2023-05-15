@@ -3,7 +3,6 @@ package com.example.publictransportationguidance.tracking;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.BUNDLE_PATH;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.INTENT_PATH;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.SELECTED_PATH;
-import static com.example.publictransportationguidance.helpers.GlobalVariables.SEARCH_BY_COST;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,17 +15,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.example.publictransportationguidance.helpers.GlobalVariables;
-import com.example.publictransportationguidance.pojo.PathInfo;
+import com.example.publictransportationguidance.pojo.pathsResponse.PathInfo;
 import com.example.publictransportationguidance.api.RetrofitClient;
 import com.example.publictransportationguidance.R;
 import com.example.publictransportationguidance.room.DAO;
 import com.example.publictransportationguidance.room.RoomDB;
-import com.example.publictransportationguidance.pojo.shortestPathResponse.Shortest;
-import com.example.publictransportationguidance.pojo.shortestPathResponse.ShortestPath;
+import com.example.publictransportationguidance.pojo.PathsTokenizer;
+import com.example.publictransportationguidance.pojo.pathsResponse.NearestPaths;
 import com.example.publictransportationguidance.databinding.ActivityPathResultsBinding;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -67,69 +67,44 @@ public class PathResults extends AppCompatActivity {
 
         dao = RoomDB.getInstance(getApplication()).Dao();
 
-        if (SEARCH_BY_COST)  getShortestPathsSortedByCost(LOCATION, DESTINATION);
-        else                 getShortestPathsSortedByDistance(LOCATION, DESTINATION);
+        getNearestPaths(LOCATION,DESTINATION);
+//        if (SEARCH_BY_COST)  getNearestPaths(LOCATION, DESTINATION);
 
     }
 
 
-    public void getShortestPathsSortedByCost(String location, String destination) {
-        RetrofitClient.getInstance().getApi().getShortestByCost(location, destination).enqueue(new Callback<List<List<ShortestPath>>>() {
+    public void getNearestPaths(String location, String destination) {
+
+        RetrofitClient.getInstance().getApi().getNearestPaths(location,destination).enqueue(new Callback<List<List<NearestPaths>>>() {
             @Override
-            public void onResponse(@NonNull Call<List<List<ShortestPath>>> call, @NonNull Response<List<List<ShortestPath>>> response) {
-                List<List<ShortestPath>> shortestPathsInCost = response.body();
+            public void onResponse(@NonNull Call<List<List<NearestPaths>>> call, @NonNull Response<List<List<NearestPaths>>> response) {
+                List<List<NearestPaths>> shortestPathsInCost = response.body();
 
                 if (shortestPathsInCost != null) {
                     if (shortestPathsInCost.size() > 0) {
                         storeLatLngOfEveryNodeInReturnedPaths(shortestPathsInCost,getApplicationContext());   /* M Osama: store latLng of every node in each path to be able to use them to draw default path on map*/
                         searchingForResultsToast();
-                        initCostAndDistance(shortestPathsInCost);                   /* M Osama: put cost & distance of the best root */
-                        HashMap pathMap = Shortest.pathMap(shortestPathsInCost);    /* M Osama: give each Path a number */
-                        cachingToRoom(pathMap,shortestPathsInCost);                 /* M Osama: caching Paths to Room */
-                        wheelTransportations = feedWheel();                         /* M Osama: Build String Array from cachedPath Info */
-                        identifyingWheelSettings();                                 /* M Osama: Identifying wheel settings*/
-                        wheelOnClickListener(shortestPathsInCost);                  /* M Osama: onClickListener for wheel representing choices */
-                        costAndDistanceTracker();                                   /* M Osama: textViews tracking currentPath cost & distance */
-                        sortingClickListener();                                     /* M Osama: onClickListener for two sorting Buttons */
+                        initCostAndDistance(shortestPathsInCost);                           /* M Osama: put cost & distance of the best root */
+                        HashMap pathMap = PathsTokenizer.pathMap(shortestPathsInCost);      /* M Osama: give each Path a number */
+                        cachingToRoom(pathMap,shortestPathsInCost);                         /* M Osama: caching Paths to Room */
+                        wheelTransportations = feedWheel();                                 /* M Osama: Build String Array from cachedPath Info */
+                        identifyingWheelSettings();                                         /* M Osama: Identifying wheel settings*/
+                        wheelOnClickListener(shortestPathsInCost);                          /* M Osama: onClickListener for wheel representing choices */
+                        costAndDistanceTracker();                                           /* M Osama: textViews tracking currentPath cost & distance */
+                        sortingClickListener();                                             /* M Osama: onClickListener for two sorting Buttons */
                     }
-                    else { noPathsFound();  finish();  noAvailablePathsToast(); }
+                    else { Toast.makeText(getApplicationContext(),"FuckYou",Toast.LENGTH_SHORT);
+                        noPathsFound();  noAvailablePathsToast(); }
                 }
-                else { checkInternetConnectionToast(); }
+                else { checkInternetConnectionToast(); noPathsFound(); }
 
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<List<ShortestPath>>> call, @NonNull Throwable t) { noPathsFound(); }
+            public void onFailure(@NonNull Call<List<List<NearestPaths>>> call, @NonNull Throwable t) { noPathsFound(); }
         });
+
     }
-    public void getShortestPathsSortedByDistance(String location, String destination) {
-        RetrofitClient.getInstance().getApi().getShortestByDistance(location, destination).enqueue(new Callback<List<List<ShortestPath>>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<List<ShortestPath>>> call, @NonNull Response<List<List<ShortestPath>>> response) {
-                List<List<ShortestPath>> shortestPathsInCost = response.body();
-
-                if (shortestPathsInCost != null) {
-                    if (shortestPathsInCost.size() > 0) {
-                        storeLatLngOfEveryNodeInReturnedPaths(shortestPathsInCost,getApplicationContext());   /* M Osama: store latLng of every node in each path to be able to use them to draw default path on map*/
-                        searchingForResultsToast();
-                        initCostAndDistance(shortestPathsInCost);                   /* M Osama: put cost & distance of the best root */
-                        HashMap pathMap = Shortest.pathMap(shortestPathsInCost);    /* M Osama: give each path a number*/
-                        cachingToRoom(pathMap,shortestPathsInCost);                 /* M Osama: caching Paths to Room */
-                        wheelTransportations = feedWheel();                         /* M Osama: Build String Array from cachedPath Info To be fed to Wheel */
-                        identifyingWheelSettings();                                 /* M Osama: Identifying wheel settings*/
-                        wheelOnClickListener(shortestPathsInCost);                  /* M Osama: onClickListener for wheel representing choices */
-                        costAndDistanceTracker();                                   /* M Osama: textViews tracking currentPath cost & distance */
-                        sortingClickListener();                                     /* M Osama: onClickListener for two sorting Buttons */
-                    } else { noPathsFound();  finish();  noAvailablePathsToast(); }
-                } else { checkInternetConnectionToast(); }
-
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<List<ShortestPath>>> call, @NonNull Throwable t) { noPathsFound(); }
-        });
-    }
-
 
     public void identifyingWheelSettings() {
         binding.wheel.setMinValue(0);                            /* M Osama: wheel populated starting from index0 from source*/
@@ -143,7 +118,10 @@ public class PathResults extends AppCompatActivity {
     public void noPathsFound(){
         binding.cost.setText(R.string.NotAvailable);
         binding.distance.setText(R.string.NotAvailable);
-        String[] temp = {"لا يوجد طريق متوفر","لا يوجد طريق متوفر","لا يوجد طريق متوفر"};
+
+        String[] temp = new String[100];
+        Arrays.fill(temp, "لا يوجد طريق متوفر");
+
         binding.wheel.setDisplayedValues(temp);
     }
 
@@ -154,7 +132,7 @@ public class PathResults extends AppCompatActivity {
         binding.distanceRBPathResults.setOnClickListener((View view) -> Toast.makeText(PathResults.this, R.string.PathsSortedAccordingToDistance, Toast.LENGTH_SHORT).show());
 
     }
-    public void wheelOnClickListener(List<List<ShortestPath>> shortestPaths){
+    public void wheelOnClickListener(List<List<NearestPaths>> shortestPaths){
         binding.wheel.setOnClickListener((View v) -> {
             intentToSelectedPath = new Intent(PathResults.this, SelectedPath.class); /* haidy: to link between the 2 pages*/
             Bundle bundle = new Bundle();
@@ -163,7 +141,7 @@ public class PathResults extends AppCompatActivity {
 
             pickedPathNodes = wheelTransportations[numOfSelectedPath];     /*haidy: getting the text of the selected index in the NumberPicker*/
 
-            pickedPathDetails = Shortest.detailedPathToPrint(Shortest.stopsAndMeans(shortestPaths,numOfSelectedPath));
+            pickedPathDetails = PathsTokenizer.detailedPathToPrint(PathsTokenizer.stopsAndMeans(shortestPaths,numOfSelectedPath));
 
             /* M Osama: to track which path the user chosen */
             GlobalVariables.selectedPathNumberInWheel=numOfSelectedPath;
@@ -191,9 +169,9 @@ public class PathResults extends AppCompatActivity {
         Toast.makeText(PathResults.this, R.string.SearchingForPaths, Toast.LENGTH_SHORT).show();
     }
 
-    public void initCostAndDistance(List<List<ShortestPath>> shortestPaths){
-        binding.cost.setText("" + Shortest.getPathCost(shortestPaths, 0));
-        binding.distance.setText("" + Shortest.getPathDistance(shortestPaths, 0));
+    public void initCostAndDistance(List<List<NearestPaths>> shortestPaths){
+        binding.cost.setText("" + PathsTokenizer.getPathCost(shortestPaths, 0));
+        binding.distance.setText("" + PathsTokenizer.getPathDistance(shortestPaths, 0));
     }
     public void costAndDistanceTracker(){
         /* M Osama: track costs & distances of selected Path */
@@ -205,16 +183,16 @@ public class PathResults extends AppCompatActivity {
         });
     }
 
-    public void cachingToRoom(HashMap pathMap,List<List<ShortestPath>> shortestPaths){
+    public void cachingToRoom(HashMap pathMap,List<List<NearestPaths>> shortestPaths){
         /*ToBe Deleted*/
         dao.deleteAllPaths();
 
         /* M Osama: caching Paths in Room (only if PathsTable is empty) */
         if (dao.getNumberOfRowsOfPathsTable() == 0) {
             for (int pathNum = 0; pathNum < pathMap.size(); pathNum++) {
-                double tempDistance = Shortest.getPathDistance(shortestPaths, pathNum);
-                int tempCost = Shortest.getPathCost(shortestPaths, pathNum);
-                String tempPath = Shortest.getStringPathToPopulateRoom(pathMap).get(pathNum);
+                double tempDistance = PathsTokenizer.getPathDistance(shortestPaths, pathNum);
+                int tempCost = PathsTokenizer.getPathCost(shortestPaths, pathNum);
+                String tempPath = PathsTokenizer.getStringPathToPopulateRoom(pathMap).get(pathNum);
                 PathInfo pathInfo = new PathInfo(pathNum, tempDistance, tempCost, tempPath);
                 dao.insertPath(pathInfo);
             }
@@ -226,10 +204,10 @@ public class PathResults extends AppCompatActivity {
             PathInfo info = dao.getPathToPopulateWheel(pathNum);
             transportationsTemp.add(info.getPath());
         }
-        return Shortest.listToArray(transportationsTemp);
+        return PathsTokenizer.listToArray(transportationsTemp);
     }
 
-    public void storeLatLngOfEveryNodeInReturnedPaths(List<List<ShortestPath>> shortestPaths, Context context){
+    public void storeLatLngOfEveryNodeInReturnedPaths(List<List<NearestPaths>> shortestPaths, Context context){
         int numberOfReturnedPaths = shortestPaths.size();
         for(int pathNumber=0;pathNumber<numberOfReturnedPaths;pathNumber++){
 
