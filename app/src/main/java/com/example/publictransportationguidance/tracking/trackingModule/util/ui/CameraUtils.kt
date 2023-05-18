@@ -7,9 +7,7 @@ import com.google.android.gms.maps.model.*
 class CameraUtils {
 
     companion object {
-
-        /* M Osama: moves googleMaps Camera to passed LatLng */
-        fun moveCamera(googleMap: GoogleMap,latLng: LatLng) { googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng)) }
+//        fun moveCamera(googleMap: GoogleMap,latLng: LatLng) { googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng)) }
 
         /* M Osama: animate Camera transversing between location to another */
         fun animateCamera(googleMap: GoogleMap, latLng: LatLng) {
@@ -21,6 +19,12 @@ class CameraUtils {
         fun showDefaultLocationOnMap(googleMap: GoogleMap,latLng: LatLng) {
             moveCamera(googleMap,latLng)
             animateCamera(googleMap,latLng)
+        }
+
+        /* M Osama: moves googleMaps Camera to passed LatLng */
+        @JvmStatic
+        fun moveCamera(googleMap: GoogleMap, currentLocation: LatLng) {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
         }
 
     }

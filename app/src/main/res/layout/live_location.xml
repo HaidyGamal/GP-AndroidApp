@@ -13,30 +13,75 @@
         android:background="@drawable/sub_background"
         android:orientation="vertical">
 
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
+        <fragment
             android:id="@+id/trackingLocationMap"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/locationTxt"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"/>
+            app:layout_constraintVertical_bias="1.0" />
 
-        <TextView
-            android:id="@+id/locationTxt"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:gravity="right"
-            android:padding="32dp"
-            android:text="أنت الآن في"
-            android:textSize="30dp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline2" />
+<!--        <TextView-->
+<!--            android:id="@+id/location"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:gravity="right"-->
+<!--            android:padding="32dp"-->
+<!--            android:text=""-->
+<!--            android:textColor="@color/black"-->
+<!--            android:textSize="30dp"-->
+<!--            android:textStyle="bold"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/guideline8"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/guideline2" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/locationTxt"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:gravity="right"-->
+<!--            android:padding="32dp"-->
+<!--            android:text="أنت الآن في:"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:autoSizeTextType="uniform"-->
+<!--            android:textStyle="bold"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/guideline8"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/guideline2" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/start"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:text="بدأ"-->
+<!--            app:autoSizeMaxTextSize="40sp"-->
+<!--            app:autoSizeMinTextSize="6sp"-->
+<!--            app:autoSizeStepGranularity="1sp"-->
+<!--            app:autoSizeTextType="uniform"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/guideline8" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/stop"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:text="ايقاف"-->
+<!--            app:autoSizeMaxTextSize="40sp"-->
+<!--            app:autoSizeMinTextSize="6sp"-->
+<!--            app:autoSizeStepGranularity="1sp"-->
+<!--            app:autoSizeTextType="uniform"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/guideline8"-->
+<!--            app:layout_constraintStart_toStartOf="parent" />-->
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline2"
@@ -44,6 +89,13 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.75" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

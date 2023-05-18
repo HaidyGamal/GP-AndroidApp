@@ -88,7 +88,7 @@ object MapUtils {
         }
     }
 
-
+    @JvmStatic
     fun moveCar(googleMap: GoogleMap, context: Context, currentLocation: LatLng) {
         handler = Handler()
         runnable = Runnable {

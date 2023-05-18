@@ -93,6 +93,26 @@
     <string name="EnableGpsMessage">يبدو إنك غير مفعل امكانية استخدام مكانك، هل يمكنك تفعيلها ؟</string>
     <string name="Yes">نعم</string>
     <string name="No">لأ</string>
+
+
+    <string name="return_to_activity">متابعة السير</string>
+    <string name="location_unknown">Location unknown</string>
+    <string name="location_updates_label">Location Updates</string>
+
+    <string name="permission_rationale">Location permission is needed for core functionality</string>
+    <string name="permission_denied_explanation">Permission was denied, but is needed for core
+        functionality.</string>
+    <string name="settings">Settings</string>
+    <string name="ok">OK</string>
+    <string name="request_location_updates">Request location updates</string>
+    <string name="remove_location_updates">Remove location updates</string>
+
+    <string name="location_updated">Location Updated: %1$s</string>
+
+
+
+
+
     <!-- Strings related to spinner -->
     <string-array name="transportations">
         <item>Microbus</item>
@@ -101,5 +121,6 @@
 
     </string-array>
     <string name="title_activity_live_location">LiveLocation</string>
+    <string name="current_location_is">أنت الآن في</string>
 
 </resources>

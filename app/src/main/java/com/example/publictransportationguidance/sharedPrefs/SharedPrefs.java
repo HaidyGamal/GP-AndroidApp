@@ -20,6 +20,10 @@ public class SharedPrefs {
         }
     }
 
+    public static SharedPreferences getSharedPreferences() {
+        return sharedPrefs;
+    }
+
     //Overloaden Reading Methods
     public static String readMap(String key, String defValue)          { return sharedPrefs.getString(key, defValue); }
     public static boolean readMap(String key, boolean defValue)        { return sharedPrefs.getBoolean(key, defValue); }
