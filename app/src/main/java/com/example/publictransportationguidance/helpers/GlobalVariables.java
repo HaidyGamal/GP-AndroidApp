@@ -50,6 +50,7 @@ public class GlobalVariables {
     /* M Osama: search by distance or cost */
     public static boolean SEARCH_BY_COST = true;
     public static boolean SEARCH_BY_DISTANCE = false;
+    public static boolean SEARCH_BY_TIME = false;
 
     /* M Osama: path TAG for intent between PathResults & SelectedPaths */
     public static String SELECTED_PATH ="path";
@@ -59,5 +60,9 @@ public class GlobalVariables {
 
     public static String BUNDLE_PATH="";
     public static String INTENT_PATH="";
+
+    public final static String BUS="bus";
+    public final static String METRO="subway";
+    public final static String MODE="transit";
 
 }

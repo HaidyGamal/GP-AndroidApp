@@ -15,5 +15,4 @@ public class Account extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AccountBinding binding = DataBindingUtil.setContentView(this,R.layout.account);
-
 }}

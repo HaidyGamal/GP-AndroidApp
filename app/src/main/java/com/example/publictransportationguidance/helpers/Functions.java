@@ -1,14 +1,35 @@
 package com.example.publictransportationguidance.helpers;
 
+import static com.example.publictransportationguidance.BuildConfig.MAPS_API_KEY;
+import static com.example.publictransportationguidance.api.Api.GOOGLE_MAPS_BASE_URL;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.BUS;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.METRO;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.MODE;
+
+import android.app.Activity;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.widget.AdapterView;
 import android.widget.Toast;
+
+import com.example.publictransportationguidance.R;
+import com.example.publictransportationguidance.TripsTimeCallback;
+import com.example.publictransportationguidance.api.RetrofitClient;
+import com.example.publictransportationguidance.pojo.estimatedTimeResponse.EstimatedTime;
+import com.example.publictransportationguidance.pojo.pathsResponse.NearestPaths;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import retrofit2.Response;
 
 public class Functions {
 
@@ -144,6 +165,101 @@ public class Functions {
 //        }
 //        return sortedList;
 //    }
+
+    public static void noAvailablePathsToast(Context context){
+        Toast.makeText(context, "نأسف لعدم وجود طريق متوفرة", Toast.LENGTH_SHORT).show();
+    }
+    public static void checkInternetConnectionToast(Context context){
+        Toast.makeText(context, R.string.CheckInternetConnection, Toast.LENGTH_SHORT).show();
+    }
+    public static void searchingForResultsToast(Context context){
+        Toast.makeText(context, R.string.SearchingForPaths, Toast.LENGTH_SHORT).show();
+    }
+    public static void sortingByCostToast(Context context){
+        Toast.makeText(context, R.string.PathsSortedAccordingToCost, Toast.LENGTH_SHORT).show();
+    }
+    public static void sortingByDistanceToast(Context context){
+        Toast.makeText(context, R.string.PathsSortedAccordingToDistance, Toast.LENGTH_SHORT).show();
+    }
+    public static void sortingByTimeToast(Context context){
+        Toast.makeText(context, R.string.PathsSortedAccordingToTime, Toast.LENGTH_SHORT).show();
+    }
+
+    public static String getDurationText(Response<EstimatedTime> response) {
+        return response.body().getRoutes().get(0).getLegs().get(0).getDuration().getText();
+    }
+
+    public static int extractMinutes(String duration) {
+        String numberString = duration.replaceAll("[^0-9]", "");
+        return Integer.parseInt(numberString);
+    }
+
+    public static List<NearestPaths> getPathByNumber(List<List<NearestPaths>> paths, int pathNumber){
+        return paths.get(pathNumber);
+    }
+
+    public static ArrayList<String> getPathNodes(List<NearestPaths> path){
+        ArrayList<String> nodes = new ArrayList<>();
+        for(int i = 0; i< getPathSize(path); i++){
+            double latitude = path.get(i).getLatitude();
+            double longitude = path.get(i).getLongitude();
+            nodes.add(latitude+","+longitude);
+        }
+        return nodes;
+    }
+
+    public static ArrayList<String> getPathMeans(List<NearestPaths> path){
+        ArrayList<String> means = new ArrayList<>();
+        for(int i = 0; i< getPathSize(path); i++){
+            String mean = path.get(i).getTransportationType();
+            if(means.equals("bus") || means.equals("microbus")) means.add(BUS);
+            else                                                means.add(METRO);
+        }
+        return means;
+    }
+
+    public static int getPathSize(List<NearestPaths> path){
+        return path.size();
+    }
+
+    public static void calcEstimatedTripsTime(String location, String destination,int numberOfPaths,List<List<NearestPaths>> paths, Activity activity, TripsTimeCallback callback) {
+
+        /* M Osama: to store the estimated time of each Possible Path */
+        int[] globalDurations = new int[numberOfPaths];
+        Arrays.fill(globalDurations, 0);
+
+        for (int pathNumber = 0; pathNumber < numberOfPaths; pathNumber++) {
+            List<NearestPaths> path = getPathByNumber(paths, pathNumber);
+            int numberOfIntermediatePaths = getPathSize(path) - 1;
+
+            ArrayList<String> nodes = getPathNodes(path);
+            ArrayList<String> means = getPathMeans(path);
+            ArrayList<String> localDurations = new ArrayList<>();
+            ArrayList<Future<Response<EstimatedTime>>> responses = new ArrayList<>();
+
+            ExecutorService executor = Executors.newFixedThreadPool(numberOfIntermediatePaths);     /* M Osama: Creating multiple threads to calculate the duration between each two intermediate Nodes */
+
+            /* M Osama: iteration to calculate the totalTime of each possible Path */
+            for (int nodeNumber = 0; nodeNumber < numberOfIntermediatePaths; nodeNumber++) {
+                int constantNodeNumberForRequest = nodeNumber;
+                Future<Response<EstimatedTime>> apiResponse = executor.submit(() -> RetrofitClient.getInstance(GOOGLE_MAPS_BASE_URL).getApi().getEstimatedTime(nodes.get(constantNodeNumberForRequest), nodes.get(constantNodeNumberForRequest + 1), MODE, means.get(constantNodeNumberForRequest), MAPS_API_KEY).execute());
+                responses.add(apiResponse);
+
+                /* M Osama: summing the time between pathNodes to calculate the Path total time */
+                try {
+                    localDurations.add(getDurationText(responses.get(nodeNumber).get()));       /* M Osama: Getting a response from the multiple responses we runned then Getting duration of moving between two intermediate Nodes */
+                    globalDurations[pathNumber] += extractMinutes(localDurations.get(nodeNumber));        /* M Osama: Summing all subDurations to calculate the totalDuration */
+                } catch (InterruptedException | ExecutionException e) { e.printStackTrace(); }
+            }
+
+            executor.shutdown();                        // Shutdown the executor after completing the tasks
+        }
+
+        callback.onTripsTimeCalculated(globalDurations);
+
+    }
+
+
 
 
 }

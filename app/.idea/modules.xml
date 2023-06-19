@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1291636066/GP-AndroidApp.PublicTransportationGuidance.iml" filepath="$PROJECT_DIR$/.idea/modules/1291636066/GP-AndroidApp.PublicTransportationGuidance.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/388225645/PublicTransportationGuidance.iml" filepath="$PROJECT_DIR$/.idea/modules/388225645/PublicTransportationGuidance.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/PublicTransportationGuidance.app.iml" filepath="$PROJECT_DIR$/.idea/modules/PublicTransportationGuidance.app.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/PublicTransportationGuidance.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/PublicTransportationGuidance.app.androidTest.iml" />

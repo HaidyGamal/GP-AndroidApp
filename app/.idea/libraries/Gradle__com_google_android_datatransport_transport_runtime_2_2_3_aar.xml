@@ -4,6 +4,9 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/7d1be08ab863198f2e133203aa86caf5/transformed/transport-runtime-2.2.3/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/7d1be08ab863198f2e133203aa86caf5/transformed/transport-runtime-2.2.3/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/7d1be08ab863198f2e133203aa86caf5/transformed/transport-runtime-2.2.3/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4f471f590d7b5519856a35b1d9418953/transformed/transport-runtime-2.2.3/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/4f471f590d7b5519856a35b1d9418953/transformed/transport-runtime-2.2.3/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4f471f590d7b5519856a35b1d9418953/transformed/transport-runtime-2.2.3/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.android.datatransport/transport-runtime/2.2.3/98d7e688682f0a29533d77fc69ba2a642e195620/transport-runtime-2.2.3-javadoc.jar!/" />

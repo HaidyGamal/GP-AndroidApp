@@ -22,22 +22,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-<!--        <androidx.appcompat.widget.AppCompatButton-->
-<!--            android:id="@+id/pickCurrentLocationBtn"-->
-<!--            android:layout_width="40dp"-->
-<!--            android:layout_height="40dp"-->
-<!--            android:layout_margin="4dp"-->
-<!--            android:padding="8dp"-->
-<!--            android:background="@color/dark_red"-->
-<!--            android:drawableLeft="@drawable/ic_current_location"-->
-<!--            android:textColor="@color/white"-->
-<!--            android:textStyle="bold"-->
-<!--            app:layout_constraintBottom_toBottomOf="@+id/tv_location"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintHorizontal_bias="1.0"-->
-<!--            app:layout_constraintStart_toEndOf="@+id/tv_destination"-->
-<!--            app:layout_constraintTop_toTopOf="@+id/tv_location" />-->
-
         <AutoCompleteTextView
             android:id="@+id/tv_location"
             android:layout_width="0dp"
@@ -89,7 +73,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.50121653" />
+            app:layout_constraintGuide_percent="0.33333333" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.66666666" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline4"
@@ -156,10 +147,24 @@
                 android:layout_gravity="center"
                 android:checked="false"
                 android:padding="4dp"
-                android:layout_margin="32dp"
                 android:textColor="@color/dark_red"
                 android:textStyle="bold"
                 android:text="@string/distance"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:background="@drawable/button_background_red2" />
+
+            <RadioButton
+                android:id="@+id/timeRB_homeFragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:checked="false"
+                android:padding="4dp"
+                android:layout_margin="32dp"
+                android:textColor="@color/dark_red"
+                android:textStyle="bold"
+                android:text="@string/time"
                 android:textAlignment="center"
                 android:textSize="20sp"
                 android:background="@drawable/button_background_red2" />

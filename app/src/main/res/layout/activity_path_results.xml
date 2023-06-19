@@ -67,12 +67,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="32dp"
                 android:checked="false"
                 android:padding="4dp"
                 android:textColor="@color/dark_red"
                 android:textStyle="bold"
                 android:text="@string/distance"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:background="@drawable/button_background_red2" />
+
+            <!--adding a radio button -->
+            <RadioButton
+                android:id="@+id/timeRB_pathResults"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="32dp"
+                android:checked="false"
+                android:padding="4dp"
+                android:textColor="@color/dark_red"
+                android:textStyle="bold"
+                android:text="@string/time"
                 android:textAlignment="center"
                 android:textSize="20sp"
                 android:background="@drawable/button_background_red2" />
@@ -84,16 +99,34 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:padding="4dp"
-            android:hint="@string/cost"
-            android:textColorHint="@color/white"
-            android:textStyle="bold"
-            android:textColor="@color/white"
             android:background="@color/purple_200"
-            android:layout_marginStart="40dp"
+            android:hint="@string/cost"
+            android:layout_marginRight="24sp"
+            android:padding="4dp"
             android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
             android:textSize="25sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/guideline13"
+            app:layout_constraintTop_toTopOf="@+id/guideline7" />
+
+        <TextView
+            android:id="@+id/egyptianPound"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:background="@color/purple_200"
+            android:padding="10dp"
+            android:layout_marginLeft="12sp"
+            android:text="جم"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/cost"
+            app:layout_constraintEnd_toStartOf="@+id/cost"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guideline7" />
 
@@ -102,17 +135,69 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:padding="4dp"
-            android:hint="@string/distance"
-            android:layout_marginEnd="28dp"
-            android:textAlignment="center"
-            android:textSize="25sp"
-            android:textColorHint="@color/white"
-            android:textStyle="bold"
-            android:textColor="@color/white"
             android:background="@color/purple_200"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:hint="@string/distance"
+            android:padding="4dp"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/guideline14"
+            app:layout_constraintTop_toTopOf="@+id/guideline7" />
+
+        <TextView
+            android:id="@+id/kilometer"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:background="@color/purple_200"
+            android:padding="10dp"
+            android:text="كم"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/cost"
+            app:layout_constraintEnd_toStartOf="@+id/distance"
             app:layout_constraintStart_toStartOf="@+id/guideline13"
+            app:layout_constraintTop_toTopOf="@+id/guideline7" />
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/purple_200"
+            android:layout_marginRight="8sp"
+            android:hint="@string/time"
+            android:padding="4dp"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/distance"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/minutes"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:background="@color/purple_200"
+            android:padding="10dp"
+            android:layout_marginLeft="22sp"
+            android:text="دقيقة"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/cost"
+            app:layout_constraintEnd_toStartOf="@+id/time"
+            app:layout_constraintStart_toStartOf="@+id/guideline14"
             app:layout_constraintTop_toTopOf="@+id/guideline7" />
 
 <!--        <NumberPicker-->
@@ -153,6 +238,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_end="224dp" />
+            app:layout_constraintGuide_percent="0.36" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.64" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

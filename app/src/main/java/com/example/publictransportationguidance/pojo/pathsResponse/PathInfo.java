@@ -18,12 +18,16 @@ public class PathInfo {
     private int cost;
 
     @NotNull
+    private int time;
+
+    @NotNull
     private String path;
 
-    public PathInfo(int id,Double distance, int cost, String path) {
+    public PathInfo(int id,Double distance, int cost, int time,String path) {
         this.id=id;
         this.distance = distance;
         this.cost = cost;
+        this.time = time;
         this.path = path;
     }
 
@@ -46,6 +50,13 @@ public class PathInfo {
     }
     public void setCost(int cost) {
         this.cost = cost;
+    }
+
+    public int getTime() {
+        return time;
+    }
+    public void setTime(int time) {
+        this.time = time;
     }
 
     public String getPath() {

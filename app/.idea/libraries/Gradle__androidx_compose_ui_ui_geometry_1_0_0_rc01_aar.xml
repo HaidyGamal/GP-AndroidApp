@@ -4,6 +4,9 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/904c5f5306d7ee4727b471f9d6c9be12/transformed/ui-geometry-1.0.0-rc01/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/904c5f5306d7ee4727b471f9d6c9be12/transformed/ui-geometry-1.0.0-rc01/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/904c5f5306d7ee4727b471f9d6c9be12/transformed/ui-geometry-1.0.0-rc01/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/7968d7dfff61a35eebedf10d3df239be/transformed/ui-geometry-1.0.0-rc01/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/7968d7dfff61a35eebedf10d3df239be/transformed/ui-geometry-1.0.0-rc01/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/7968d7dfff61a35eebedf10d3df239be/transformed/ui-geometry-1.0.0-rc01/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

@@ -114,23 +114,34 @@ public class HomeFragment extends Fragment{
             if(binding.tvLocation.getText()+""!="" && binding.tvDestination.getText()+""!="") {
                 searchForPaths(locationLats,destinationLats);
             }
-            else  Toast.makeText(getContext(), "لا يمكن ترك أحد نقطتي الانطلاق أو الانتهاء فارغة", Toast.LENGTH_SHORT).show();
+            else  Toast.makeText(getContext(),R.string.AutoCompleteTextViewWarning, Toast.LENGTH_SHORT).show();
 
             // Toast.makeText(getContext(), lats[0]+","+lats[1], Toast.LENGTH_SHORT).show();       //M Osama: for debugging only
         });
 
-        /* M Osama: activate sorting using distance */
-        binding.distanceRBHomeFragment.setOnClickListener(v -> {
-            SEARCH_BY_DISTANCE=true;
-            SEARCH_BY_COST=false;
-            Toast.makeText(getActivity(), R.string.PathsSortedAccordingToDistance, Toast.LENGTH_SHORT).show();
-        });
 
         /* M Osama: activate sorting using cost */
         binding.costRBHomeFragment.setOnClickListener(v -> {
             SEARCH_BY_COST=true;
             SEARCH_BY_DISTANCE=false;
-            Toast.makeText(getActivity(), R.string.PathsSortedAccordingToCost, Toast.LENGTH_SHORT).show();
+            SEARCH_BY_TIME=false;
+            sortingByCostToast(getContext());
+        });
+
+        /* M Osama: activate sorting using distance */
+        binding.distanceRBHomeFragment.setOnClickListener(v -> {
+            SEARCH_BY_COST=false;
+            SEARCH_BY_DISTANCE=true;
+            SEARCH_BY_TIME=false;
+            sortingByDistanceToast(getContext());
+        });
+
+        /* M Osama: activate sorting using time */
+        binding.timeRBHomeFragment.setOnClickListener(v -> {
+            SEARCH_BY_COST=false;
+            SEARCH_BY_DISTANCE=false;
+            SEARCH_BY_TIME=true;
+            sortingByTimeToast(getContext());
         });
 
     }

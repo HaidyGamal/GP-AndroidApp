@@ -11,7 +11,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.publictransportationguidance.pojo.pathsResponse.PathInfo;
 
-@Database(entities = {PathInfo.class}, version = 4)
+@Database(entities = {PathInfo.class}, version = 5)
 public abstract class RoomDB extends RoomDatabase {
     private static RoomDB instance;
     public abstract DAO Dao();

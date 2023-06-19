@@ -122,5 +122,8 @@
     </string-array>
     <string name="title_activity_live_location">LiveLocation</string>
     <string name="current_location_is">أنت الآن في</string>
+    <string name="time">الوقت</string>
+    <string name="PathsSortedAccordingToTime">سيتم الترتيب طبقا للوقت</string>
+    <string name="AutoCompleteTextViewWarning">لا يمكن ترك أحد نقطتي الانطلاق أو الانتهاء فارغة</string>
 
 </resources>
