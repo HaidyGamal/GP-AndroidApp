@@ -1,5 +1,6 @@
 package com.example.publictransportationguidance.tracking;
 
+import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 import static com.example.publictransportationguidance.api.Api.NEO4J_BASE_URL;
 import static com.example.publictransportationguidance.helpers.Functions.calcEstimatedTripsTime;
 import static com.example.publictransportationguidance.helpers.Functions.checkInternetConnectionToast;
@@ -8,6 +9,7 @@ import static com.example.publictransportationguidance.helpers.Functions.searchi
 import static com.example.publictransportationguidance.helpers.Functions.sortingByCostToast;
 import static com.example.publictransportationguidance.helpers.Functions.sortingByDistanceToast;
 import static com.example.publictransportationguidance.helpers.Functions.sortingByTimeToast;
+import static com.example.publictransportationguidance.helpers.Functions.tryAgainToast;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.BUNDLE_PATH;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.INTENT_PATH;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.SELECTED_PATH;
@@ -31,7 +33,7 @@ import com.example.publictransportationguidance.api.RetrofitClient;
 import com.example.publictransportationguidance.R;
 import com.example.publictransportationguidance.room.DAO;
 import com.example.publictransportationguidance.room.RoomDB;
-import com.example.publictransportationguidance.pojo.PathsTokenizer;
+import com.example.publictransportationguidance.helpers.PathsTokenizer;
 import com.example.publictransportationguidance.pojo.pathsResponse.NearestPaths;
 import com.example.publictransportationguidance.databinding.ActivityPathResultsBinding;
 import com.google.android.gms.maps.model.LatLng;
@@ -100,11 +102,11 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
                         wheelTransportations = feedWheel();                                     /* M Osama: Build String Array from cachedPath Info */
                         identifyingWheelSettings();                                         /* M Osama: Identifying wheel settings*/
                         wheelOnClickListener(paths);                                     /* M Osama: onClickListener for wheel representing choices */
-                        costAndDistanceTracker();                                           /* M Osama: textViews tracking currentPath cost & distance */
+                        costDistanceTimeTracker();                                           /* M Osama: textViews tracking currentPath cost & distance */
                         sortingClickListener();                                             /* M Osama: onClickListener for two sorting Buttons */
                         calcEstimatedTripsTime(LOCATION,DESTINATION,paths.size(),paths,activity,callback);
                     }
-                    else { Toast.makeText(getApplicationContext(),"Error",Toast.LENGTH_SHORT);  noPathsFound();  noAvailablePathsToast(getApplicationContext()); }
+                    else { tryAgainToast(getApplicationContext());  noPathsFound();  noAvailablePathsToast(getApplicationContext()); }
                 }
                 else { checkInternetConnectionToast(getApplicationContext()); noPathsFound(); }
 
@@ -117,10 +119,10 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
     }
 
     public void identifyingWheelSettings() {
-        binding.wheel.setMinValue(0);                            /* M Osama: wheel populated starting from index0 from source*/
-        binding.wheel.setMaxValue(wheelTransportations.length - 1);   /* M Osama: wheel populated till index(len-1)*/
-        binding.wheel.setValue(0);                               /* M Osama: index0 content represent best result; to be edited after building database & mapping */
-        binding.wheel.setDisplayedValues(wheelTransportations);       /* M Osama: populating wheel with data */
+        binding.wheel.setMinValue(0);                                   /* M Osama: wheel populated starting from index0 from source*/
+        binding.wheel.setMaxValue(wheelTransportations.length - 1);     /* M Osama: wheel populated till index(len-1)*/
+        binding.wheel.setValue(0);                                      /* M Osama: index0 content represent best result; to be edited after building database & mapping */
+        binding.wheel.setDisplayedValues(wheelTransportations);         /* M Osama: populating wheel with data */
     }
 
     public void noPathsFound(){
@@ -135,12 +137,9 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
     }
 
     public void sortingClickListener(){
-        /* M Osama: Sort by cost */
-        binding.costRBPathResults.setOnClickListener((View view) -> sortingByCostToast(this));
-        /* M Osama: Sort by distance */
-        binding.distanceRBPathResults.setOnClickListener((View view) -> sortingByDistanceToast(this));
-        /* M Osama: Sort by distance */
-        binding.timeRBPathResults.setOnClickListener((View view) -> sortingByTimeToast(this));
+        binding.costRBPathResults.setOnClickListener((View view) -> sortingByCostToast(this));          /* M Osama: Sort by cost */
+        binding.distanceRBPathResults.setOnClickListener((View view) -> sortingByDistanceToast(this));  /* M Osama: Sort by distance */
+        binding.timeRBPathResults.setOnClickListener((View view) -> sortingByTimeToast(this));          /* M Osama: Sort by time */
     }
 
     public void wheelOnClickListener(List<List<NearestPaths>> shortestPaths){
@@ -165,6 +164,11 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
             intentToSelectedPath.putExtra(SELECTED_PATH,pickedPathDetails);
 
             Toast.makeText(PathResults.this, pickedPathNodes, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(PathResults.this,pickedPathDetails, Toast.LENGTH_SHORT).show();
+            Log.i("Hona",pickedPathDetails);
+            Log.i("Hona",pickedPathNodes);
+            Log.i("Hona",numOfSelectedPath+"");
+            Log.i("Hona",pathsNodesLatLng.get(numOfSelectedPath)+"");
 
             startActivity(intentToSelectedPath);
         });
@@ -176,16 +180,26 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
         /* binding.time is written down in onTripsTimeCalculated */
     }
 
-    public void costAndDistanceTracker(){
-        /* M Osama: track costs & distances of selected Path */
-        binding.wheel.setOnScrollListener((com.shawnlin.numberpicker.NumberPicker numberPicker, int i) -> {
-            String cost = "" + dao.getPathToPopulateWheel(numberPicker.getValue()).getCost();
-            String distance = "" + dao.getPathToPopulateWheel(numberPicker.getValue()).getDistance();
-            String time = ""+dao.getPathToPopulateWheel(numberPicker.getValue()).getTime();
-            binding.cost.setText(cost);
-            binding.distance.setText(distance);
-            binding.time.setText(time);
+    public void costDistanceTimeTracker() {
+        binding.wheel.setOnValueChangedListener((numberPicker, oldValue, newValue) -> {
+            updateCostDistanceTime(newValue);
         });
+
+        binding.wheel.setOnScrollListener((numberPicker, scrollState) -> {
+            if (scrollState == SCROLL_STATE_IDLE) {
+                int currentValue = binding.wheel.getValue();
+                updateCostDistanceTime(currentValue);
+            }
+        });
+    }
+
+    private void updateCostDistanceTime(int value) {
+        String cost = "" + dao.getPathToPopulateWheel(value).getCost();
+        String distance = "" + dao.getPathToPopulateWheel(value).getDistance();
+        String time = "" + dao.getPathToPopulateWheel(value).getTime();
+        binding.cost.setText(cost);
+        binding.distance.setText(distance);
+        binding.time.setText(time);
     }
 
     public void cachingToRoom(HashMap pathMap,List<List<NearestPaths>> shortestPaths){
@@ -217,10 +231,10 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
         int numberOfReturnedPaths = shortestPaths.size();
         for(int pathNumber=0;pathNumber<numberOfReturnedPaths;pathNumber++){
             int numberOfNodesInPath = shortestPaths.get(pathNumber).size();
+//            tempPathNodesLatLng.clear();
             for(int nodeNumber=0;nodeNumber<numberOfNodesInPath;nodeNumber++) {
                 double latitude = shortestPaths.get(pathNumber).get(nodeNumber).getLatitude();
                 double longitude = shortestPaths.get(pathNumber).get(nodeNumber).getLongitude();
-
                 tempPathNodesLatLng.add(nodeNumber,new LatLng(latitude,longitude));
             }
             pathsNodesLatLng.add(pathNumber, tempPathNodesLatLng);
@@ -236,4 +250,5 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
         }
         binding.time.setText(globalDurations[0]+"");
     }
+
 }

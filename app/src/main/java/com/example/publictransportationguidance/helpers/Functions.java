@@ -184,6 +184,9 @@ public class Functions {
     public static void sortingByTimeToast(Context context){
         Toast.makeText(context, R.string.PathsSortedAccordingToTime, Toast.LENGTH_SHORT).show();
     }
+    public static void tryAgainToast(Context context) {
+        Toast.makeText(context, R.string.TryAgain, Toast.LENGTH_SHORT);
+    }
 
     public static String getDurationText(Response<EstimatedTime> response) {
         return response.body().getRoutes().get(0).getLegs().get(0).getDuration().getText();

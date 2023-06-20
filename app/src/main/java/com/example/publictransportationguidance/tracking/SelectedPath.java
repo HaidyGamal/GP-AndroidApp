@@ -79,12 +79,6 @@ public class SelectedPath extends AppCompatActivity implements SharedPreferences
 
 
 
-
-
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

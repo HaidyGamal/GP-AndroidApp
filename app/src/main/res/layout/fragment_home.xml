@@ -69,20 +69,6 @@
             app:layout_constraintTop_toTopOf="@+id/guideline6" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.33333333" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.66666666" />
-
-        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -111,63 +97,60 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.8" />
 
-        <!--displaying a radio group on below line-->
         <RadioGroup
             android:id="@+id/radioGroup_homeFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_centerInParent="true"
-            android:layout_gravity="center"
             android:gravity="center"
             android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@+id/searchBtn"
             app:layout_constraintTop_toBottomOf="@+id/tv_destination">
 
-            <!--adding a radio button -->
             <RadioButton
                 android:id="@+id/costRB_homeFragment"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="32dp"
-                android:checked="false"
+                android:layout_weight="1"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/button_background_red2"
                 android:padding="4dp"
-                android:textColor="@color/dark_red"
-                android:textStyle="bold"
                 android:text="@string/cost"
                 android:textAlignment="center"
+                android:textColor="@color/dark_red"
                 android:textSize="20sp"
-                android:background="@drawable/button_background_red2" />
+                android:textStyle="bold" />
 
-            <!--adding a radio button -->
             <RadioButton
                 android:id="@+id/distanceRB_homeFragment"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:checked="false"
+                android:layout_weight="1"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/button_background_red2"
                 android:padding="4dp"
-                android:textColor="@color/dark_red"
-                android:textStyle="bold"
                 android:text="@string/distance"
                 android:textAlignment="center"
+                android:textColor="@color/dark_red"
                 android:textSize="20sp"
-                android:background="@drawable/button_background_red2" />
+                android:textStyle="bold" />
 
             <RadioButton
                 android:id="@+id/timeRB_homeFragment"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:checked="false"
+                android:layout_weight="1"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/button_background_red2"
                 android:padding="4dp"
-                android:layout_margin="32dp"
-                android:textColor="@color/dark_red"
-                android:textStyle="bold"
                 android:text="@string/time"
                 android:textAlignment="center"
+                android:textColor="@color/dark_red"
                 android:textSize="20sp"
-                android:background="@drawable/button_background_red2" />
+                android:textStyle="bold" />
 
         </RadioGroup>
 

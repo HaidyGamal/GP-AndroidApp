@@ -1,4 +1,4 @@
-package com.example.publictransportationguidance.pojo;
+package com.example.publictransportationguidance.helpers;
 
 import com.example.publictransportationguidance.pojo.pathsResponse.NearestPaths;
 

@@ -17,8 +17,10 @@
         <entry key="..\:/AndroidProjects/GRADUATION_PROJECT/GP-AndroidApp/app/src/main/res/layout/nav_header_main.xml" value="0.25" />
         <entry key="..\:/AndroidProjects/GRADUATION_PROJECT/GP-AndroidApp/app/src/main/res/layout/selected_path.xml" value="0.25" />
         <entry key="..\:/AndroidProjects/GRADUATION_PROJECT/GP-AndroidApp/app/src/main/res/layout/verification.xml" value="0.25" />
-        <entry key="..\:/FinalProject/GP-AndroidApp/app/src/main/res/layout/activity_path_results.xml" value="0.5" />
-        <entry key="..\:/FinalProject/GP-AndroidApp/app/src/main/res/layout/fragment_home.xml" value="0.5" />
+        <entry key="..\:/FinalProject/GP-AndroidApp/app/src/main/res/layout/activity_main.xml" value="0.38697916666666665" />
+        <entry key="..\:/FinalProject/GP-AndroidApp/app/src/main/res/layout/activity_path_results.xml" value="0.4322916666666667" />
+        <entry key="..\:/FinalProject/GP-AndroidApp/app/src/main/res/layout/activity_track_live_location.xml" value="0.38697916666666665" />
+        <entry key="..\:/FinalProject/GP-AndroidApp/app/src/main/res/layout/fragment_home.xml" value="0.33" />
       </map>
     </option>
   </component>

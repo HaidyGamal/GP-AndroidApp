@@ -13,7 +13,12 @@
         tools:context=".tracking.PathResults"
         android:background="@drawable/sub_background">
 
-        <!--displaying a radio group on below line-->
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.1" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline11"
@@ -23,76 +28,121 @@
             app:layout_constraintGuide_percent="0.38" />
 
         <TextView
+            android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
+            android:background="@drawable/button_background_red1"
             android:gravity="center"
             android:text="@string/paths_sorted_by"
             android:textColor="@color/white"
-            android:textStyle="bold"
-            android:background="@drawable/button_background_red1"
             android:textSize="32dp"
-            app:layout_constraintBottom_toTopOf="@+id/radioGroup_pathResults"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/guideline20"
+            app:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteX="0dp"></TextView>
 
         <RadioGroup
             android:id="@+id/radioGroup_pathResults"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24sp"
+            android:layout_marginEnd="16dp"
             android:layout_centerInParent="true"
-            android:layout_gravity="center"
             android:gravity="center"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@+id/guideline7">
+            app:layout_constraintTop_toBottomOf="@+id/textView2">
 
-            <!--adding a radio button -->
             <RadioButton
                 android:id="@+id/costRB_pathResults"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="32dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/button_background_red2"
                 android:checked="false"
                 android:padding="4dp"
-                android:textColor="@color/dark_red"
-                android:textStyle="bold"
                 android:text="@string/cost"
                 android:textAlignment="center"
+                android:textColor="@color/dark_red"
                 android:textSize="20sp"
-                android:background="@drawable/button_background_red2" />
+                android:textStyle="bold" />
 
-            <!--adding a radio button -->
             <RadioButton
                 android:id="@+id/distanceRB_pathResults"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/button_background_red2"
                 android:checked="false"
                 android:padding="4dp"
-                android:textColor="@color/dark_red"
-                android:textStyle="bold"
                 android:text="@string/distance"
                 android:textAlignment="center"
+                android:textColor="@color/dark_red"
                 android:textSize="20sp"
-                android:background="@drawable/button_background_red2" />
+                android:textStyle="bold" />
 
-            <!--adding a radio button -->
             <RadioButton
                 android:id="@+id/timeRB_pathResults"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="32dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/button_background_red2"
                 android:checked="false"
                 android:padding="4dp"
-                android:textColor="@color/dark_red"
-                android:textStyle="bold"
                 android:text="@string/time"
                 android:textAlignment="center"
+                android:textColor="@color/dark_red"
                 android:textSize="20sp"
-                android:background="@drawable/button_background_red2" />
+                android:textStyle="bold" />
 
         </RadioGroup>
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.11111111111111" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.3333333333333" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline18"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.4444444444444" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.666666666666" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline19"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.7777777777777777" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline21"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.25" />
 
         <TextView
             android:id="@+id/cost"
@@ -101,25 +151,24 @@
             android:layout_gravity="center"
             android:background="@color/purple_200"
             android:hint="@string/cost"
-            android:layout_marginRight="24sp"
             android:padding="4dp"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             android:textSize="25sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/guideline13"
-            app:layout_constraintTop_toTopOf="@+id/guideline7" />
+            app:layout_constraintEnd_toStartOf="@+id/guideline15"
+            app:layout_constraintStart_toStartOf="@+id/guideline17"
+            app:layout_constraintTop_toBottomOf="@+id/guideline21" />
 
         <TextView
             android:id="@+id/egyptianPound"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_gravity="center"
             android:background="@color/purple_200"
             android:padding="10dp"
-            android:layout_marginLeft="12sp"
-            android:text="جم"
+            android:text="جنيه"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
@@ -127,8 +176,8 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/cost"
             app:layout_constraintEnd_toStartOf="@+id/cost"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline7" />
+            app:layout_constraintTop_toBottomOf="@+id/guideline21" />
+
 
         <TextView
             android:id="@+id/distance"
@@ -143,12 +192,13 @@
             android:textColorHint="@color/white"
             android:textSize="25sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/guideline14"
-            app:layout_constraintTop_toTopOf="@+id/guideline7" />
+            app:layout_constraintEnd_toStartOf="@+id/guideline16"
+            app:layout_constraintStart_toStartOf="@+id/guideline18"
+            app:layout_constraintTop_toBottomOf="@+id/guideline21" />
 
         <TextView
             android:id="@+id/kilometer"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_gravity="center"
             android:background="@color/purple_200"
@@ -159,18 +209,17 @@
             android:textColorHint="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/cost"
+            app:layout_constraintBottom_toBottomOf="@+id/distance"
             app:layout_constraintEnd_toStartOf="@+id/distance"
-            app:layout_constraintStart_toStartOf="@+id/guideline13"
-            app:layout_constraintTop_toTopOf="@+id/guideline7" />
+            app:layout_constraintTop_toBottomOf="@+id/guideline21" />
 
         <TextView
             android:id="@+id/time"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@color/purple_200"
-            android:layout_marginRight="8sp"
             android:hint="@string/time"
             android:padding="4dp"
             android:textAlignment="center"
@@ -178,37 +227,26 @@
             android:textColorHint="@color/white"
             android:textSize="25sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/distance"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="@+id/radioGroup_pathResults"
+            app:layout_constraintStart_toStartOf="@+id/guideline19"
+            app:layout_constraintTop_toBottomOf="@+id/guideline21" />
 
         <TextView
             android:id="@+id/minutes"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_gravity="center"
             android:background="@color/purple_200"
             android:padding="10dp"
-            android:layout_marginLeft="22sp"
-            android:text="دقيقة"
+            android:text="د"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/cost"
+            app:layout_constraintBottom_toBottomOf="@+id/time"
             app:layout_constraintEnd_toStartOf="@+id/time"
-            app:layout_constraintStart_toStartOf="@+id/guideline14"
-            app:layout_constraintTop_toTopOf="@+id/guideline7" />
-
-<!--        <NumberPicker-->
-<!--            android:id="@+id/wheel"-->
-<!--            android:textSize="4sp"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_margin="20dp"-->
-<!--            android:theme="@style/AppTheme.Picker"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/radioGroup_pathResults"></NumberPicker>-->
+            app:layout_constraintTop_toBottomOf="@+id/guideline21" />
 
         <com.shawnlin.numberpicker.NumberPicker
             android:id="@+id/wheel"
@@ -233,18 +271,5 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.3" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline13"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.36" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline14"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.64" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

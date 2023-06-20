@@ -125,5 +125,6 @@
     <string name="time">الوقت</string>
     <string name="PathsSortedAccordingToTime">سيتم الترتيب طبقا للوقت</string>
     <string name="AutoCompleteTextViewWarning">لا يمكن ترك أحد نقطتي الانطلاق أو الانتهاء فارغة</string>
+    <string name="TryAgain">هناك مشكلة، نرجو اعادة المحاولة</string>
 
 </resources>
