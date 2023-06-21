@@ -259,8 +259,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cost"
-            app:np_dividerDistance="140dp"
-            app:np_height="180dp"
+            app:np_dividerDistance="90dp"
+            app:np_height="140dp"
             app:np_wrapSelectorWheel="true"
             app:np_itemSpacing="8dp"/>
 
