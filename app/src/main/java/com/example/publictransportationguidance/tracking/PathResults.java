@@ -66,6 +66,9 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
     public static ArrayList<ArrayList<LatLng>> pathsNodesLatLng = new ArrayList<>();
     ArrayList<LatLng> tempPathNodesLatLng=new ArrayList<>();
 
+    /* M Osama: instance to put loadingDialog infront of UI */
+    LoadingDialog loadingDialog = new LoadingDialog(PathResults.this);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +83,9 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
 
         dao = RoomDB.getInstance(getApplication()).Dao();
 
+
+
+        loadingDialog.startLoadingDialog();
         getNearestPaths(LOCATION,DESTINATION,this,this);
 
     }
@@ -87,10 +93,12 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
 
     public void getNearestPaths(String location, String destination, Activity activity,TripsTimeCallback callback) {
 
+
         RetrofitClient.getInstance(NEO4J_BASE_URL).getApi().getNearestPaths(location,destination).enqueue(new Callback<List<List<NearestPaths>>>() {
             @Override
             public void onResponse(@NonNull Call<List<List<NearestPaths>>> call, @NonNull Response<List<List<NearestPaths>>> response) {
                 List<List<NearestPaths>> paths = response.body();
+//                binding.progressBar.setVisibility(View.GONE);
 
                 if (paths != null) {
                     if (paths.size() > 0) {
@@ -105,6 +113,7 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
                         costDistanceTimeTracker();                                           /* M Osama: textViews tracking currentPath cost & distance */
                         sortingClickListener();                                             /* M Osama: onClickListener for two sorting Buttons */
                         calcEstimatedTripsTime(LOCATION,DESTINATION,paths.size(),paths,activity,callback);
+                        loadingDialog.endLoadingDialog();
                     }
                     else { tryAgainToast(getApplicationContext());  noPathsFound();  noAvailablePathsToast(getApplicationContext()); }
                 }
@@ -113,7 +122,11 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<List<NearestPaths>>> call, @NonNull Throwable t) { noPathsFound(); }
+            public void onFailure(@NonNull Call<List<List<NearestPaths>>> call, @NonNull Throwable t) {
+                noPathsFound();
+                loadingDialog.endLoadingDialog();
+//                binding.progressBar.setVisibility(View.GONE);
+            }
         });
 
     }
