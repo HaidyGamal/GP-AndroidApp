@@ -25,11 +25,9 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginDialog extends DialogFragment {
     FragmentLoginBinding binding;
     String email,password;
-    String emailPattern="[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     ProgressDialog dialog;
     AlertDialog.Builder LoginDialogBuilder;
     FirebaseAuth mAuth;
-    FirebaseUser mUser;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_login,container,false);
@@ -60,6 +58,8 @@ public class LoginDialog extends DialogFragment {
     }
 
     private void performLogin() {
+
+        String emailPattern="[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
         email = binding.email.getText().toString();
         password = binding.password.getText().toString();
 
@@ -74,7 +74,7 @@ public class LoginDialog extends DialogFragment {
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     dialog.dismiss();
-                    mUser=mAuth.getCurrentUser();
+                    FirebaseUser mUser=mAuth.getCurrentUser();
                     if(mUser!=null) {
                         if (!mUser.isEmailVerified()) {
                             LoginDialogBuilder.setMessage(R.string.ThisAccountIsNotVerified);

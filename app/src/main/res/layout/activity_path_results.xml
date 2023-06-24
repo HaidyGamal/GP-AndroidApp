@@ -54,7 +54,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView2">
 
             <RadioButton
-                android:id="@+id/costRB_pathResults"
+                android:id="@+id/sortByCost"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -69,7 +69,7 @@
                 android:textStyle="bold" />
 
             <RadioButton
-                android:id="@+id/distanceRB_pathResults"
+                android:id="@+id/sortByDistance"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -85,7 +85,7 @@
                 android:textStyle="bold" />
 
             <RadioButton
-                android:id="@+id/timeRB_pathResults"
+                android:id="@+id/sortByTime"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

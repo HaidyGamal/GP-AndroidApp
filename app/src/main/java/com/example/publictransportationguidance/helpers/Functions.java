@@ -6,7 +6,6 @@ import static com.example.publictransportationguidance.helpers.GlobalVariables.B
 import static com.example.publictransportationguidance.helpers.GlobalVariables.METRO;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.MODE;
 
-import android.app.Activity;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
@@ -64,20 +63,6 @@ public class Functions {
         return Arrays.asList(dataSource).indexOf(selectedItem);
     }
 
-    /*M Osama: used to take only the first two words of the place picked from the map */
-    public static String extractAddress(String input) {
-        String[] parts = input.split(",");
-        if (parts.length >= 3) {
-            return parts[1].trim() + ", " + parts[2].trim();
-        } else {
-            return "";
-        }
-    }
-
-    public static boolean freeOfNumbers(String str) {
-        return str.matches("[a-zA-Z]+");
-    }
-
     public static String getLocationName(Context context, Double latitude, Double longitude){
         Geocoder myLocation = new Geocoder(context, new Locale("ar"));
         List<Address> myList;
@@ -132,48 +117,16 @@ public class Functions {
 
         return temp;
     }
-    public static String deleteSinglePipe(String string) {
-        if (string.indexOf('|') == string.lastIndexOf('|')) {
-            string = string.replace("|", "");
-        }
-        return string;
-    }
-    public static String deleteSinglePipeIfSucceededByTwoSpaces(String string) {
-        int index = string.indexOf("|  ");
-        if (index != -1 && index == string.lastIndexOf("|  ")) {
-            string = string.replace("|  ", "");
-        }
-        return string;
-    }
-
 
     public static String stringEnhancer(String str){
         return removeVerticalBarWithSpaces(removeSingleComma(removeCommaWithSpaceAfter(removeNonAlphabeticCharacters(removeEgyptWithSpaceBefore(str)))));
     }
-
-//    public static List<Nearby> sortByDistance(List<Nearby> nearbyList) {
-//        int n = nearbyList.size();
-//        List<Nearby> sortedList = new ArrayList<>(nearbyList);
-//        for (int i = 0; i < n-1; i++) {
-//            for (int j = 0; j < n-i-1; j++) {
-//                if (sortedList.get(j).getDistance() > sortedList.get(j+1).getDistance()) {
-//                    Nearby temp = sortedList.get(j);
-//                    sortedList.set(j, sortedList.get(j+1));
-//                    sortedList.set(j+1, temp);
-//                }
-//            }
-//        }
-//        return sortedList;
-//    }
 
     public static void noAvailablePathsToast(Context context){
         Toast.makeText(context, "نأسف لعدم وجود طريق متوفرة", Toast.LENGTH_SHORT).show();
     }
     public static void checkInternetConnectionToast(Context context){
         Toast.makeText(context, R.string.CheckInternetConnection, Toast.LENGTH_SHORT).show();
-    }
-    public static void searchingForResultsToast(Context context){
-        Toast.makeText(context, R.string.SearchingForPaths, Toast.LENGTH_SHORT).show();
     }
     public static void sortingByCostToast(Context context){
         Toast.makeText(context, R.string.PathsSortedAccordingToCost, Toast.LENGTH_SHORT).show();
@@ -215,8 +168,8 @@ public class Functions {
         ArrayList<String> means = new ArrayList<>();
         for(int i = 0; i< getPathSize(path); i++){
             String mean = path.get(i).getTransportationType();
-            if(means.equals("bus") || means.equals("microbus")) means.add(BUS);
-            else                                                means.add(METRO);
+            if(mean.equals("bus") || mean.equals("microbus")) means.add(BUS);
+            else                                              means.add(METRO);
         }
         return means;
     }
@@ -225,13 +178,13 @@ public class Functions {
         return path.size();
     }
 
-    public static void calcEstimatedTripsTime(String location, String destination,int numberOfPaths,List<List<NearestPaths>> paths, Activity activity, TripsTimeCallback callback) {
+    public static void calcEstimatedTripsTime(List<List<NearestPaths>> paths, TripsTimeCallback callback) {
 
         /* M Osama: to store the estimated time of each Possible Path */
-        int[] globalDurations = new int[numberOfPaths];
+        int[] globalDurations = new int[paths.size()];
         Arrays.fill(globalDurations, 0);
 
-        for (int pathNumber = 0; pathNumber < numberOfPaths; pathNumber++) {
+        for (int pathNumber = 0; pathNumber < paths.size(); pathNumber++) {
             List<NearestPaths> path = getPathByNumber(paths, pathNumber);
             int numberOfIntermediatePaths = getPathSize(path) - 1;
 
@@ -263,6 +216,35 @@ public class Functions {
     }
 
 
-
-
 }
+
+
+/** M Osama: old functions to be deleted if we didn't need them */
+//public static void searchingForResultsToast(Context context){
+//    Toast.makeText(context, R.string.SearchingForPaths, Toast.LENGTH_SHORT).show();
+//}
+//public static String deleteSinglePipe(String string) {
+//    if (string.indexOf('|') == string.lastIndexOf('|')) {
+//        string = string.replace("|", "");
+//    }
+//    return string;
+//}
+//    public static String deleteSinglePipeIfSucceededByTwoSpaces(String string) {
+//        int index = string.indexOf("|  ");
+//        if (index != -1 && index == string.lastIndexOf("|  ")) {
+//            string = string.replace("|  ", "");
+//        }
+//        return string;
+//    }
+/*M Osama: used to take only the first two words of the place picked from the map */
+//public static String extractAddress(String input) {
+//    String[] parts = input.split(",");
+//    if (parts.length >= 3) {
+//        return parts[1].trim() + ", " + parts[2].trim();
+//    } else {
+//        return "";
+//    }
+//}
+//public static boolean freeOfNumbers(String str) {
+//    return str.matches("[a-zA-Z]+");
+//}

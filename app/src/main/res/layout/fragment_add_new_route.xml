@@ -11,12 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".Fragments.AddNewRouteFragment">
+        tools:context=".Fragments.AddNewRouteFragment"
+        android:weightSum="12">
 
         <LinearLayout
             android:id="@+id/L1"
             android:layout_width="match_parent"
-            android:layout_height="59dp"
+            android:layout_height="0dp"
+            android:layout_weight="1.5"
             android:orientation="horizontal">
 
             <TextView
@@ -39,7 +41,8 @@
         <LinearLayout
             android:id="@+id/L2"
             android:layout_width="match_parent"
-            android:layout_height="59dp"
+            android:layout_height="0dp"
+            android:layout_weight="1.5"
             android:orientation="horizontal">
 
             <TextView
@@ -62,7 +65,8 @@
         <LinearLayout
             android:id="@+id/L3"
             android:layout_width="match_parent"
-            android:layout_height="59dp"
+            android:layout_height="0dp"
+            android:layout_weight="1.5"
             android:orientation="horizontal">
 
             <TextView
@@ -87,7 +91,8 @@
         <LinearLayout
             android:id="@+id/L4"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1.5"
             android:layout_marginTop="15dp"
             android:orientation="horizontal">
 
@@ -113,7 +118,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="59dp"
+            android:layout_height="0dp"
+            android:layout_weight="1.5"
             android:orientation="horizontal">
 
             <TextView
@@ -135,10 +141,27 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/submit_btn"
+            android:id="@+id/submit"
             android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="120dp"
+            android:layout_height="0dp"
+            android:layout_margin="12sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_weight="1"
             android:text="@string/submit" />
+
+        <Button
+            android:id="@+id/logOut"
+            android:layout_width="150dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="80sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:text="@string/logOut" />
+
     </LinearLayout>
+
+
+
 </layout>

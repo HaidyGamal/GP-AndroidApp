@@ -2,9 +2,12 @@ package com.example.publictransportationguidance.room;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.example.publictransportationguidance.pojo.pathsResponse.PathInfo;
+
+import java.util.List;
 
 @Dao
 public interface DAO {
@@ -18,16 +21,19 @@ public interface DAO {
     @Query("SELECT COUNT(path) FROM Paths")
     int getNumberOfRowsOfPathsTable();
 
-    @Query("SELECT * FROM Paths WHERE id =:pathNum")
-    PathInfo getPathToPopulateWheel(int pathNum);
-
-    @Query("UPDATE Paths SET time = :time WHERE id = :pathNum")
+    @Query("UPDATE Paths SET time = :time WHERE defaultPathNumber = :pathNum")
     void updatePathTime(int pathNum, int time);
 
-    @Query("SELECT * FROM Paths ORDER BY cost")
-    PathInfo getPathInfoOrderedByCost();
-    @Query("SELECT * FROM Paths ORDER BY distance")
-    PathInfo getPathInfoOrderedByDistance();
+
+    @Query("SELECT * FROM Paths ORDER BY " + "CASE " + "WHEN :sortingCriteria = 'time' THEN time " + "WHEN :sortingCriteria = 'distance' THEN distance " + "WHEN :sortingCriteria = 'cost' THEN cost " + "END ASC")
+    List<PathInfo> getSortedPathsASC(String sortingCriteria);
+
+    @Query("DELETE FROM Paths")
+    void clearAllPaths();
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertPaths(List<PathInfo> paths);
+
 }
 
 
@@ -51,6 +57,17 @@ public interface DAO {
 
 //    @Query("SELECT * FROM Stops ORDER BY name")
 //    List<StopModel> getAllStopsInfo();
+
+//@Query("SELECT * FROM Paths ORDER BY cost")
+//PathInfo getPathInfoOrderedByCost();
+//    @Query("SELECT * FROM Paths ORDER BY distance")
+//    PathInfo getPathInfoOrderedByDistance();
+
+//@Query("SELECT * FROM Paths WHERE defaultPathNumber =:pathNum")
+//PathInfo getPathToPopulateWheel(int pathNum);
+
+//    @Query("SELECT * FROM Paths ORDER BY " + "CASE " + "WHEN :sortingCriteria = 'time' THEN time " + "WHEN :sortingCriteria = 'distance' THEN distance " + "WHEN :sortingCriteria = 'cost' THEN cost " + "END DESC")
+//    List<PathInfo> getSortedPathsDESC(String sortingCriteria);
 /************************************************************************************************/
 
 

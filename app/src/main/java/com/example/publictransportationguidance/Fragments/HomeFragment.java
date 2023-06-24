@@ -56,8 +56,6 @@ public class HomeFragment extends Fragment{
     /* M Osama: Google Maps API -> stops -> AutoCompleteTextView */
     String[] stopsArray ={};
     String[] stopsIDsArray={};
-    public static List<String> stopsList = new ArrayList<>();
-    public static List<String> stopsIDsList = new ArrayList<>();
 
     /* M Osama: instance of CustomAutoComplete Adapter */
     CustomAutoCompleteAdapter list;
@@ -111,38 +109,14 @@ public class HomeFragment extends Fragment{
         autoCompleteOnFooterClick(getView());
 
         binding.searchBtn.setOnClickListener(v -> {
-            if(binding.tvLocation.getText()+""!="" && binding.tvDestination.getText()+""!="") {
-                searchForPaths(locationLats,destinationLats);
-            }
+            if(binding.tvLocation.getText()+""!="" && binding.tvDestination.getText()+""!="")   searchForPaths(locationLats,destinationLats);
             else  Toast.makeText(getContext(),R.string.AutoCompleteTextViewWarning, Toast.LENGTH_SHORT).show();
-
-            // Toast.makeText(getContext(), lats[0]+","+lats[1], Toast.LENGTH_SHORT).show();       //M Osama: for debugging only
         });
 
-
-        /* M Osama: activate sorting using cost */
-        binding.costRBHomeFragment.setOnClickListener(v -> {
-            SEARCH_BY_COST=true;
-            SEARCH_BY_DISTANCE=false;
-            SEARCH_BY_TIME=false;
-            sortingByCostToast(getContext());
-        });
-
-        /* M Osama: activate sorting using distance */
-        binding.distanceRBHomeFragment.setOnClickListener(v -> {
-            SEARCH_BY_COST=false;
-            SEARCH_BY_DISTANCE=true;
-            SEARCH_BY_TIME=false;
-            sortingByDistanceToast(getContext());
-        });
-
-        /* M Osama: activate sorting using time */
-        binding.timeRBHomeFragment.setOnClickListener(v -> {
-            SEARCH_BY_COST=false;
-            SEARCH_BY_DISTANCE=false;
-            SEARCH_BY_TIME=true;
-            sortingByTimeToast(getContext());
-        });
+        /* M Osama: decide the sorting Criteria */
+        binding.orderByCost.setOnClickListener(v -> {       sortingByCostToast(getContext());       SORTING_CRITERIA=COST;      });
+        binding.orderByDistance.setOnClickListener(v -> {   sortingByDistanceToast(getContext());   SORTING_CRITERIA=DISTANCE;  });
+        binding.orderByTime.setOnClickListener(v -> {       sortingByTimeToast(getContext());       SORTING_CRITERIA=TIME;      });
 
     }
 
@@ -158,20 +132,16 @@ public class HomeFragment extends Fragment{
             String locationName = data.getExtras().getString(LOCATION_NAME_KEY);
 
             /* M Osama: Update TextViews */
-            if(LAST_CLICKED_FOOTER_VIEW==R.id.tv_location){
-                binding.tvLocation.setText(locationName);
-                locationLats=getStopLatLong(lats[0],lats[1]);
-            }
-            else if(LAST_CLICKED_FOOTER_VIEW==R.id.tv_destination){
-                binding.tvDestination.setText(locationName);
-                destinationLats=getStopLatLong(lats[0],lats[1]);
-            }
+            if(LAST_CLICKED_FOOTER_VIEW==R.id.tv_location){             binding.tvLocation.setText(locationName);       locationLats=getStopLatLong(lats[0],lats[1]);       }
+            else if(LAST_CLICKED_FOOTER_VIEW==R.id.tv_destination){     binding.tvDestination.setText(locationName);    destinationLats=getStopLatLong(lats[0],lats[1]);    }
             else;
         }
     }
 
     /* M Osama: function to update the autoCompleteTextView on every change the user write */
     public void updateDropDownListUsingGoogleMapsAPI(AutoCompleteTextView acTextView){
+        List<String> stopsIDsList = new ArrayList<>();
+        List<String> stopsList = new ArrayList<>();
         stopsList.clear();
         stopsIDsList.clear();
         FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder() /*  Use the builder to create a FindAutocompletePredictionsRequest. */
@@ -203,10 +173,9 @@ public class HomeFragment extends Fragment{
     public void autoCompleteOnFooterClick(View view){
         list.setOnFooterClickListener(() -> {
             LAST_CLICKED_FOOTER_VIEW=view.getId();
-            Toast.makeText(getContext(), "جاري الذهاب إلي الخريطة", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.GoingToMap, Toast.LENGTH_SHORT).show();
             if(askUserToEnableLocation(getContext())==true){
-                Intent toMap = new Intent(getActivity(),MapActivity.class);
-                startActivityForResult(toMap,REQUEST_CODE);
+                startActivityForResult(new Intent(getActivity(),MapActivity.class),REQUEST_CODE);
             }
         });
     }
@@ -232,7 +201,6 @@ public class HomeFragment extends Fragment{
             else                 destinationLats=getStopLatLong(lats[0],lats[1]);
 
             // Toast.makeText(getContext(), "ID="+stopID+" "+lats[0]+","+lats[1], Toast.LENGTH_SHORT).show();                /* M Osama: Only for checking that getPlaceCoordinatesUsingID is working */
-
         }).addOnFailureListener((exception) -> {
             if (exception instanceof ApiException) Toast.makeText(getContext(), ((ApiException) exception).getStatusCode(), Toast.LENGTH_SHORT).show();
         });
@@ -250,12 +218,12 @@ public class HomeFragment extends Fragment{
     public boolean askUserToEnableLocation(Context context) {
         final LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
-        // Check if location services are enabled
+        /* Check if location services are enabled */
         if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);                   // If location services are not enabled, prompt the user to enable them
             context.startActivity(intent);
-            return true;
-        } else { return true; }                                                                     // If location services are already enabled, return true
+        }
+        return true;                                                                                // If location services are already enabled, return true
     }
 
 }

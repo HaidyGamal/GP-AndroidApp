@@ -3,6 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/FinalProject/GP-AndroidApp/app/src/main/res/layout/activity_path_results.xml" value="0.2015625" />
+        <entry key="..\:/FinalProject/GP-AndroidApp/app/src/main/res/layout/fragment_add_new_route.xml" value="0.33" />
+        <entry key="..\:/FinalProject/GP-AndroidApp/app/src/main/res/layout/fragment_home.xml" value="0.38697916666666665" />
+        <entry key="..\:/FinalProject/GP-AndroidApp/app/src/main/res/layout/fragment_login.xml" value="0.2015625" />
+        <entry key="..\:/FinalProject/GP-AndroidApp/app/src/main/res/layout/fragment_signup.xml" value="0.2015625" />
         <entry key="..\:/GP-AndroidApp2/app/src/main/res/layout/live_location.xml" value="0.17255434782608695" />
         <entry key="..\:/GP/GP-AndroidApp-main/PublicTransportationGuidance/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/GP/GP-AndroidApp-main/PublicTransportationGuidance/app/src/main/res/layout/activity_path_results.xml" value="0.1" />

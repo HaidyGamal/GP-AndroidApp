@@ -106,72 +106,8 @@ public class PathsTokenizer {
         }
         return transportations;
     }
-    public static ArrayList<String> getStringDetailedPathToPopulateRoom(List<List<NearestPaths>> listOfList, int pathNumber){
-        ArrayList<String> transportations=new ArrayList<>();
-        int numOfPaths= PathsTokenizer.concatStopsAndDetailedMeans(listOfList,pathNumber).size();
-        for (int pathNum=0;pathNum<numOfPaths;pathNum++){
-            transportations.add(detailedPathToPrint(PathsTokenizer.concatStopsAndDetailedMeans(listOfList,pathNum)));
-        }
-        return transportations;
-    }
 
-    public static ArrayList<String> getStringUnDetailedPathToPopulateRoom(List<List<NearestPaths>> listOfList, int pathNumber){
-        ArrayList<String> transportations=new ArrayList<>();
-        int numOfPaths= PathsTokenizer.concatStopsAndDetailedMeansWithoutRedundancy(listOfList,pathNumber).size();
-        for (int pathNum=0;pathNum<numOfPaths;pathNum++){
-            transportations.add(detailedPathToPrint(PathsTokenizer.concatStopsAndDetailedMeansWithoutRedundancy(listOfList,pathNum)));
-        }
-        return transportations;
-    }
-
-    public static List<String> concatStopsAndMeans(List<List<NearestPaths>> listOfList, int pathNumber){
-        List<String> concatedStopsAndMeans=new ArrayList<>();
-        List<NearestPaths> path = getPath(listOfList,pathNumber);
-        List<String> pathStops=getPathStops(listOfList,pathNumber);
-        List<String> pathMeans=getPathMeans(listOfList,pathNumber);
-        int numOfStops = getNumberOfPathStops(path);
-        for(int stopNum=0;stopNum<(numOfStops-1);stopNum++){
-            concatedStopsAndMeans.add(pathStops.get(stopNum));
-            concatedStopsAndMeans.add(pathMeans.get(stopNum));
-        }
-        String lastStop=pathStops.get(pathStops.size()-1);
-        concatedStopsAndMeans.add(lastStop);
-        return concatedStopsAndMeans;
-    }
-
-
-    public static List<String> concatStopsAndDetailedMeans(List<List<NearestPaths>> listOfList, int pathNumber){
-        List<String> concatedStopsAndMeans=new ArrayList<>();
-        List<NearestPaths> path = getPath(listOfList,pathNumber);
-        List<String> pathStops=getPathStops(listOfList,pathNumber);
-        List<String> pathDetailedMeans=getPathMeansDetailed(listOfList,pathNumber);
-        int numOfStops = getNumberOfPathStops(path);
-        for(int stopNum=0;stopNum<(numOfStops-1);stopNum++){
-            concatedStopsAndMeans.add(pathStops.get(stopNum));
-            concatedStopsAndMeans.add(pathDetailedMeans.get(stopNum));
-        }
-        String lastStop=pathStops.get(pathStops.size()-1);
-        concatedStopsAndMeans.add(lastStop);
-        return concatedStopsAndMeans;
-    }
-    public static List<String> concatStopsAndDetailedMeansWithoutRedundancy(List<List<NearestPaths>> listOfList, int pathNumber){
-        List<String> concatedStopsAndMeans=new ArrayList<>();
-        String prevMean="";
-        List<NearestPaths> path = getPath(listOfList,pathNumber);
-        List<String> pathStops=getPathStops(listOfList,pathNumber);
-        List<String> pathDetailedMeans=getPathMeansDetailed(listOfList,pathNumber);
-        int numOfStops = getNumberOfPathStops(path);
-        for(int stopNum=0;stopNum<(numOfStops-1);stopNum++){
-            if(pathDetailedMeans.get(stopNum).equals(prevMean));
-            else{ concatedStopsAndMeans.add(pathStops.get(stopNum));  concatedStopsAndMeans.add(pathDetailedMeans.get(stopNum)); }
-            prevMean=pathDetailedMeans.get(stopNum);
-        }
-        String lastStop=pathStops.get(pathStops.size()-1);
-        concatedStopsAndMeans.add(lastStop);
-        return concatedStopsAndMeans;
-    }
-
-    public static HashMap<Integer,List<String>> pathMap(List<List<NearestPaths>> listOfList){
+    public static HashMap<Integer,List<String>> enumeratePaths(List<List<NearestPaths>> listOfList){
         HashMap<Integer,List<String>> paths=new HashMap<>();
         List<String> tempPath;
 
@@ -197,15 +133,12 @@ public class PathsTokenizer {
     public static String replaceLastOccurrence(String inputString, String oldSubstring, String newSubstring) {
         int lastIndex = inputString.lastIndexOf(oldSubstring);
 
-        if (lastIndex == -1) {
-            return inputString;  // oldSubstring not found in inputString
-        }
+        if (lastIndex == -1) return inputString;  // oldSubstring not found in inputString
 
         String result = inputString.substring(0, lastIndex) + newSubstring + inputString.substring(lastIndex + oldSubstring.length());
 
         return result;
     }
-
 
     public static List<String> stopsAndMeans(List<List<NearestPaths>> listOfList , int pathNumber){
         List<String> stops=getPathStops(listOfList,pathNumber);
@@ -223,6 +156,70 @@ public class PathsTokenizer {
         return stopsAndMeans;
     }
 
-
 }
 
+
+
+/** M Osama: old functions to be deleted later if we didn't need them */
+//public static ArrayList<String> getStringUnDetailedPathToPopulateRoom(List<List<NearestPaths>> listOfList, int pathNumber){
+//    ArrayList<String> transportations=new ArrayList<>();
+//    int numOfPaths= PathsTokenizer.concatStopsAndDetailedMeansWithoutRedundancy(listOfList,pathNumber).size();
+//    for (int pathNum=0;pathNum<numOfPaths;pathNum++){
+//        transportations.add(detailedPathToPrint(PathsTokenizer.concatStopsAndDetailedMeansWithoutRedundancy(listOfList,pathNum)));
+//    }
+//    return transportations;
+//}
+//
+//    public static List<String> concatStopsAndMeans(List<List<NearestPaths>> listOfList, int pathNumber){
+//        List<String> concatedStopsAndMeans=new ArrayList<>();
+//        List<NearestPaths> path = getPath(listOfList,pathNumber);
+//        List<String> pathStops=getPathStops(listOfList,pathNumber);
+//        List<String> pathMeans=getPathMeans(listOfList,pathNumber);
+//        int numOfStops = getNumberOfPathStops(path);
+//        for(int stopNum=0;stopNum<(numOfStops-1);stopNum++){
+//            concatedStopsAndMeans.add(pathStops.get(stopNum));
+//            concatedStopsAndMeans.add(pathMeans.get(stopNum));
+//        }
+//        String lastStop=pathStops.get(pathStops.size()-1);
+//        concatedStopsAndMeans.add(lastStop);
+//        return concatedStopsAndMeans;
+//    }
+//
+//    public static ArrayList<String> getStringDetailedPathToPopulateRoom(List<List<NearestPaths>> listOfList, int pathNumber){
+//        ArrayList<String> transportations=new ArrayList<>();
+//        int numOfPaths= PathsTokenizer.concatStopsAndDetailedMeans(listOfList,pathNumber).size();
+//        for (int pathNum=0;pathNum<numOfPaths;pathNum++){
+//            transportations.add(detailedPathToPrint(PathsTokenizer.concatStopsAndDetailedMeans(listOfList,pathNum)));
+//        }
+//        return transportations;
+//    }
+//public static List<String> concatStopsAndDetailedMeans(List<List<NearestPaths>> listOfList, int pathNumber){
+//    List<String> concatedStopsAndMeans=new ArrayList<>();
+//    List<NearestPaths> path = getPath(listOfList,pathNumber);
+//    List<String> pathStops=getPathStops(listOfList,pathNumber);
+//    List<String> pathDetailedMeans=getPathMeansDetailed(listOfList,pathNumber);
+//    int numOfStops = getNumberOfPathStops(path);
+//    for(int stopNum=0;stopNum<(numOfStops-1);stopNum++){
+//        concatedStopsAndMeans.add(pathStops.get(stopNum));
+//        concatedStopsAndMeans.add(pathDetailedMeans.get(stopNum));
+//    }
+//    String lastStop=pathStops.get(pathStops.size()-1);
+//    concatedStopsAndMeans.add(lastStop);
+//    return concatedStopsAndMeans;
+//}
+//    public static List<String> concatStopsAndDetailedMeansWithoutRedundancy(List<List<NearestPaths>> listOfList, int pathNumber){
+//        List<String> concatedStopsAndMeans=new ArrayList<>();
+//        String prevMean="";
+//        List<NearestPaths> path = getPath(listOfList,pathNumber);
+//        List<String> pathStops=getPathStops(listOfList,pathNumber);
+//        List<String> pathDetailedMeans=getPathMeansDetailed(listOfList,pathNumber);
+//        int numOfStops = getNumberOfPathStops(path);
+//        for(int stopNum=0;stopNum<(numOfStops-1);stopNum++){
+//            if(pathDetailedMeans.get(stopNum).equals(prevMean));
+//            else{ concatedStopsAndMeans.add(pathStops.get(stopNum));  concatedStopsAndMeans.add(pathDetailedMeans.get(stopNum)); }
+//            prevMean=pathDetailedMeans.get(stopNum);
+//        }
+//        String lastStop=pathStops.get(pathStops.size()-1);
+//        concatedStopsAndMeans.add(lastStop);
+//        return concatedStopsAndMeans;
+//    }

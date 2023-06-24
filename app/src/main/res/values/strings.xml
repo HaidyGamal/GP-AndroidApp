@@ -60,7 +60,7 @@
     <string name="PathsSortedAccordingToCost">سيتم الترتيب طبقا للسعر</string>
     <string name="LocationAndDestinationMustBeSpecified">يجب تحديد نقطة للانطلاق وكذلك نقطة انتهاء أولا</string>
     <string name="PleaseChooseTwoAvailableStops">عفوا يجب اختيار نقطتين متوفرتين لدينا</string>
-    <string name="NotAvailable">غير متوفر</string>
+    <string name="NotAvailable">-</string>
     <string name="NoAvailablePathsToBePresented">عذرا، لا يوجد طريق متوفر</string>
     <string name="GoingToGoogleMaps">جاري الذهاب إلي جوجل</string>
     <string name="we_will_checked">جاري التحقق</string>
@@ -126,5 +126,8 @@
     <string name="PathsSortedAccordingToTime">سيتم الترتيب طبقا للوقت</string>
     <string name="AutoCompleteTextViewWarning">لا يمكن ترك أحد نقطتي الانطلاق أو الانتهاء فارغة</string>
     <string name="TryAgain">هناك مشكلة، نرجو اعادة المحاولة</string>
+    <string name="GoingToMap">جاري الذهاب إلي الخريطة</string>
+    <string name="LogoutSuccessful">تم تسجيل الخروج بنجاح</string>
+    <string name="logOut">Log Out</string>
 
 </resources>
