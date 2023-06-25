@@ -2,6 +2,7 @@ package com.example.publictransportationguidance.helpers;
 
 import static com.example.publictransportationguidance.BuildConfig.MAPS_API_KEY;
 import static com.example.publictransportationguidance.api.Api.GOOGLE_MAPS_BASE_URL;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.BLIND_MODE_ACCEPTANCE;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.BUS;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.METRO;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.MODE;
@@ -9,12 +10,14 @@ import static com.example.publictransportationguidance.helpers.GlobalVariables.M
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.Handler;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.example.publictransportationguidance.R;
 import com.example.publictransportationguidance.TripsTimeCallback;
 import com.example.publictransportationguidance.api.RetrofitClient;
+import com.example.publictransportationguidance.blindMode.ArrowFunction;
 import com.example.publictransportationguidance.pojo.estimatedTimeResponse.EstimatedTime;
 import com.example.publictransportationguidance.pojo.pathsResponse.NearestPaths;
 
@@ -34,7 +37,7 @@ public class Functions {
 
     public static String[] listToArray(List<String> list) {
         String[] array = new String[list.size()];
-        for (int i = 0; i < list.size(); i++)   array[i] = list.get(i);
+        for (int i = 0; i < list.size(); i++) array[i] = list.get(i);
         return array;
     }
 
@@ -56,44 +59,55 @@ public class Functions {
     }
 
     /* M Osama: functions helps in dealing with autoComplete dataSource(array,list,...)*/
-    public static String getSelectedItem(AdapterView parent , int positionInDropList){
+    public static String getSelectedItem(AdapterView parent, int positionInDropList) {
         return (String) parent.getItemAtPosition(positionInDropList);
     }
-    public static int getDataSourceIndex(String[] dataSource , String selectedItem){
+
+    public static int getDataSourceIndex(String[] dataSource, String selectedItem) {
         return Arrays.asList(dataSource).indexOf(selectedItem);
     }
 
-    public static String getLocationName(Context context, Double latitude, Double longitude){
+    public static String getLocationName(Context context, Double latitude, Double longitude) {
         Geocoder myLocation = new Geocoder(context, new Locale("ar"));
         List<Address> myList;
         try {
-            myList = myLocation.getFromLocation(latitude,longitude, 1);
+            myList = myLocation.getFromLocation(latitude, longitude, 1);
             Address address = (Address) myList.get(0);
-            Toast.makeText(context, address.getLocality()+"", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, address.getLocality() + "", Toast.LENGTH_SHORT).show();
             return address.getLocality();
-        } catch (IOException e) {  e.printStackTrace();   return "هناك مشكلة في الانترنت"; }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "هناك مشكلة في الانترنت";
+        }
     }
 
     public static String removeEgyptWithSpaceBefore(String input) {
         return input.replaceAll(" \\bEgypt\\b", "");
     }
+
     public static String removeNonAlphabeticCharacters(String input) {
         // Check if the string is free from English characters
         boolean isArabic = input.matches("\\p{InArabic}+");
-        if (!isArabic) { return input; }
+        if (!isArabic) {
+            return input;
+        }
 
         // Remove any non-alphabetic characters from the string
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < input.length(); i++) {
             char c = input.charAt(i);
-            if (Character.isAlphabetic(c)) { sb.append(c); }
+            if (Character.isAlphabetic(c)) {
+                sb.append(c);
+            }
         }
 
         return sb.toString();
     }
+
     public static String removeCommaWithSpaceAfter(String input) {
         return input.replaceAll("[,،]\\s", " ");
     }
+
     public static String removeSingleComma(String input) {
         // Count the number of commas in the input string
         int commaCount = input.length() - input.replaceAll("[,،]", "").length();
@@ -105,6 +119,7 @@ public class Functions {
 
         return input;
     }
+
     public static String removeVerticalBarWithSpaces(String input) {
         // Remove the vertical bar if it's preceded by one space and followed by two spaces
         String temp = input.replaceAll("\\s\\|\\s{2}", "");
@@ -118,25 +133,30 @@ public class Functions {
         return temp;
     }
 
-    public static String stringEnhancer(String str){
+    public static String stringEnhancer(String str) {
         return removeVerticalBarWithSpaces(removeSingleComma(removeCommaWithSpaceAfter(removeNonAlphabeticCharacters(removeEgyptWithSpaceBefore(str)))));
     }
 
-    public static void noAvailablePathsToast(Context context){
+    public static void noAvailablePathsToast(Context context) {
         Toast.makeText(context, "نأسف لعدم وجود طريق متوفرة", Toast.LENGTH_SHORT).show();
     }
-    public static void checkInternetConnectionToast(Context context){
+
+    public static void checkInternetConnectionToast(Context context) {
         Toast.makeText(context, R.string.CheckInternetConnection, Toast.LENGTH_SHORT).show();
     }
-    public static void sortingByCostToast(Context context){
+
+    public static void sortingByCostToast(Context context) {
         Toast.makeText(context, R.string.PathsSortedAccordingToCost, Toast.LENGTH_SHORT).show();
     }
-    public static void sortingByDistanceToast(Context context){
+
+    public static void sortingByDistanceToast(Context context) {
         Toast.makeText(context, R.string.PathsSortedAccordingToDistance, Toast.LENGTH_SHORT).show();
     }
-    public static void sortingByTimeToast(Context context){
+
+    public static void sortingByTimeToast(Context context) {
         Toast.makeText(context, R.string.PathsSortedAccordingToTime, Toast.LENGTH_SHORT).show();
     }
+
     public static void tryAgainToast(Context context) {
         Toast.makeText(context, R.string.TryAgain, Toast.LENGTH_SHORT);
     }
@@ -150,31 +170,31 @@ public class Functions {
         return Integer.parseInt(numberString);
     }
 
-    public static List<NearestPaths> getPathByNumber(List<List<NearestPaths>> paths, int pathNumber){
+    public static List<NearestPaths> getPathByNumber(List<List<NearestPaths>> paths, int pathNumber) {
         return paths.get(pathNumber);
     }
 
-    public static ArrayList<String> getPathNodes(List<NearestPaths> path){
+    public static ArrayList<String> getPathNodes(List<NearestPaths> path) {
         ArrayList<String> nodes = new ArrayList<>();
-        for(int i = 0; i< getPathSize(path); i++){
+        for (int i = 0; i < getPathSize(path); i++) {
             double latitude = path.get(i).getLatitude();
             double longitude = path.get(i).getLongitude();
-            nodes.add(latitude+","+longitude);
+            nodes.add(latitude + "," + longitude);
         }
         return nodes;
     }
 
-    public static ArrayList<String> getPathMeans(List<NearestPaths> path){
+    public static ArrayList<String> getPathMeans(List<NearestPaths> path) {
         ArrayList<String> means = new ArrayList<>();
-        for(int i = 0; i< getPathSize(path); i++){
+        for (int i = 0; i < getPathSize(path); i++) {
             String mean = path.get(i).getTransportationType();
-            if(mean.equals("bus") || mean.equals("microbus")) means.add(BUS);
-            else                                              means.add(METRO);
+            if (mean.equals("bus") || mean.equals("microbus")) means.add(BUS);
+            else means.add(METRO);
         }
         return means;
     }
 
-    public static int getPathSize(List<NearestPaths> path){
+    public static int getPathSize(List<NearestPaths> path) {
         return path.size();
     }
 
@@ -205,7 +225,9 @@ public class Functions {
                 try {
                     localDurations.add(getDurationText(responses.get(nodeNumber).get()));       /* M Osama: Getting a response from the multiple responses we runned then Getting duration of moving between two intermediate Nodes */
                     globalDurations[pathNumber] += extractMinutes(localDurations.get(nodeNumber));        /* M Osama: Summing all subDurations to calculate the totalDuration */
-                } catch (InterruptedException | ExecutionException e) { e.printStackTrace(); }
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
             }
 
             executor.shutdown();                        // Shutdown the executor after completing the tasks
@@ -215,6 +237,22 @@ public class Functions {
 
     }
 
+    /* M Osama: execute any function without the need of buttons */
+    public static void execute(ArrowFunction function) {
+        Handler handler = new Handler();
+        handler.postDelayed(function::run, 1500);
+    }
+
+    public static boolean stringIsFound(String stringToCheck,String[] stringArray) {
+        boolean isMatch = false;
+        for(String word :stringArray) {
+            if (word.equals(stringToCheck)) {
+                isMatch = true;
+                break;
+            }
+        }
+        return isMatch;
+    }
 
 }
 
