@@ -44,15 +44,15 @@
     <string name="fname">First Name</string>
     <string name="lname">Last Name</string>
     <!-- Strings related to ADD new route -->
-    <string name="from">From</string>
-    <string name="to">To</string>
+    <string name="from">من</string>
+    <string name="to">الى</string>
     <string name="no.">No. of Transportations</string>
-    <string name="transport">Transportation</string>
-    <string name="bus">Bus</string>
-    <string name="mic_bus">Microbus</string>
-    <string name="cost">التكلفة</string>
-    <string name="submit">Submit</string>
-    <string name="verify">Your Request Will Be Reviewed</string>
+    <string name="transport">وسيلة المواصلات</string>
+    <string name="bus">أتوبيس</string>
+    <string name="mic_bus">ميكروباص</string>
+    <string name="cost">السعر</string>
+    <string name="submit">أرسل اقتراحك</string>
+    <string name="verify">سيتم مراجعة طلبك</string>
     <string name="verification">Verification Code Sent</string>
     <string name="AvailableStopsAreUpdated">الأماكن المتوفرة محدثة أولا بأول</string>
     <string name="CheckInternetConnection">نرجو التحقق من جودة النت لديكم</string>
@@ -115,9 +115,9 @@
 
     <!-- Strings related to spinner -->
     <string-array name="transportations">
-        <item>Microbus</item>
-        <item>Bus</item>
-        <item>Metro</item>
+        <item>ميكروباص</item>
+        <item>أتوبيس</item>
+        <item>مترو</item>
 
     </string-array>
     <string name="title_activity_live_location">LiveLocation</string>
