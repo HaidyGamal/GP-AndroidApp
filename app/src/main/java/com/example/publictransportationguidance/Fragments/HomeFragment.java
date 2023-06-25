@@ -18,8 +18,9 @@ import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
@@ -63,6 +64,9 @@ public class HomeFragment extends Fragment{
     /* M Osama: Place AutoComplete instance */
     PlacesClient placesClient;
 
+    /* M Osama: track the returned position from Map */
+    private ActivityResultLauncher<Intent> mapActivityResultLauncher;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_home,container,false);
@@ -71,6 +75,7 @@ public class HomeFragment extends Fragment{
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        initializeMapActivityResultLauncher();                                          /* M Osama: track the result returned from Map if user clicked on it */
 
         /* M Osama: initial list value to prevent NullPointerException */
         list = new CustomAutoCompleteAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, stopsArray, FOOTER);
@@ -120,24 +125,6 @@ public class HomeFragment extends Fragment{
 
     }
 
-    /* M Osama: Update results obtained from MapActivity */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==REQUEST_CODE && resultCode== Activity.RESULT_OK){
-
-            /* Manage returned data from Activity here */
-            lats[0] = data.getExtras().getDouble(LATITUDE_KEY);
-            lats[1] = data.getExtras().getDouble(LONGITUDE_KEY);
-            String locationName = data.getExtras().getString(LOCATION_NAME_KEY);
-
-            /* M Osama: Update TextViews */
-            if(LAST_CLICKED_FOOTER_VIEW==R.id.tv_location){             binding.tvLocation.setText(locationName);       locationLats=getStopLatLong(lats[0],lats[1]);       }
-            else if(LAST_CLICKED_FOOTER_VIEW==R.id.tv_destination){     binding.tvDestination.setText(locationName);    destinationLats=getStopLatLong(lats[0],lats[1]);    }
-            else;
-        }
-    }
-
     /* M Osama: function to update the autoCompleteTextView on every change the user write */
     public void updateDropDownListUsingGoogleMapsAPI(AutoCompleteTextView acTextView){
         List<String> stopsIDsList = new ArrayList<>();
@@ -169,16 +156,6 @@ public class HomeFragment extends Fragment{
 
     }
 
-    /* M Osama: States what will happen in case user clicked on "Set Location On MapActivity" */
-    public void autoCompleteOnFooterClick(View view){
-        list.setOnFooterClickListener(() -> {
-            LAST_CLICKED_FOOTER_VIEW=view.getId();
-            Toast.makeText(getContext(), R.string.GoingToMap, Toast.LENGTH_SHORT).show();
-            if(askUserToEnableLocation(getContext())==true){
-                startActivityForResult(new Intent(getActivity(),MapActivity.class),REQUEST_CODE);
-            }
-        });
-    }
 
     /* M Osama: States what will happen in case user clicked clicked on specific please */
     public void autoCompleteOnItemClick(AutoCompleteTextView acTextView,int stop){
@@ -224,6 +201,34 @@ public class HomeFragment extends Fragment{
             context.startActivity(intent);
         }
         return true;                                                                                // If location services are already enabled, return true
+    }
+
+    /* M Osama: States what will happen in case user clicked on "Set Location On MapActivity" */
+    public void autoCompleteOnFooterClick(View view) {
+        list.setOnFooterClickListener(() -> {
+            LAST_CLICKED_FOOTER_VIEW = view.getId();
+            Toast.makeText(getContext(), R.string.GoingToMap, Toast.LENGTH_SHORT).show();
+            if (askUserToEnableLocation(getContext())) {
+                Intent mapIntent = new Intent(getActivity(), MapActivity.class);
+                mapActivityResultLauncher.launch(mapIntent);
+            }
+        });
+    }
+
+    /* M Osama: track the returned result from Map */
+    private void initializeMapActivityResultLauncher() {
+        mapActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                Intent data = result.getData();
+                if (data != null) {
+                    double latitude = data.getDoubleExtra(LATITUDE_KEY, 0.0);
+                    double longitude = data.getDoubleExtra(LONGITUDE_KEY, 0.0);
+                    String locationName = data.getStringExtra(LOCATION_NAME_KEY);
+                    if (LAST_CLICKED_FOOTER_VIEW == R.id.tv_location) {             binding.tvLocation.setText(locationName);       locationLats = getStopLatLong(latitude, longitude);     }
+                    else if (LAST_CLICKED_FOOTER_VIEW == R.id.tv_destination) {     binding.tvDestination.setText(locationName);    destinationLats = getStopLatLong(latitude, longitude);  }
+                }
+            }
+        });
     }
 
 }
