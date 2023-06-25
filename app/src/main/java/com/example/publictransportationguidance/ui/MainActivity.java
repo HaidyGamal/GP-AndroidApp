@@ -1,6 +1,6 @@
 package com.example.publictransportationguidance.ui;
 
-import static com.example.publictransportationguidance.blindMode.speechToText.SpeechToTextHelper.RECOGNIZER_RESULT;
+import static com.example.publictransportationguidance.blindMode.speechToText.SpeechToTextHelper.MAIN_ACTIVITY_RECOGNIZER;
 import static com.example.publictransportationguidance.helpers.Functions.execute;
 import static com.example.publictransportationguidance.helpers.Functions.stringIsFound;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.ARABIC;
@@ -128,16 +128,14 @@ public class MainActivity extends AppCompatActivity implements SpeechRecognition
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RECOGNIZER_RESULT && resultCode == RESULT_OK && data != null) {
+        if (requestCode == MAIN_ACTIVITY_RECOGNIZER && resultCode == RESULT_OK && data != null) {
             ArrayList<String> speechConvertedToText = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             onSpeechRecognitionResult(SpeechToTextHelper.convertHaaToTaaMarbuta(speechConvertedToText.get(0)));
         }
     }
 
     @Override
-    public void onSpeechRecognitionResult(String result, EditText targetEditText) {
-
-    }
+    public void onSpeechRecognitionResult(String result, EditText targetEditText) {}
 
     @Override
     public void onSpeechRecognitionResult(String result) {
