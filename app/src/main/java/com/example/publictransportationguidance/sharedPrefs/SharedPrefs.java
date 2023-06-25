@@ -10,18 +10,38 @@ import java.util.Map;
 import java.util.Set;
 
 public class SharedPrefs {
-    private static SharedPreferences sharedPrefs =null;
-    private static String SHARED_PREFS_NAME="TawsilaSharedPrefs";                                    /*xml file name*/
+    private static SharedPreferences sharedPrefs = null;
+    private static String SHARED_PREFS_NAME = "TawsilaSharedPrefs"; /* xml file name */
     private static SharedPreferences.Editor prefsEditor;
+    private static SharedPreferences.OnSharedPreferenceChangeListener prefsListener;
 
-    public static void init(Context context){
-        if(sharedPrefs==null){
-            sharedPrefs=context.getSharedPreferences(SHARED_PREFS_NAME,Activity.MODE_PRIVATE);
+    public static void init(Context context) {
+        if (sharedPrefs == null) {
+            sharedPrefs = context.getSharedPreferences(SHARED_PREFS_NAME, Activity.MODE_PRIVATE);
         }
     }
 
     public static SharedPreferences getSharedPreferences() {
         return sharedPrefs;
+    }
+
+    public static void registerOnSharedPreferenceChangeListener(SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        sharedPrefs.registerOnSharedPreferenceChangeListener(listener);
+        prefsListener = listener;
+    }
+
+    public static void unregisterOnSharedPreferenceChangeListener() {
+        sharedPrefs.unregisterOnSharedPreferenceChangeListener(prefsListener);
+    }
+
+    public static void addOnSharedPreferenceChangeListenerForKey(String key, SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        listener.onSharedPreferenceChanged(sharedPrefs, key);
+        sharedPrefs.registerOnSharedPreferenceChangeListener(listener);
+    }
+
+    // New method to remove a listener for a specific key
+    public static void removeOnSharedPreferenceChangeListenerForKey(String key, SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        sharedPrefs.unregisterOnSharedPreferenceChangeListener(listener);
     }
 
     //Overloaden Reading Methods

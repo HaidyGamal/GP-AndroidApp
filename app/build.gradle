@@ -102,5 +102,8 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-firestore:22.0.0'
 
+    implementation 'com.google.maps:google-maps-services:0.17.0'
+
+
 }
 

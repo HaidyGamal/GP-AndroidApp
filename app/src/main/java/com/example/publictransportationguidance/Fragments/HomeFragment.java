@@ -1,17 +1,21 @@
 package com.example.publictransportationguidance.Fragments;
 
 import static com.example.publictransportationguidance.BuildConfig.MAPS_API_KEY;
+import static com.example.publictransportationguidance.blindMode.speechToText.SpeechToTextHelper.convertHaaToTaaMarbuta;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.*;
 import static com.example.publictransportationguidance.helpers.Functions.*;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextWatcher;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +25,17 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import com.example.publictransportationguidance.blindMode.speechToText.SpeechToTextHelper;
+import com.example.publictransportationguidance.blindMode.textToSpeech.TextToSpeechHelper;
 import com.example.publictransportationguidance.googleMap.MapActivity;
 import com.example.publictransportationguidance.helpers.GlobalVariables;
 import com.example.publictransportationguidance.adapters.CustomAutoCompleteAdapter;
 import com.example.publictransportationguidance.R;
+import com.example.publictransportationguidance.sharedPrefs.SharedPrefs;
 import com.example.publictransportationguidance.tracking.PathResults;
 import com.example.publictransportationguidance.databinding.FragmentHomeBinding;
 import com.google.android.gms.common.api.ApiException;
@@ -40,12 +48,15 @@ import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
+import com.google.maps.model.GeocodingResult;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class HomeFragment extends Fragment{
+public class HomeFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     public HomeFragment() {}
     FragmentHomeBinding binding;
 
@@ -57,6 +68,7 @@ public class HomeFragment extends Fragment{
     /* M Osama: Google Maps API -> stops -> AutoCompleteTextView */
     String[] stopsArray ={};
     String[] stopsIDsArray={};
+    String[] stopsDetailsArray={};
 
     /* M Osama: instance of CustomAutoComplete Adapter */
     CustomAutoCompleteAdapter list;
@@ -67,9 +79,18 @@ public class HomeFragment extends Fragment{
     /* M Osama: track the returned position from Map */
     private ActivityResultLauncher<Intent> mapActivityResultLauncher;
 
+    /* M Osama: instance to deal with stt*/
+    private SpeechToTextHelper speechToTextHelper;
+    private TextToSpeechHelper textToSpeechHelper;
+
+    private GeoApiContext geoApiContext;
+    List<String> stopsDetailsList;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_home,container,false);
+        speechToTextHelper = SpeechToTextHelper.getInstance(ARABIC);
+        SharedPrefs.init(getContext());
+        SharedPrefs.registerOnSharedPreferenceChangeListener(this);
         return binding.getRoot();
     }
 
@@ -84,27 +105,12 @@ public class HomeFragment extends Fragment{
         if (!Places.isInitialized())  Places.initialize(getContext(), MAPS_API_KEY);
         placesClient = Places.createClient(getContext());
 
+        /* M Osama: initializing tts & stt */
+        initializeTTSandSTT();
+
         /* M Osama: update both autoComplete using Google Maps Places API */
-        binding.tvLocation.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
-            public void afterTextChanged(Editable s) { updateDropDownListUsingGoogleMapsAPI(binding.tvLocation); }
-        });
-        binding.tvDestination.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
-            public void afterTextChanged(Editable s) { updateDropDownListUsingGoogleMapsAPI(binding.tvDestination); }
-        });
+        locationTextChangeListener();
+        destinationTextChangeListener();
 
         /* M Osama: autoComplete onClickListeners */
         autoCompleteOnItemClick(binding.tvLocation,0);
@@ -125,12 +131,29 @@ public class HomeFragment extends Fragment{
 
     }
 
+    public String[] getResponseInArabic(String placeId) {
+        initializeGeoApiContext();
+        String[] placeFullName= new String[2];
+        try {
+            GeocodingResult[] results = GeocodingApi.newRequest(geoApiContext).place(placeId).language("ar").await();
+            if (results != null && results.length > 0) {
+                GeocodingResult result = results[0];
+                placeFullName[0]=deleteFromPenultimateComma(result.formattedAddress);
+                placeFullName[1]=deleteFromFistComma(deleteFromPenultimateComma(result.formattedAddress));
+            } else {}
+        } catch (Exception e) {}
+        return placeFullName;
+    }
+
     /* M Osama: function to update the autoCompleteTextView on every change the user write */
     public void updateDropDownListUsingGoogleMapsAPI(AutoCompleteTextView acTextView){
         List<String> stopsIDsList = new ArrayList<>();
         List<String> stopsList = new ArrayList<>();
+        stopsDetailsList = new ArrayList<>();
         stopsList.clear();
         stopsIDsList.clear();
+        stopsDetailsList.clear();
+
         FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder() /*  Use the builder to create a FindAutocompletePredictionsRequest. */
                 .setLocationBias(RectangularBounds.newInstance(new LatLng(GlobalVariables.SOUTH, GlobalVariables.WEST), new LatLng(GlobalVariables.NORTH, GlobalVariables.EAST)))
                 .setCountry("EGY")
@@ -140,22 +163,35 @@ public class HomeFragment extends Fragment{
 
         placesClient.findAutocompletePredictions(request).addOnSuccessListener(response -> {
             for (AutocompletePrediction p : response.getAutocompletePredictions()) {
-                stopsList.add(stringEnhancer(p.getPrimaryText(null) + " | " + p.getSecondaryText(null)));
                 stopsIDsList.add(p.getPlaceId());
+                if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1){
+                    String[] placeInArabic = getResponseInArabic(p.getPlaceId());
+                    stopsList.add(placeInArabic[0]);
+                    stopsDetailsList.add(placeInArabic[1]);
+                }
+                else{
+                    stopsList.add(stringEnhancer(p.getPrimaryText(null) + " | " + p.getSecondaryText(null)));
+                }
+
             }
 
             /* M Osama: Initialize AutoCompleteTextView */
             stopsArray = listToArray(stopsList);
             stopsIDsArray= listToArray(stopsIDsList);
+            stopsDetailsArray=listToArray(stopsDetailsList);
             list = new CustomAutoCompleteAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, stopsArray, FOOTER);
             acTextView.setAdapter(list);
 
             autoCompleteOnFooterClick(acTextView);
 
+            if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1) {
+                if(acTextView.getId()==binding.tvLocation.getId())          textToSpeechHelper.speak(availableStopsToBeRead(stopsDetailsList),()-> listenToSpecifiedLocationName(this));
+                else if(acTextView.getId()==binding.tvDestination.getId())  textToSpeechHelper.speak(availableStopsToBeRead(stopsDetailsList),()-> listenToSpecifiedDestinationName(this));
+            }
+
         }).addOnFailureListener((exception) -> Toast.makeText(getContext(), R.string.CheckInternetConnection, Toast.LENGTH_SHORT).show());
 
     }
-
 
     /* M Osama: States what will happen in case user clicked clicked on specific please */
     public void autoCompleteOnItemClick(AutoCompleteTextView acTextView,int stop){
@@ -163,21 +199,26 @@ public class HomeFragment extends Fragment{
             String selectedItem = getSelectedItem(parent,position);
             Toast.makeText(getContext(), selectedItem, Toast.LENGTH_SHORT).show();                                              /* M Osama: Only for checking the autoCompleteOnClick is working */
             getPlaceCoordinatesUsingID(stopsIDsArray[getDataSourceIndex(stopsArray,selectedItem)],stop);
-            acTextView.setText(deleteFromSequence(selectedItem," |"));
+            if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1) {
+                acTextView.setText(getSubstringBeforeFirstComma(selectedItem));
+            }
+            else{
+                acTextView.setText(deleteFromSequence(selectedItem," |"));
+            }
         });
     }
 
+
     /* M Osama: Returns the location lat & long which can be used to search through db */
     public void getPlaceCoordinatesUsingID(String placeID,int stopID){
-        FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeID, Arrays.asList(Place.Field.ID,Place.Field.NAME,Place.Field.LAT_LNG));
+        FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeID, Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
         placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
-            lats[0]=response.getPlace().getLatLng().latitude;
-            lats[1]=response.getPlace().getLatLng().longitude;
+            lats[0] = response.getPlace().getLatLng().latitude;
+            lats[1] = response.getPlace().getLatLng().longitude;
 
-            if(stopID==LOCATION) locationLats=getStopLatLong(lats[0],lats[1]);
-            else                 destinationLats=getStopLatLong(lats[0],lats[1]);
+            if (stopID == LOCATION) locationLats = getStopLatLong(lats[0], lats[1]);
+            else if (stopID == DESTINATION) destinationLats = getStopLatLong(lats[0], lats[1]);
 
-            // Toast.makeText(getContext(), "ID="+stopID+" "+lats[0]+","+lats[1], Toast.LENGTH_SHORT).show();                /* M Osama: Only for checking that getPlaceCoordinatesUsingID is working */
         }).addOnFailureListener((exception) -> {
             if (exception instanceof ApiException) Toast.makeText(getContext(), ((ApiException) exception).getStatusCode(), Toast.LENGTH_SHORT).show();
         });
@@ -194,9 +235,7 @@ public class HomeFragment extends Fragment{
     /* M Osama: ask the user to allow using map */
     public boolean askUserToEnableLocation(Context context) {
         final LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-
-        /* Check if location services are enabled */
-        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {                            /* Check if location services are enabled */
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);                   // If location services are not enabled, prompt the user to enable them
             context.startActivity(intent);
         }
@@ -231,5 +270,157 @@ public class HomeFragment extends Fragment{
         });
     }
 
-}
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        speechToTextHelper.onActivityResult(requestCode, resultCode, data);                                                  // Pass the onActivityResult event to the SpeechToTextHelper
+        ArrayList<String> speechConvertedToText = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
+        /* M Osama: receiving the locationName from the blind */
+        if(requestCode==LISTEN_TO_RAW_LOCATION_NAME) {
+            binding.tvLocation.setText(convertHaaToTaaMarbuta(speechConvertedToText.get(0)));
+            locationTextChangeListener();
+        }
+
+        /* M Osama: receiving the specifiedDetails of the locationName from the blind */
+        else if(requestCode==LISTEN_TO_SPECIFIED_LOCATION_NAME){
+            Log.i("Out",convertHaaToTaaMarbuta(speechConvertedToText.get(0)));                                      /* M Osama: for debugging only */
+            for(int placeNum=0;placeNum<stopsDetailsList.size();placeNum++){
+                String place = convertToAleph(removeCommas(convertHaaToTaaMarbuta(stopsDetailsList.get(placeNum))));
+                Log.i("In",place);                                                                                  /* M Osama: for debugging only */
+                if(place.equals(convertHaaToTaaMarbuta(speechConvertedToText.get(0)))) {
+                    Toast.makeText(getContext(), "نعم", Toast.LENGTH_SHORT).show();                                /* M Osama: for debugging only */
+                    autoCompleteOnVoiceClick(binding.tvLocation,0,placeNum);
+                    Log.i("Leo",locationLats);
+                    Log.i("Leo",destinationLats);
+                    execute(() -> textToSpeechHelper.speak(getString(R.string.WhatsYourDestination), () -> listenToRawDestinationName(this)));
+                    break;
+                }
+                else{
+                    Toast.makeText(getContext(), "لا", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }
+
+        /* M Osama: receiving the destinationName from the blind*/
+        else if(requestCode==LISTEN_TO_RAW_DESTINATION_NAME){
+            binding.tvDestination.setText(convertHaaToTaaMarbuta(speechConvertedToText.get(0)));
+            destinationTextChangeListener();
+        }
+
+        /* M Osama: receiving the specifiedDetails of the destinationName from the blind */
+        else if(requestCode==LISTEN_TO_SPECIFIED_DESTINATION_NAME){
+//            Log.i("Out",convertHaaToTaaMarbuta(speechConvertedToText.get(0)));                                      /* For Debugging */
+            for(int placeNum=0;placeNum<stopsDetailsList.size();placeNum++){
+                String place = convertToAleph(removeCommas(convertHaaToTaaMarbuta(stopsDetailsList.get(placeNum))));
+//                Log.i("In",place);                                                                                  /* For Debugging */
+                if(place.equals(convertHaaToTaaMarbuta(speechConvertedToText.get(0)))) {
+                    Toast.makeText(getContext(), "نعم", Toast.LENGTH_SHORT).show();                              /* M Osama: for debugging only */
+                    autoCompleteOnVoiceClick(binding.tvDestination,1,placeNum);
+//                    Log.i("Leo",locationLats);                                                                      /* For Debugging */
+//                    Log.i("Leo",destinationLats);                                                                   /* For Debugging */
+                    execute(() -> textToSpeechHelper.speak(getString(R.string.SortingCriteria), () -> listenToSortingCriteria(this)));
+                    break;
+                }
+                else{
+                    Toast.makeText(getContext(), "لا", Toast.LENGTH_SHORT).show();                                  /* M Osama: for debugging only */
+                }
+            }
+        }
+
+        /* M Osama: receiving the sortingCriteria from the blind*/
+        else if(requestCode==LISTEN_TO_SORTING_CRITERIA){
+            String searchingMethod=convertHaaToTaaMarbuta(speechConvertedToText.get(0));
+            if(stringIsFound(searchingMethod,SORTING_CRITERIA_ACCEPTANCE)) {
+                if (searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[0]) || searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[1])) {         sortingByCostToast(getContext());       SORTING_CRITERIA = COST;    }
+                else if (searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[2]) || searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[3])) {  sortingByDistanceToast(getContext());   SORTING_CRITERIA = DISTANCE;  }
+                else if (searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[4]) || searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[5])) {  sortingByTimeToast(getContext());       SORTING_CRITERIA = TIME;      }
+                searchForPaths(locationLats, destinationLats);
+                Log.i("Leo",locationLats);
+                Log.i("Leo",destinationLats);
+            }
+            else;
+        }
+
+    }
+
+
+
+    /* M Osama: States what will happen in case user clicked clicked on specific please */
+    public void autoCompleteOnVoiceClick(AutoCompleteTextView acTextView,int stop,int tempPlaceNumber){
+        String selectedItem = stopsDetailsList.get(tempPlaceNumber);
+        Toast.makeText(getContext(), selectedItem, Toast.LENGTH_SHORT).show();                      /* M Osama: Only for checking the autoCompleteOnClick is working */
+        getPlaceCoordinatesUsingID(stopsIDsArray[tempPlaceNumber], stop);
+//        acTextView.setText(getSubstringBeforeFirstComma(selectedItem));
+    }
+
+    void initializeTTSandSTT(){
+        textToSpeechHelper = TextToSpeechHelper.getInstance(getContext(),ARABIC);
+        speechToTextHelper = SpeechToTextHelper.getInstance(ARABIC);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals("ON_BLIND_MODE")) {
+            if (SharedPrefs.readMap(key,0) == 1) {
+                execute(() -> textToSpeechHelper.speak(getString(R.string.WhatsYourtLocation), () -> listenToRawLocationName(this)));
+            } else {}
+        }
+    }
+
+    private void listenToRawLocationName(HomeFragment homeFragment) {
+        speechToTextHelper.startSpeechRecognition(homeFragment,LISTEN_TO_RAW_LOCATION_NAME);
+    }
+
+    private void listenToRawDestinationName(HomeFragment homeFragment){
+        speechToTextHelper.startSpeechRecognition(homeFragment,LISTEN_TO_RAW_DESTINATION_NAME);
+    }
+
+    private void listenToSortingCriteria(HomeFragment homeFragment){
+        speechToTextHelper.startSpeechRecognition(homeFragment,LISTEN_TO_SORTING_CRITERIA);
+    }
+
+    private void listenToNothing(){}
+
+    private void listenToSpecifiedLocationName(HomeFragment homeFragment){
+        speechToTextHelper.startSpeechRecognition(homeFragment,LISTEN_TO_SPECIFIED_LOCATION_NAME);
+    }
+
+    private void listenToSpecifiedDestinationName(HomeFragment homeFragment){
+        speechToTextHelper.startSpeechRecognition(homeFragment,LISTEN_TO_SPECIFIED_DESTINATION_NAME);
+    }
+
+    private void locationTextChangeListener(){
+        binding.tvLocation.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) { updateDropDownListUsingGoogleMapsAPI(binding.tvLocation); }
+        });
+    }
+    private void destinationTextChangeListener(){
+        binding.tvDestination.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) { updateDropDownListUsingGoogleMapsAPI(binding.tvDestination); }
+        });
+    }
+
+    private void initializeGeoApiContext() {
+        if (geoApiContext == null) {
+            geoApiContext = new GeoApiContext.Builder().apiKey(MAPS_API_KEY).build();
+        }
+    }
+
+
+}

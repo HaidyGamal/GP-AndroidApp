@@ -4,11 +4,18 @@ import android.app.Activity;
 import android.content.Intent;
 import android.speech.RecognizerIntent;
 
+import androidx.annotation.Nullable;
+
+import com.example.publictransportationguidance.Fragments.HomeFragment;
+
+import java.util.ArrayList;
+
 public class SpeechToTextHelper {
-    public static final int RECOGNIZER_RESULT = 1;
+    public static final int MAIN_ACTIVITY_RECOGNIZER = 1;
 
     private static SpeechToTextHelper instance;
     private Intent speechToTextIntent;
+    private HomeFragment homeFragment;
 
     private SpeechToTextHelper(String language) {
         speechToTextIntent = createSpeechRecognitionIntent(language);
@@ -21,8 +28,16 @@ public class SpeechToTextHelper {
         return instance;
     }
 
+//    public void startSpeechRecognition(HomeFragment homeFragment) {
+//        homeFragment.startActivityForResult(speechToTextIntent, RECOGNIZER_RESULT);
+//    }
+
     public void startSpeechRecognition(Activity activity) {
-        activity.startActivityForResult(speechToTextIntent, RECOGNIZER_RESULT);
+        activity.startActivityForResult(speechToTextIntent, MAIN_ACTIVITY_RECOGNIZER);
+    }
+
+    public void startSpeechRecognition(HomeFragment homeFragment,int recognizer) {
+        homeFragment.startActivityForResult(speechToTextIntent, recognizer);
     }
 
     private Intent createSpeechRecognitionIntent(String language) {
@@ -39,4 +54,17 @@ public class SpeechToTextHelper {
         String replacement = "ة";
         return input.replaceAll(pattern, replacement);
     }
+
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == MAIN_ACTIVITY_RECOGNIZER && resultCode == Activity.RESULT_OK && data != null) {
+            ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            if (matches != null && !matches.isEmpty()) {
+                String speechText = matches.get(0);
+                String convertedText = convertHaaToTaaMarbuta(speechText);
+                // Do something with the converted text
+            }
+        }
+    }
+
 }
+

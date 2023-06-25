@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.publictransportationguidance.R;
 import com.example.publictransportationguidance.TripsTimeCallback;
+import com.example.publictransportationguidance.adapters.CustomAutoCompleteAdapter;
 import com.example.publictransportationguidance.api.RetrofitClient;
 import com.example.publictransportationguidance.blindMode.ArrowFunction;
 import com.example.publictransportationguidance.pojo.estimatedTimeResponse.EstimatedTime;
@@ -34,6 +35,12 @@ import java.util.concurrent.Future;
 import retrofit2.Response;
 
 public class Functions {
+
+    public static final int LISTEN_TO_RAW_LOCATION_NAME = 9999;
+    public static final int LISTEN_TO_SPECIFIED_LOCATION_NAME = 8888;
+    public static final int LISTEN_TO_RAW_DESTINATION_NAME = 7777;
+    public static final int LISTEN_TO_SPECIFIED_DESTINATION_NAME = 6666;
+    public static final int LISTEN_TO_SORTING_CRITERIA = 5555;
 
     public static String[] listToArray(List<String> list) {
         String[] array = new String[list.size()];
@@ -252,6 +259,70 @@ public class Functions {
             }
         }
         return isMatch;
+    }
+
+    /** M Osama: blindMode functions from HomeFragment */
+    public static String deleteFromPenultimateComma(String input) {
+        int lastCommaIndex = input.lastIndexOf("،");
+        if (lastCommaIndex != -1) {
+            int penultimateCommaIndex = input.lastIndexOf("،", lastCommaIndex - 1);
+            if (penultimateCommaIndex != -1) { return input.substring(0, penultimateCommaIndex); }
+        }
+        return input;
+    }
+
+    public static String deleteFromFistComma(String input) {
+        int firstCommaIndex = input.indexOf("،");
+        if (firstCommaIndex != -1) {
+            return input.substring(firstCommaIndex + 1).trim();
+        }
+        return input;
+    }
+
+    public static String getSubstringBeforeFirstComma(String input) {
+        int firstCommaIndex = input.indexOf("،");
+        if (firstCommaIndex != -1) {
+            return input.substring(0, firstCommaIndex).trim();
+        }
+        return input;
+    }
+
+    public static String availableStopsToBeRead(CustomAutoCompleteAdapter list) {
+        StringBuilder resultBuilder = new StringBuilder();
+        int count = list.getCount();
+        for (int i = 0; i < count; i++) {
+            String currentItem = list.getItem(i);
+            resultBuilder.append(currentItem);
+
+            if (i + 1 < count) { resultBuilder.append(" | أَم | "); }
+        }
+        return resultBuilder.toString();
+    }
+    public static String availableStopsToBeRead(List<String> items) {
+        StringBuilder resultBuilder = new StringBuilder();
+        resultBuilder.append("أي من هذهِ الأماكن تريد | |");
+        int count = items.size();
+        for (int i = 0; i < count; i++) {
+            String currentItem = items.get(i);
+            resultBuilder.append(currentItem);
+            if (i + 1 < count) {
+                resultBuilder.append(" | أَم | ");
+            }
+        }
+        return resultBuilder.toString();
+    }
+
+    public static String removeCommas(String input) {
+        if (input == null) {
+            return null;
+        }
+        return input.replace("،", "");
+    }
+    public static String convertToAleph(String input) {
+        if (input == null) {
+            return null;
+        }
+        return input.replace("أ", "ا");
     }
 
 }
