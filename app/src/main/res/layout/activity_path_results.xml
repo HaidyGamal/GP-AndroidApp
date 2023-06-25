@@ -54,7 +54,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView2">
 
             <RadioButton
-                android:id="@+id/costRB_pathResults"
+                android:id="@+id/sortByCost"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -69,7 +69,7 @@
                 android:textStyle="bold" />
 
             <RadioButton
-                android:id="@+id/distanceRB_pathResults"
+                android:id="@+id/sortByDistance"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -85,7 +85,7 @@
                 android:textStyle="bold" />
 
             <RadioButton
-                android:id="@+id/timeRB_pathResults"
+                android:id="@+id/sortByTime"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -248,6 +248,18 @@
             app:layout_constraintEnd_toStartOf="@+id/time"
             app:layout_constraintTop_toBottomOf="@+id/guideline21" />
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:layout_margin="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <com.shawnlin.numberpicker.NumberPicker
             android:id="@+id/wheel"
             android:layout_width="match_parent"
@@ -272,4 +284,5 @@
             app:layout_constraintGuide_percent="0.3" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

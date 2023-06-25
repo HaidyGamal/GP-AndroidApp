@@ -103,5 +103,7 @@ dependencies {
 
     implementation 'io.github.ShawnLin013:number-picker:2.4.13'
 
+    implementation 'com.google.firebase:firebase-firestore:22.0.0'
+
 }
 

@@ -6,22 +6,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.example.publictransportationguidance.R;
 import com.example.publictransportationguidance.databinding.FragmentSignupBinding;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +31,7 @@ public class SignUp extends AppCompatActivity {
     FirebaseFirestore db;
 
     public static String TAG2 = "TAG22";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,27 +55,15 @@ public class SignUp extends AppCompatActivity {
         fname=binding.FnameET.getText().toString();
         lname=binding.LnameET.getText().toString();
         phone=binding.phoneET.getText().toString();
-        //haidy: Create a Matcher object and apply the pattern to the input string
         Matcher matcher = mobilePattern.matcher(phone);
-        //haidy: sending data to Firestore
         Map<String,Object> data=new HashMap<>();
         data.put("FirstName",fname);
         data.put("LastName",lname);
         data.put("Phone",phone);
         db.collection("users").document(mail)
                 .set(data)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d("TAG", "DocumentSnapshot added with ID: " + mail);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("Firestore", "Error adding document", e);
-                    }
-                });
+                .addOnSuccessListener(unused -> Log.d("TAG", "DocumentSnapshot added with ID: " + mail))
+                .addOnFailureListener(e -> Log.e("Firestore", "Error adding document", e));
         if(fname.isEmpty())     {binding.FnameET.setError("Required field!");}
         else if(lname.isEmpty()) {binding.LnameET.setError("Required field!");}
         else if(!email.matches(emailPattern)){ binding.em.setError(getString(R.string.EnterCorrectEmail)); }
@@ -98,18 +78,17 @@ public class SignUp extends AppCompatActivity {
 
             mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    FirebaseUser user =mAuth.getCurrentUser();      //haidy: sending the verification link
+                    FirebaseUser user =mAuth.getCurrentUser();
 
                     user.sendEmailVerification().addOnSuccessListener(unused -> Toast.makeText(SignUp.this, R.string.VerificationEmailHasBeenSent, Toast.LENGTH_LONG).show()).addOnFailureListener(e -> Log.d(TAG2,"ON Failure: Email Not sent"+e.getMessage()));
-//
                     Toast.makeText(SignUp.this, R.string.SuccessfulRegistration, Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
-                    finish();                   // M Osama: return to addNewRoute & logIn dialog after registration
+                    finish();
                 }
                 else {  dialog.dismiss();  Toast.makeText(SignUp.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show(); }
             });
-        }}
-
-
+        }
+    }
 }
+
 

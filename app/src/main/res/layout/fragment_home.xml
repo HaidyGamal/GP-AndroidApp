@@ -110,7 +110,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_destination">
 
             <RadioButton
-                android:id="@+id/costRB_homeFragment"
+                android:id="@+id/orderByCost"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -124,7 +124,7 @@
                 android:textStyle="bold" />
 
             <RadioButton
-                android:id="@+id/distanceRB_homeFragment"
+                android:id="@+id/orderByDistance"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -139,7 +139,7 @@
                 android:textStyle="bold" />
 
             <RadioButton
-                android:id="@+id/timeRB_homeFragment"
+                android:id="@+id/orderByTime"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
