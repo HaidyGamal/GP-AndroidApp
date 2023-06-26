@@ -12,6 +12,28 @@
         android:layout_height="match_parent"
         tools:context=".Fragments.AddNewRouteFragment">
 
+        <EditText
+            android:id="@+id/transportType"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:minHeight="48dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/logOut" />
+
+        <!--        <EditText-->
+        <!--            android:id="@+id/transportType"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="50dp"-->
+        <!--            android:ems="10"-->
+        <!--            android:inputType="textPersonName"-->
+        <!--            android:minHeight="48dp"-->
+        <!--            app:layout_constraintBottom_toTopOf="@+id/spin"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent" />-->
+
         <Button
             android:id="@+id/logOut"
             android:layout_width="115dp"
@@ -39,28 +61,6 @@
             app:layout_constraintBottom_toTopOf="@+id/tv_destination"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
-
-        <!--        <EditText-->
-<!--            android:id="@+id/toET"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:ems="10"-->
-<!--            android:inputType="textPersonName"-->
-<!--            app:layout_constraintBottom_toTopOf="@+id/transportType"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent" />-->
-
-<!--        <EditText-->
-<!--            android:id="@+id/transportType"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="50dp"-->
-<!--            android:ems="10"-->
-<!--            android:inputType="textPersonName"-->
-<!--            android:minHeight="48dp"-->
-<!--            app:layout_constraintBottom_toTopOf="@+id/spin"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent" />-->
 
         <AutoCompleteTextView
             android:id="@+id/tv_destination"
@@ -180,3 +180,14 @@
     <!--            app:layout_constraintEnd_toEndOf="parent"-->
     <!--            app:layout_constraintStart_toStartOf="parent"-->
     <!--            app:layout_constraintTop_toBottomOf="@+id/logOut" />-->
+
+    <!--        <EditText-->
+    <!--            android:id="@+id/toET"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:ems="10"-->
+    <!--            android:inputType="textPersonName"-->
+    <!--            app:layout_constraintBottom_toTopOf="@+id/transportType"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintStart_toStartOf="parent" />-->
+
