@@ -196,7 +196,26 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
         Toast.makeText(getActivity(), R.string.LogoutSuccessful, Toast.LENGTH_SHORT).show();
         showLogInDialog();
     }
+    public String getTransportationMode(String input) {
+        String mode;
 
+        switch (input) {
+            case "أوتوبيس":
+                mode = "bus";
+                break;
+            case "ميكروباص":
+                mode = "microbus";
+                break;
+            case "مترو":
+                mode = "metro";
+                break;
+            default:
+                mode = "unknown";
+                break;
+        }
+
+        return mode;
+    }
     private void focus(EditText editText,String text){
         editText.setText(text);
         editText.setTextColor(Color.GRAY);
@@ -252,14 +271,21 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
                     Map<String, Integer> dataCountMap = new HashMap<>();
 
                     for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-                        String name = document.getString("Node Name");
-                        String type = document.getString("Type");
-                        String fLatitude = document.getString("FromLatitude");
-                        String fLongitude = document.getString("FromLongitude");
-                        String tLatitude = document.getString("ToLatitude");
-                        String tLongitude = document.getString("ToLongitude");
+                        Object nameObj = document.get("Node Name");
+                        Object typeObj = document.get("Type");
+                        Object fLatitudeObj = document.get("FromLatitude");
+                        Object fLongitudeObj = document.get("FromLongitude");
+                        Object tLatitudeObj = document.get("ToLatitude");
+                        Object tLongitudeObj = document.get("ToLongitude");
 
-                        if (name != null && fLatitude != null && fLongitude != null && tLatitude != null && tLongitude != null && type != null) {
+                        if (nameObj instanceof String && typeObj instanceof String && fLatitudeObj instanceof String && fLongitudeObj instanceof String && tLatitudeObj instanceof String && tLongitudeObj instanceof String) {
+                            String name = (String) nameObj;
+                            String type = (String) typeObj;
+                            String fLatitude = (String) fLatitudeObj;
+                            String fLongitude = (String) fLongitudeObj;
+                            String tLatitude = (String) tLatitudeObj;
+                            String tLongitude = (String) tLongitudeObj;
+
                             String dataKey = name + "_" + fLatitude + "_" + fLongitude + "_" + tLatitude + "_" + tLongitude + "_" + type;
                             dataCountMap.put(dataKey, dataCountMap.getOrDefault(dataKey, 0) + 1);
                         }
@@ -277,7 +303,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
                         if (count >= 5) {
                             if (!logsExecuted) {
                                 logsExecuted = true;
-                                addToNeo4j(location, destination, cost, pathName, transportationType);
+                                addToNeo4j(location, destination, cost, pathName, getTransportationMode(transportationType));
                             }
                         }
                     }
@@ -294,7 +320,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
         String cost,dist;
         String name= bind.transportType.getText().toString();
 
-        if(!bind.costET.getText().equals("")||!bind.costET.getText().equals("اختيارى"))      cost= bind.costET.getText().toString();
+        if(!bind.costET.getText().equals("")||!bind.costET.getHint().equals("اختيارى")||!bind.costET.getText().toString().isEmpty())      cost= bind.costET.getText().toString();
         else cost="7";
 
         dist="0.7";
@@ -304,7 +330,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
         else if(bind.tvDestination.getText().toString().isEmpty()|| bind.tvDestination.getText().toString().equals("")|| bind.tvDestination.getText().toString().equals(getString(R.string.Destination)))            bind.tvDestination.setError("مطلوب!");
         else if(name.isEmpty()||name.equals("")||name.equals(getString(R.string.ConnectionName)))                                                                                                                     bind.transportType.setError("مطلوب!");
         else{
-            Map<String,Object> node = buildFirestoreNode(mUser.getEmail(),name,splitLatLng(location)[0],splitLatLng(location)[1],splitLatLng(destination)[0],splitLatLng(destination)[1], bind.spin.getSelectedItem().toString(),cost,dist);
+            Map<String,Object> node = buildFirestoreNode(mUser.getEmail(),name,splitLatLng(location)[0],splitLatLng(location)[1],splitLatLng(destination)[0],splitLatLng(destination)[1], getTransportationMode(bind.spin.getSelectedItem().toString()),cost,dist);
             db.collection(FIRESTORE_COLLECTION_NAME)
                     .add(node)
                     .addOnSuccessListener(documentReference -> {
