@@ -325,6 +325,15 @@ public class Functions {
         return input.replace("أ", "ا");
     }
 
+    public static String[] splitLatLng(String latLng) {
+        String[] splitCoordinates = latLng.split(",");
+
+        String latitude = splitCoordinates[0].trim();
+        String longitude = splitCoordinates[1].trim();
+
+        return new String[] { latitude, longitude };
+    }
+
 }
 
 

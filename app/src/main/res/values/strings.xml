@@ -133,5 +133,7 @@
     <string name="WhatsYourtLocation">ما هي نقطة الانطلاق التي تريدها</string>
     <string name="WhatsYourDestination">ما هي نقطة الانتهاء التي تريد الوصول إليها</string>
     <string name="SortingCriteria">ما هي طريقة ترتيب الطرق التي تريدونها | الوقت | أم | المسافة | أم | التكلفة ؟</string>
+    <string name="ConnectionName">اسم الخط</string>
+    <string name="OptionalPathCost">اختيارى</string>
 
 </resources>
