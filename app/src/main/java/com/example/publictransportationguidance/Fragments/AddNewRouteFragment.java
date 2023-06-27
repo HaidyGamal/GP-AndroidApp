@@ -123,6 +123,8 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
     private GeoApiContext geoApiContext;
     List<String> stopsDetailsList;
 
+    FirebaseFirestore db;
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -130,6 +132,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
         initializeMapActivityResultLauncher();
         SharedPrefs.init(getActivity());
         firebaseInitializer();
+        db = FirebaseFirestore.getInstance();
 
         /* M Osama: initial list value to prevent NullPointerException */
         list = new CustomAutoCompleteAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, stopsArray, FOOTER);
@@ -159,7 +162,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
 
         bind.submit.setOnClickListener((View v) -> {
             if (!isAddToNeo4jExecuted) {
-                sendData(locationLats, destinationLats);
+                buildFirestoreSingleDataToSend(locationLats, destinationLats);
                 isAddToNeo4jExecuted = true;
             }
         });
@@ -260,7 +263,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void hasRedundantData(String location, String destination, String cost, String pathName, String transportationType) {
+    public void hasRedundantData(String location, String destination, String cost, String pathName, String transportationType,String documentId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference collectionRef = db.collection(FIRESTORE_COLLECTION_NAME);
 
@@ -300,12 +303,26 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
                         Log.i("Info", "Type: " + transportationType);
                         Log.i("Info", "Count: " + count);
 
-                        if (count >= 5) {
+                        /* M Osama: If redundancy is >5 : No suggestions is added to firestore 5 */
+                        if(count>5){
+//                            Toast.makeText(getContext(), count+"الطريق موجود بالفعل", Toast.LENGTH_SHORT).show();         /* M Osama: for debugging only */
+                            deleteData(documentId);
+                        }
+
+                        /* M Osama: if redundancy =5    : A connection is added(in case nodes are avaliable) */
+                        else if (count == 5) {
                             if (!logsExecuted) {
-                                logsExecuted = true;
                                 addToNeo4j(location, destination, cost, pathName, getTransportationMode(transportationType));
+                                logsExecuted = true;
+//                                Toast.makeText(getContext(), count+"سيتم اضافة الطريق", Toast.LENGTH_SHORT).show();       /* M Osama: for debugging only*/
                             }
                         }
+
+                        /* M Osama: if redundancy <5    : A suggestion is added to firestore */
+                        else {
+//                            Toast.makeText(getContext(), count+"سيتم مراجعة طلبكم", Toast.LENGTH_SHORT).show();           /* M Osama: for debugging only */
+                        }
+
                     }
                 }
             } else {
@@ -316,31 +333,49 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void sendData(String location, String destination) {
+    private void buildFirestoreSingleDataToSend(String location, String destination) {
         String dist;
         String name= bind.transportType.getText().toString();
         String cost = getCost(bind.costET.getText().toString().trim());
 
         dist="0.7";
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         if(bind.tvLocation.getText().toString().isEmpty()|| bind.tvLocation.getText().toString().equals("")|| bind.tvLocation.getText().toString().equals(getString(R.string.Location)))                      bind.tvLocation.setError("مطلوب!");
         else if(bind.tvDestination.getText().toString().isEmpty()|| bind.tvDestination.getText().toString().equals("")|| bind.tvDestination.getText().toString().equals(getString(R.string.Destination)))            bind.tvDestination.setError("مطلوب!");
         else if(name.isEmpty()||name.equals("")||name.equals(getString(R.string.ConnectionName)))                                                                                                                     bind.transportType.setError("مطلوب!");
         else{
             Map<String,Object> node = buildFirestoreNode(mUser.getEmail(),name,splitLatLng(location)[0],splitLatLng(location)[1],splitLatLng(destination)[0],splitLatLng(destination)[1], getTransportationMode(bind.spin.getSelectedItem().toString()),cost,dist);
-            db.collection(FIRESTORE_COLLECTION_NAME)
-                    .add(node)
-                    .addOnSuccessListener(documentReference -> {
-                        String id = documentReference.getId();
-                        Log.d("TAG", "DocumentSnapshot added with ID: " + id);
-                        hasRedundantData(locationLats, destinationLats, cost, name, bind.spin.getSelectedItem().toString());
-                        new VerifyDialog().show(getChildFragmentManager(), LoginDialog.TAG);
-                        isAddToNeo4jExecuted = false;
-                    })
-                    .addOnFailureListener(e -> Log.e("Firestore", "Error adding document", e));
+            sendData(node,cost,name);
         }
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void sendData(Map<String,Object> node,String cost,String name){
+        db.collection(FIRESTORE_COLLECTION_NAME)
+                .add(node)
+                .addOnSuccessListener(documentReference -> {
+                    String documentId = documentReference.getId();
+                    Log.d("TAG", "DocumentSnapshot added with ID: " + documentId);
+                    hasRedundantData(locationLats, destinationLats, cost, name, bind.spin.getSelectedItem().toString(),documentId);
+                    new VerifyDialog().show(getChildFragmentManager(), LoginDialog.TAG);
+                    isAddToNeo4jExecuted = false;
+                })
+                .addOnFailureListener(e -> Log.e("Firestore", "Error adding document", e));
+    }
+
+    private void deleteData(String documentId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection(FIRESTORE_COLLECTION_NAME)
+                .document(documentId)
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("TAG", "DocumentSnapshot successfully deleted.");
+                    // Perform any additional actions upon successful deletion
+                })
+                .addOnFailureListener(e -> Log.e("Firestore", "Error deleting document", e));
+    }
+
 
     private String getCost(String cost) {
         if(cost.equals("اختياري") || cost.equals("") || cost.equals("اختيارى"))    return "7";
@@ -544,3 +579,5 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
         });
     }
 }
+
+

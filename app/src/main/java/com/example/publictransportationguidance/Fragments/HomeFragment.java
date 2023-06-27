@@ -333,9 +333,9 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         else if(requestCode==LISTEN_TO_SORTING_CRITERIA){
             String searchingMethod=convertHaaToTaaMarbuta(speechConvertedToText.get(0));
             if(stringIsFound(searchingMethod,SORTING_CRITERIA_ACCEPTANCE)) {
-                if (searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[0]) || searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[1])) {         sortingByCostToast(getContext());       SORTING_CRITERIA = COST;    }
+                if (searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[4]) || searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[5])) {       sortingByCostToast(getContext());       SORTING_CRITERIA = COST;    }
                 else if (searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[2]) || searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[3])) {  sortingByDistanceToast(getContext());   SORTING_CRITERIA = DISTANCE;  }
-                else if (searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[4]) || searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[5])) {  sortingByTimeToast(getContext());       SORTING_CRITERIA = TIME;      }
+                else if (searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[0]) || searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[1])) {  sortingByTimeToast(getContext());       SORTING_CRITERIA = TIME;      }
                 searchForPaths(locationLats, destinationLats);
                 Log.i("Leo",locationLats);
                 Log.i("Leo",destinationLats);
