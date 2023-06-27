@@ -317,11 +317,9 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void sendData(String location, String destination) {
-        String cost,dist;
+        String dist;
         String name= bind.transportType.getText().toString();
-
-        if(!bind.costET.getText().equals("")||!bind.costET.getHint().equals("اختيارى")||!bind.costET.getText().toString().isEmpty())      cost= bind.costET.getText().toString();
-        else cost="7";
+        String cost = getCost(bind.costET.getText().toString().trim());
 
         dist="0.7";
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -342,6 +340,11 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
                     })
                     .addOnFailureListener(e -> Log.e("Firestore", "Error adding document", e));
         }
+    }
+
+    private String getCost(String cost) {
+        if(cost.equals("اختياري") || cost.equals(""))    return "7";
+        else                                             return cost;
     }
 
     Map<String,Object> buildFirestoreNode(String email,String nodeName,String locationLat,String locationLong,String destinationLat,String destinationLong,String transportationType,String cost,String distance){
