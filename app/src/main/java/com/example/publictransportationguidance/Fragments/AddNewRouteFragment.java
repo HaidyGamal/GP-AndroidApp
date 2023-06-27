@@ -343,7 +343,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
     }
 
     private String getCost(String cost) {
-        if(cost.equals("اختياري") || cost.equals(""))    return "7";
+        if(cost.equals("اختياري") || cost.equals("") || cost.equals("اختيارى"))    return "7";
         else                                             return cost;
     }
 
