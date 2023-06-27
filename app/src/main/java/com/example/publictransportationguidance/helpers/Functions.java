@@ -41,6 +41,8 @@ public class Functions {
     public static final int LISTEN_TO_RAW_DESTINATION_NAME = 7777;
     public static final int LISTEN_TO_SPECIFIED_DESTINATION_NAME = 6666;
     public static final int LISTEN_TO_SORTING_CRITERIA = 5555;
+    public static final int LISTEN_TO_CHOSEN_MODE = 4444;
+    public static final int RE_LISTEN_TO_CHOSEN_MODE= 3333;
 
     public static String[] listToArray(List<String> list) {
         String[] array = new String[list.size()];

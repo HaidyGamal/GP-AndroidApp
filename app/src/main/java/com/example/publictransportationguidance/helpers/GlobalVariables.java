@@ -54,7 +54,9 @@ public class GlobalVariables {
     /* M Osama: TTS & STT*/
     public static final String ARABIC="ar";
     public static final String ASKING_FOR_MODE="مرحبا بكم في تطبيقي توصيلة، هل تريدون العمل بنظام الضّريرِيِنْ أم لا";
+    public static final String RE_ASKING_FOR_MODE="هل تريدون العمل بنظام الضّريرِيِنْ أم لا";
     public static final String[] BLIND_MODE_ACCEPTANCE = {"نعم","اة","أيوة","ايوة","آة","اوك","تمام","ماشي"};
+    public static final String[] BLIND_MODE_REJECTANCE = {"لا","لأ","ليه","لية"};
     public static final String[] SORTING_CRITERIA_ACCEPTANCE = {"الوقت","وقت","المسافة","مسافة","التكلفة","تكلفة"};
     public static final String FIRESTORE_COLLECTION_NAME = "Nodes";
 }

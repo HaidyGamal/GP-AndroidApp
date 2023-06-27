@@ -1,13 +1,15 @@
 package com.example.publictransportationguidance.ui;
 
-import static com.example.publictransportationguidance.blindMode.speechToText.SpeechToTextHelper.MAIN_ACTIVITY_RECOGNIZER;
+import static com.example.publictransportationguidance.helpers.Functions.LISTEN_TO_CHOSEN_MODE;
 import static com.example.publictransportationguidance.helpers.Functions.execute;
 import static com.example.publictransportationguidance.helpers.Functions.stringIsFound;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.ARABIC;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.ASKING_FOR_MODE;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.BLIND_MODE_ACCEPTANCE;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.BLIND_MODE_REJECTANCE;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.IS_LOGGED_IN;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.ON_BLIND_MODE;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.RE_ASKING_FOR_MODE;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -37,6 +39,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.publictransportationguidance.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements SpeechRecognitionCallback {
 
@@ -46,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements SpeechRecognition
 
     public TextToSpeechHelper textToSpeechHelper;
     public SpeechToTextHelper speechToTextHelper;
+
+    private HashMap<Integer, String> speechRecognitionResults = new HashMap<>();
+    private int currentRequestCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements SpeechRecognition
 
         /* M Osama: activate BlindMode vocally */
         initializeTTSandSTT();
-        execute(() -> textToSpeechHelper.speak(ASKING_FOR_MODE, () -> startListening(this)));
+        execute(() -> textToSpeechHelper.speak(ASKING_FOR_MODE, () -> listenToChosenMode(this)));
 
     }
 
@@ -120,27 +126,45 @@ public class MainActivity extends AppCompatActivity implements SpeechRecognition
     }
 
     /* M Osama what we need to execute after the Speech is ended */
-    void startListening(Activity activity){
-        speechToTextHelper.startSpeechRecognition(activity);
+    void listenToChosenMode(Activity activity){
+        currentRequestCode = LISTEN_TO_CHOSEN_MODE;
+        speechToTextHelper.startSpeechRecognition(activity,currentRequestCode);
     }
 
     /* M Osama: ran after startSpeechRecognition */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == MAIN_ACTIVITY_RECOGNIZER && resultCode == RESULT_OK && data != null) {
+        if (requestCode == currentRequestCode && resultCode == RESULT_OK && data != null) {
             ArrayList<String> speechConvertedToText = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            onSpeechRecognitionResult(SpeechToTextHelper.convertHaaToTaaMarbuta(speechConvertedToText.get(0)));
+            String result = SpeechToTextHelper.convertHaaToTaaMarbuta(speechConvertedToText.get(0));
+            speechRecognitionResults.put(requestCode,result);
+            processSpeechRecognitionResult(requestCode,result);
         }
     }
 
     @Override
-    public void onSpeechRecognitionResult(String result, EditText targetEditText) {}
+    public void onSpeechRecognitionResult(String result, EditText targetEditText) {
+        processSpeechRecognitionResult(currentRequestCode, result);
+    }
 
     @Override
     public void onSpeechRecognitionResult(String result) {
-        if(stringIsFound(result,BLIND_MODE_ACCEPTANCE)) blindModeOnInitializer();
-        else                                            blindModeOffInitializer();
+        processSpeechRecognitionResult(currentRequestCode, result);
+    }
+
+    private void processSpeechRecognitionResult(int requestCode, String result) {
+        switch (requestCode) {
+            case LISTEN_TO_CHOSEN_MODE:
+                handleChosenMode(result);
+                break;
+        }
+    }
+
+    private void handleChosenMode(String result){
+        if(stringIsFound(result,BLIND_MODE_ACCEPTANCE))         blindModeOnInitializer();
+        else if(stringIsFound(result,BLIND_MODE_REJECTANCE))    blindModeOffInitializer();
+        else  execute(() -> textToSpeechHelper.speak(RE_ASKING_FOR_MODE, () -> listenToChosenMode(this)));
     }
 
     public  void blindModeOnInitializer(){

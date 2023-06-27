@@ -36,6 +36,10 @@ public class SpeechToTextHelper {
         activity.startActivityForResult(speechToTextIntent, MAIN_ACTIVITY_RECOGNIZER);
     }
 
+    public void startSpeechRecognition(Activity activity,int recognizer){
+        activity.startActivityForResult(speechToTextIntent,recognizer);
+    }
+
     public void startSpeechRecognition(HomeFragment homeFragment,int recognizer) {
         homeFragment.startActivityForResult(speechToTextIntent, recognizer);
     }

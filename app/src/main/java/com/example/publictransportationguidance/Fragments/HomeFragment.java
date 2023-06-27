@@ -276,71 +276,67 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         speechToTextHelper.onActivityResult(requestCode, resultCode, data);                                                  // Pass the onActivityResult event to the SpeechToTextHelper
         ArrayList<String> speechConvertedToText = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
-        /* M Osama: receiving the locationName from the blind */
-        if(requestCode==LISTEN_TO_RAW_LOCATION_NAME) {
-            binding.tvLocation.setText(convertHaaToTaaMarbuta(speechConvertedToText.get(0)));
-            locationTextChangeListener();
-        }
+        switch (requestCode){
+            case LISTEN_TO_RAW_LOCATION_NAME:                                   /* M Osama: receiving the locationName from the blind */
+                binding.tvLocation.setText(convertHaaToTaaMarbuta(speechConvertedToText.get(0)));
+                locationTextChangeListener();
+                break;
 
-        /* M Osama: receiving the specifiedDetails of the locationName from the blind */
-        else if(requestCode==LISTEN_TO_SPECIFIED_LOCATION_NAME){
-            Log.i("Out",convertHaaToTaaMarbuta(speechConvertedToText.get(0)));                                      /* M Osama: for debugging only */
-            for(int placeNum=0;placeNum<stopsDetailsList.size();placeNum++){
-                String place = convertToAleph(removeCommas(convertHaaToTaaMarbuta(stopsDetailsList.get(placeNum))));
-                Log.i("In",place);                                                                                  /* M Osama: for debugging only */
-                if(place.equals(convertHaaToTaaMarbuta(speechConvertedToText.get(0)))) {
-                    Toast.makeText(getContext(), "نعم", Toast.LENGTH_SHORT).show();                                /* M Osama: for debugging only */
-                    autoCompleteOnVoiceClick(binding.tvLocation,0,placeNum);
-                    Log.i("Leo",locationLats);
-                    Log.i("Leo",destinationLats);
-                    execute(() -> textToSpeechHelper.speak(getString(R.string.WhatsYourDestination), () -> listenToRawDestinationName(this)));
-                    break;
+            case LISTEN_TO_SPECIFIED_LOCATION_NAME:                             /* M Osama: receiving the specifiedDetails of the locationName from the blind */
+                Log.i("Out",convertHaaToTaaMarbuta(speechConvertedToText.get(0)));                                      /* M Osama: for debugging only */
+                for(int placeNum=0;placeNum<stopsDetailsList.size();placeNum++){
+                    String place = convertToAleph(removeCommas(convertHaaToTaaMarbuta(stopsDetailsList.get(placeNum))));
+                    Log.i("In",place);                                                                                  /* M Osama: for debugging only */
+                    if(place.equals(convertHaaToTaaMarbuta(speechConvertedToText.get(0)))) {
+                        Toast.makeText(getContext(), "نعم", Toast.LENGTH_SHORT).show();                                /* M Osama: for debugging only */
+                        autoCompleteOnVoiceClick(binding.tvLocation,0,placeNum);
+                        Log.i("Leo",locationLats);
+                        Log.i("Leo",destinationLats);
+                        execute(() -> textToSpeechHelper.speak(getString(R.string.WhatsYourDestination), () -> listenToRawDestinationName(this)));
+                        break;
+                    }
+                    else{
+                        Toast.makeText(getContext(), "لا", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
-                else{
-                    Toast.makeText(getContext(), "لا", Toast.LENGTH_SHORT).show();
-                }
+                break;
 
-            }
-        }
+            case LISTEN_TO_RAW_DESTINATION_NAME:                                /* M Osama: receiving the destinationName from the blind*/
+                binding.tvDestination.setText(convertHaaToTaaMarbuta(speechConvertedToText.get(0)));
+                destinationTextChangeListener();
+                break;
 
-        /* M Osama: receiving the destinationName from the blind*/
-        else if(requestCode==LISTEN_TO_RAW_DESTINATION_NAME){
-            binding.tvDestination.setText(convertHaaToTaaMarbuta(speechConvertedToText.get(0)));
-            destinationTextChangeListener();
-        }
-
-        /* M Osama: receiving the specifiedDetails of the destinationName from the blind */
-        else if(requestCode==LISTEN_TO_SPECIFIED_DESTINATION_NAME){
+            case LISTEN_TO_SPECIFIED_DESTINATION_NAME:                          /* M Osama: receiving the specifiedDetails of the destinationName from the blind */
 //            Log.i("Out",convertHaaToTaaMarbuta(speechConvertedToText.get(0)));                                      /* For Debugging */
-            for(int placeNum=0;placeNum<stopsDetailsList.size();placeNum++){
-                String place = convertToAleph(removeCommas(convertHaaToTaaMarbuta(stopsDetailsList.get(placeNum))));
+                for(int placeNum=0;placeNum<stopsDetailsList.size();placeNum++){
+                    String place = convertToAleph(removeCommas(convertHaaToTaaMarbuta(stopsDetailsList.get(placeNum))));
 //                Log.i("In",place);                                                                                  /* For Debugging */
-                if(place.equals(convertHaaToTaaMarbuta(speechConvertedToText.get(0)))) {
-                    Toast.makeText(getContext(), "نعم", Toast.LENGTH_SHORT).show();                              /* M Osama: for debugging only */
-                    autoCompleteOnVoiceClick(binding.tvDestination,1,placeNum);
+                    if(place.equals(convertHaaToTaaMarbuta(speechConvertedToText.get(0)))) {
+                        Toast.makeText(getContext(), "نعم", Toast.LENGTH_SHORT).show();                              /* M Osama: for debugging only */
+                        autoCompleteOnVoiceClick(binding.tvDestination,1,placeNum);
 //                    Log.i("Leo",locationLats);                                                                      /* For Debugging */
 //                    Log.i("Leo",destinationLats);                                                                   /* For Debugging */
-                    execute(() -> textToSpeechHelper.speak(getString(R.string.SortingCriteria), () -> listenToSortingCriteria(this)));
-                    break;
+                        execute(() -> textToSpeechHelper.speak(getString(R.string.SortingCriteria), () -> listenToSortingCriteria(this)));
+                        break;
+                    }
+                    else{
+                        Toast.makeText(getContext(), "لا", Toast.LENGTH_SHORT).show();                                  /* M Osama: for debugging only */
+                    }
                 }
-                else{
-                    Toast.makeText(getContext(), "لا", Toast.LENGTH_SHORT).show();                                  /* M Osama: for debugging only */
-                }
-            }
-        }
+                break;
 
-        /* M Osama: receiving the sortingCriteria from the blind*/
-        else if(requestCode==LISTEN_TO_SORTING_CRITERIA){
-            String searchingMethod=convertHaaToTaaMarbuta(speechConvertedToText.get(0));
-            if(stringIsFound(searchingMethod,SORTING_CRITERIA_ACCEPTANCE)) {
-                if (searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[4]) || searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[5])) {       sortingByCostToast(getContext());       SORTING_CRITERIA = COST;    }
-                else if (searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[2]) || searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[3])) {  sortingByDistanceToast(getContext());   SORTING_CRITERIA = DISTANCE;  }
-                else if (searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[0]) || searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[1])) {  sortingByTimeToast(getContext());       SORTING_CRITERIA = TIME;      }
-                searchForPaths(locationLats, destinationLats);
-                Log.i("Leo",locationLats);
-                Log.i("Leo",destinationLats);
-            }
-            else;
+            case LISTEN_TO_SORTING_CRITERIA:                                    /* M Osama: receiving the sortingCriteria from the blind*/
+                String searchingMethod=convertHaaToTaaMarbuta(speechConvertedToText.get(0));
+                if(stringIsFound(searchingMethod,SORTING_CRITERIA_ACCEPTANCE)) {
+                    if (searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[4]) || searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[5])) {       sortingByCostToast(getContext());       SORTING_CRITERIA = COST;    }
+                    else if (searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[2]) || searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[3])) {  sortingByDistanceToast(getContext());   SORTING_CRITERIA = DISTANCE;  }
+                    else if (searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[0]) || searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[1])) {  sortingByTimeToast(getContext());       SORTING_CRITERIA = TIME;      }
+                    searchForPaths(locationLats, destinationLats);
+                    Log.i("Leo",locationLats);
+                    Log.i("Leo",destinationLats);
+                }
+                else;
         }
 
     }
