@@ -2,6 +2,7 @@ package com.example.publictransportationguidance.tracking;
 
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 import static com.example.publictransportationguidance.api.Api.NEO4J_BASE_URL;
+import static com.example.publictransportationguidance.helpers.Functions.availableStopsToBeRead;
 import static com.example.publictransportationguidance.helpers.Functions.calcEstimatedTripsTime;
 import static com.example.publictransportationguidance.helpers.Functions.checkInternetConnectionToast;
 import static com.example.publictransportationguidance.helpers.Functions.noAvailablePathsToast;
@@ -9,6 +10,7 @@ import static com.example.publictransportationguidance.helpers.Functions.sorting
 import static com.example.publictransportationguidance.helpers.Functions.sortingByDistanceToast;
 import static com.example.publictransportationguidance.helpers.Functions.sortingByTimeToast;
 import static com.example.publictransportationguidance.helpers.Functions.tryAgainToast;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.ARABIC;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.BUNDLE_PATH;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.COST;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.DISTANCE;
@@ -35,6 +37,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.example.publictransportationguidance.TripsTimeCallback;
+import com.example.publictransportationguidance.blindMode.speechToText.SpeechToTextHelper;
+import com.example.publictransportationguidance.blindMode.textToSpeech.TextToSpeechHelper;
 import com.example.publictransportationguidance.pojo.pathsResponse.PathInfo;
 import com.example.publictransportationguidance.api.RetrofitClient;
 import com.example.publictransportationguidance.R;
@@ -42,6 +46,7 @@ import com.example.publictransportationguidance.room.DAO;
 import com.example.publictransportationguidance.room.RoomDB;
 import com.example.publictransportationguidance.pojo.pathsResponse.NearestPaths;
 import com.example.publictransportationguidance.databinding.ActivityPathResultsBinding;
+import com.example.publictransportationguidance.sharedPrefs.SharedPrefs;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -60,10 +65,17 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
     /* M Osama: instance to put loadingDialog inFront of UI */
     LoadingDialog loadingDialog = new LoadingDialog(PathResults.this);
 
+    /* M Osama: instance to deal with stt*/
+    private SpeechToTextHelper speechToTextHelper;
+    private TextToSpeechHelper textToSpeechHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_path_results);
+
+        /* M Osama: initializing tts & stt */
+        initializeTTSandSTT();
 
         String LOCATION = "",DESTINATION = "";
         /* M Osama: reading values from homeFragment */
@@ -75,6 +87,11 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
 
         dao = RoomDB.getInstance(getApplication()).Dao();
         loadingDialog.startLoadingDialog();
+
+
+        if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1){
+            textToSpeechHelper.speak(getString(R.string.SearchingForAvaliablePaths),()-> listenToNothing());
+        }
         getNearestPaths(LOCATION,DESTINATION,this);
 
     }
@@ -102,6 +119,9 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
             @Override
             public void onFailure(@NonNull Call<List<List<NearestPaths>>> call, @NonNull Throwable t) {
                 noPathsFound();
+                if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1){
+                    textToSpeechHelper.speak(getString(R.string.BadInternetConnection),()-> listenToNothing());
+                }
                 loadingDialog.endLoadingDialog();
             }
         });
@@ -225,10 +245,21 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
         binding.time.setText(R.string.NotAvailable);
 
         String[] temp = new String[100];
-        Arrays.fill(temp, "لا يوجد طريق متوفر");
+        Arrays.fill(temp, getString(R.string.NoPathsFound));
+
+        if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1){
+            textToSpeechHelper.speak(getString(R.string.NoPathsFound),()-> listenToNothing());
+        }
 
         binding.wheel.setDisplayedValues(temp);
     }
+
+    void initializeTTSandSTT(){
+        textToSpeechHelper = TextToSpeechHelper.getInstance(this,ARABIC);
+        speechToTextHelper = SpeechToTextHelper.getInstance(ARABIC);
+    }
+
+    private void listenToNothing(){}
 
 
 }

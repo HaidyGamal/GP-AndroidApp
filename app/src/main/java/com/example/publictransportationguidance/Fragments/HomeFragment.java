@@ -364,7 +364,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals("ON_BLIND_MODE")) {
             if (SharedPrefs.readMap(key,0) == 1) {
-                execute(() -> textToSpeechHelper.speak(getString(R.string.WhatsYourtLocation), () -> listenToRawLocationName(this)));
+                execute(() -> textToSpeechHelper.speak(getString(R.string.WhatsYourLocation), () -> listenToRawLocationName(this)));
             } else {}
         }
     }
