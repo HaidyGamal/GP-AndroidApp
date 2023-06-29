@@ -15,7 +15,6 @@ import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextWatcher;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -185,8 +184,8 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
             autoCompleteOnFooterClick(acTextView);
 
             if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1) {
-                if(acTextView.getId()==binding.tvLocation.getId())          textToSpeechHelper.speak(availableStopsToBeRead(stopsDetailsList),()-> listenToSpecifiedLocationName(this));
-                else if(acTextView.getId()==binding.tvDestination.getId())  textToSpeechHelper.speak(availableStopsToBeRead(stopsDetailsList),()-> listenToSpecifiedDestinationName(this));
+                if(acTextView.getId()==binding.tvLocation.getId())          textToSpeechHelper.speak(availableStopsToBeRead(true,stopsDetailsList),()-> listenToSpecifiedLocationName(this));
+                else if(acTextView.getId()==binding.tvDestination.getId())  textToSpeechHelper.speak(availableStopsToBeRead(true,stopsDetailsList),()-> listenToSpecifiedDestinationName(this));
             }
 
         }).addOnFailureListener((exception) -> Toast.makeText(getContext(), R.string.CheckInternetConnection, Toast.LENGTH_SHORT).show());
@@ -283,22 +282,13 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
                 break;
 
             case LISTEN_TO_SPECIFIED_LOCATION_NAME:                             /* M Osama: receiving the specifiedDetails of the locationName from the blind */
-                Log.i("Out",convertHaaToTaaMarbuta(speechConvertedToText.get(0)));                                      /* M Osama: for debugging only */
                 for(int placeNum=0;placeNum<stopsDetailsList.size();placeNum++){
                     String place = convertToAleph(removeCommas(convertHaaToTaaMarbuta(stopsDetailsList.get(placeNum))));
-                    Log.i("In",place);                                                                                  /* M Osama: for debugging only */
                     if(place.equals(convertHaaToTaaMarbuta(speechConvertedToText.get(0)))) {
-                        Toast.makeText(getContext(), "نعم", Toast.LENGTH_SHORT).show();                                /* M Osama: for debugging only */
                         autoCompleteOnVoiceClick(binding.tvLocation,0,placeNum);
-                        Log.i("Leo",locationLats);
-                        Log.i("Leo",destinationLats);
                         execute(() -> textToSpeechHelper.speak(getString(R.string.WhatsYourDestination), () -> listenToRawDestinationName(this)));
-                        break;
                     }
-                    else{
-                        Toast.makeText(getContext(), "لا", Toast.LENGTH_SHORT).show();
-                    }
-
+                    else textToSpeechHelper.speak(availableStopsToBeRead(false,stopsDetailsList),()-> listenToSpecifiedLocationName(this));
                 }
                 break;
 
@@ -308,21 +298,13 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
                 break;
 
             case LISTEN_TO_SPECIFIED_DESTINATION_NAME:                          /* M Osama: receiving the specifiedDetails of the destinationName from the blind */
-//            Log.i("Out",convertHaaToTaaMarbuta(speechConvertedToText.get(0)));                                      /* For Debugging */
                 for(int placeNum=0;placeNum<stopsDetailsList.size();placeNum++){
                     String place = convertToAleph(removeCommas(convertHaaToTaaMarbuta(stopsDetailsList.get(placeNum))));
-//                Log.i("In",place);                                                                                  /* For Debugging */
                     if(place.equals(convertHaaToTaaMarbuta(speechConvertedToText.get(0)))) {
-                        Toast.makeText(getContext(), "نعم", Toast.LENGTH_SHORT).show();                              /* M Osama: for debugging only */
                         autoCompleteOnVoiceClick(binding.tvDestination,1,placeNum);
-//                    Log.i("Leo",locationLats);                                                                      /* For Debugging */
-//                    Log.i("Leo",destinationLats);                                                                   /* For Debugging */
                         execute(() -> textToSpeechHelper.speak(getString(R.string.SortingCriteria), () -> listenToSortingCriteria(this)));
-                        break;
                     }
-                    else{
-                        Toast.makeText(getContext(), "لا", Toast.LENGTH_SHORT).show();                                  /* M Osama: for debugging only */
-                    }
+                    else textToSpeechHelper.speak(availableStopsToBeRead(false,stopsDetailsList),()-> listenToSpecifiedDestinationName(this));
                 }
                 break;
 
@@ -333,10 +315,8 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
                     else if (searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[2]) || searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[3])) {  sortingByDistanceToast(getContext());   SORTING_CRITERIA = DISTANCE;  }
                     else if (searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[0]) || searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[1])) {  sortingByTimeToast(getContext());       SORTING_CRITERIA = TIME;      }
                     searchForPaths(locationLats, destinationLats);
-                    Log.i("Leo",locationLats);
-                    Log.i("Leo",destinationLats);
                 }
-                else;
+                else  textToSpeechHelper.speak(getString(R.string.SortingCriteriaSecondListen), () -> listenToSortingCriteria(this));
         }
 
     }
@@ -382,6 +362,8 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     private void listenToSpecifiedLocationName(HomeFragment homeFragment){
         speechToTextHelper.startSpeechRecognition(homeFragment,LISTEN_TO_SPECIFIED_LOCATION_NAME);
     }
+
+
 
     private void listenToSpecifiedDestinationName(HomeFragment homeFragment){
         speechToTextHelper.startSpeechRecognition(homeFragment,LISTEN_TO_SPECIFIED_DESTINATION_NAME);

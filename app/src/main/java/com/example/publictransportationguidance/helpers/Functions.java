@@ -249,7 +249,7 @@ public class Functions {
     /* M Osama: execute any function without the need of buttons */
     public static void execute(ArrowFunction function) {
         Handler handler = new Handler();
-        handler.postDelayed(function::run, 1500);
+        handler.postDelayed(function::run, 1000);
     }
 
     public static boolean stringIsFound(String stringToCheck,String[] stringArray) {
@@ -289,20 +289,27 @@ public class Functions {
         return input;
     }
 
-    public static String availableStopsToBeRead(CustomAutoCompleteAdapter list) {
-        StringBuilder resultBuilder = new StringBuilder();
-        int count = list.getCount();
-        for (int i = 0; i < count; i++) {
-            String currentItem = list.getItem(i);
-            resultBuilder.append(currentItem);
+//    public static String availableStopsToBeRead(CustomAutoCompleteAdapter list) {
+//        StringBuilder resultBuilder = new StringBuilder();
+//        int count = list.getCount();
+//        for (int i = 0; i < count; i++) {
+//            String currentItem = list.getItem(i);
+//            resultBuilder.append(currentItem);
+//
+//            if (i + 1 < count) { resultBuilder.append(" | أَم | "); }
+//        }
+//        return resultBuilder.toString();
+//    }
 
-            if (i + 1 < count) { resultBuilder.append(" | أَم | "); }
-        }
-        return resultBuilder.toString();
-    }
-    public static String availableStopsToBeRead(List<String> items) {
+    public static String availableStopsToBeRead(boolean firstTime,List<String> items) {
         StringBuilder resultBuilder = new StringBuilder();
-        resultBuilder.append("أي من هذهِ الأماكن تريد | |");
+
+        if(firstTime)   {
+            resultBuilder.append("تم استقبال اختياركم بنجاح    |     ");
+            resultBuilder.append("أي من هذهِ الأماكن تريد | |");
+        }
+        else resultBuilder.append("أي من التالي تريد | |");
+
         int count = items.size();
         for (int i = 0; i < count; i++) {
             String currentItem = items.get(i);
@@ -313,6 +320,35 @@ public class Functions {
         }
         return resultBuilder.toString();
     }
+
+//    public static String reAvailableStopsToBeRead(List<String> items) {
+//        StringBuilder resultBuilder = new StringBuilder();
+//        resultBuilder.append("هناك خطأ| نرجو الإعادة مرةأُخَرَيَ | ");
+//        resultBuilder.append("أي من هذهِ الأماكن تريد | |");
+//        int count = items.size();
+//        for (int i = 0; i < count; i++) {
+//            String currentItem = items.get(i);
+//            resultBuilder.append(currentItem);
+//            if (i + 1 < count) {
+//                resultBuilder.append(" | أَم | ");
+//            }
+//        }
+//        return resultBuilder.toString();
+//    }
+
+//    public static String availableStopsToBeRead(List<String> items) {
+//        StringBuilder resultBuilder = new StringBuilder();
+//        resultBuilder.append("أي من هذهِ الأماكن تريد | |");
+//        int count = items.size();
+//        for (int i = 0; i < count; i++) {
+//            String currentItem = items.get(i);
+//            resultBuilder.append(currentItem);
+//            if (i + 1 < count) {
+//                resultBuilder.append(" | أَم | ");
+//            }
+//        }
+//        return resultBuilder.toString();
+//    }
 
     public static String removeCommas(String input) {
         if (input == null) {

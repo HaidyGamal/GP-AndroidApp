@@ -130,12 +130,13 @@
     <string name="LogoutSuccessful">تم تسجيل الخروج بنجاح</string>
     <string name="logOut">Log Out</string>
 
-    <string name="WhatsYourLocation">ما هي نقطة الانطلاق التي تريدها</string>
-    <string name="WhatsYourDestination">ما هي نقطة الانتهاء التي تريد الوصول إليها</string>
-    <string name="SortingCriteria">ما هي طريقة ترتيب الطرق التي تريدونها | الوقت | أم | المسافة | أم | التكلفة ؟</string>
+    <string name="WhatsYourLocation">تم استقبال اختياركم بنجاح،  |   ما هي نقطة الانطلاق التي تريدها</string>
+    <string name="WhatsYourDestination">تم استقبال اختياركم بنجاح،  |   ما هي نقطة الانتهاء التي تريد الوصول إليها</string>
+    <string name="SortingCriteria">تم استقبال اختياركم بنجاح، |   ما هي طريقة ترتيب الطرق التي تريدونها | الوقت | أمْ | المسافة | أمْ | التكلفة ؟</string>
+    <string name="SortingCriteriaSecondListen">أيٌ طريقة ترتيب تريد | الوقت | أمْ | المسافة | أمْ | التكلفة ؟</string>
     <string name="NoPathsFound">لا يوجد طريق متوفر</string>
     <string name="BadInternetConnection">نرجو مراجعة جودة الانترنت لديكم</string>
-    <string name="SearchingForAvaliablePaths">جاري البحث عن جميع الطرق المتوفرة، نرجو منكم الانتظار قليلا وسَتَظهرُ النتائج مرتبة كما اختَرْتم</string>
+    <string name="SearchingForAvaliablePaths">جاري البحث عن جميع الطرق المتوفرة، نرجو منكم الانتظار قليلا وسَتَظهَرُ النتائج مرتبة كما اختَرْتم</string>
 
 
     <string name="ConnectionName">اسم الخط</string>
