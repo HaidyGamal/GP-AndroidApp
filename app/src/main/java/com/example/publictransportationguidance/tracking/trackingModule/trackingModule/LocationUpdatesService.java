@@ -1,5 +1,7 @@
 package com.example.publictransportationguidance.tracking.trackingModule.trackingModule;
 
+import static com.example.publictransportationguidance.Fragments.ContactUsFragment.SHARE_LOCATION_COLLECTION_NAME;
+import static com.example.publictransportationguidance.helpers.Functions.getLocationName;
 import static com.example.publictransportationguidance.tracking.trackingModule.trackingModule.TrackLiveLocation.googleMap;
 
 import android.annotation.SuppressLint;
@@ -37,6 +39,17 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class LocationUpdatesService extends Service {
 
@@ -77,6 +90,11 @@ public class LocationUpdatesService extends Service {
     /* Track user current location */
     private Location mLocation;
 
+    FirebaseAuth mAuth;
+    FirebaseUser mUser;
+    FirebaseFirestore db;
+    DocumentReference docRef;
+
     public LocationUpdatesService() {}
 
     @Override
@@ -101,6 +119,14 @@ public class LocationUpdatesService extends Service {
         // Android O requires a Notification Channel.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) mNotificationManager.createNotificationChannel(new NotificationChannel(CHANNEL_ID, getString(R.string.app_name), NotificationManager.IMPORTANCE_DEFAULT));
 
+        firebaseInitializer();
+        db = FirebaseFirestore.getInstance();
+
+        /* M Osama: ensure that user has an account to prevent crashes */
+        if(isUserAuthenticated()) {
+            docRef = db.collection(SHARE_LOCATION_COLLECTION_NAME).document(Objects.requireNonNull(mUser.getEmail()));
+            ensureDocumentIsExit(mUser.getEmail());
+        }
     }
 
     @Override
@@ -217,6 +243,8 @@ public class LocationUpdatesService extends Service {
 
         Toast.makeText(getApplicationContext(), currentLocation.latitude+","+currentLocation.longitude, Toast.LENGTH_SHORT).show();
 
+        updateUserSharedLocation(currentLocation.latitude+"",currentLocation.longitude+"",getLocationName(this,currentLocation.latitude,currentLocation.longitude));
+
         TrackLiveLocation.listOfActualPathNodes.add(currentLocation);
         MapUtils.moveCar(googleMap,getApplicationContext(), currentLocation);
         CameraUtils.moveCamera(googleMap,currentLocation);
@@ -244,4 +272,84 @@ public class LocationUpdatesService extends Service {
         }
         return false;
     }
+
+    private void firebaseInitializer(){
+        mAuth= FirebaseAuth.getInstance();
+        mUser=mAuth.getCurrentUser();
+    }
+
+    /* M Osama: check whether the user has account or not */
+    private boolean isUserAuthenticated() {
+        return mUser != null; // Returns true if the user is authenticated, false otherwise
+    }
+
+    /* M Osama: can be deleted if we used user's collection instread of FriendShip collection */
+    private void ensureDocumentIsExit(String documentId){
+        DocumentReference docRef = db.collection(SHARE_LOCATION_COLLECTION_NAME).document(documentId);
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists());
+                else initializeAccount();
+            } else Toast.makeText(this, "Failed to retrieve document", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void initializeAccount() {
+        docRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                Map<String, Object> data = new HashMap<>();
+
+                // Check and add the 'friends' field if not present
+                if (!documentSnapshot.contains("friends")) {
+                    data.put("friends", new ArrayList<String>());
+                }
+
+                // Check and add the 'lat' field if not present
+                if (!documentSnapshot.contains("lat")) {
+                    data.put("lat", "");
+                }
+
+                // Check and add the 'long' field if not present
+                if (!documentSnapshot.contains("long")) {
+                    data.put("long", "");
+                }
+
+                // Check and add the 'locationName' field if not present
+                if (!documentSnapshot.contains("locationName")) {
+                    data.put("locationName", "");
+                }
+
+                if (!data.isEmpty()) {
+                    docRef.update(data)
+                            .addOnSuccessListener(v -> Toast.makeText(this, "Account fields initialized", Toast.LENGTH_SHORT).show())
+                            .addOnFailureListener(v -> Toast.makeText(this, "Failed to initialize account fields", Toast.LENGTH_SHORT).show());
+                }
+            }
+        }).addOnFailureListener(e -> Toast.makeText(this, "Failed to retrieve document", Toast.LENGTH_SHORT).show());
+    }
+
+    /* M Osama: updates user's current location Information to be listened to his friends */
+    private void updateUserSharedLocation(String currentLat, String currentLong, String locationName) {
+        if (isUserAuthenticated()) {
+            Map<String, Object> data = new HashMap<>();
+            data.put("lat", currentLat);
+            data.put("long", currentLong);
+            data.put("locationName", locationName);
+
+            docRef.get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    List<String> friendsList = (List<String>) documentSnapshot.get("friends");
+                    if (friendsList != null) {
+                        data.put("friends", friendsList);
+                    }
+                }
+
+                docRef.set(data)
+                        .addOnSuccessListener(v -> Toast.makeText(getApplicationContext(), "Done", Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(v -> Toast.makeText(getApplicationContext(), "De7k", Toast.LENGTH_SHORT).show());
+            }).addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Failed to retrieve document data", Toast.LENGTH_SHORT).show());
+        }
+    }
+
 }

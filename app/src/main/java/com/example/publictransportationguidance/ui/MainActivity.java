@@ -1,5 +1,6 @@
 package com.example.publictransportationguidance.ui;
 
+import static com.example.publictransportationguidance.Fragments.ContactUsFragment.SHARE_LOCATION_COLLECTION_NAME;
 import static com.example.publictransportationguidance.helpers.Functions.LISTEN_TO_CHOSEN_MODE;
 import static com.example.publictransportationguidance.helpers.Functions.execute;
 import static com.example.publictransportationguidance.helpers.Functions.stringIsFound;
@@ -37,9 +38,16 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.publictransportationguidance.databinding.ActivityMainBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements SpeechRecognitionCallback {
 
@@ -52,6 +60,11 @@ public class MainActivity extends AppCompatActivity implements SpeechRecognition
 
     private HashMap<Integer, String> speechRecognitionResults = new HashMap<>();
     private int currentRequestCode;
+
+    FirebaseAuth mAuth;
+    FirebaseUser mUser;
+    FirebaseFirestore db;
+    DocumentReference docRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +112,14 @@ public class MainActivity extends AppCompatActivity implements SpeechRecognition
                 blindModeOffInitializer();
             }
         });
+
+        firebaseInitializer();
+
+        /* M Osama: ensure that user has an account to prevent crashes */
+        if(isUserAuthenticated()) {
+            docRef = db.collection(SHARE_LOCATION_COLLECTION_NAME).document(Objects.requireNonNull(mUser.getEmail()));
+            ensureDocumentIsExit(mUser.getEmail());
+        }
 
         /* M Osama: activate BlindMode vocally */
         initializeTTSandSTT();
@@ -176,5 +197,63 @@ public class MainActivity extends AppCompatActivity implements SpeechRecognition
         SharedPrefs.write("ON_BLIND_MODE", 0);
         binding.appBarMain.fab.setImageResource(R.drawable.ic_blind_mode);
     }
+
+    /* M Osama: can be deleted if we used user's collection instread of FriendShip collection */
+    private void ensureDocumentIsExit(String documentId){
+        DocumentReference docRef = db.collection(SHARE_LOCATION_COLLECTION_NAME).document(documentId);
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists());
+                else initializeAccount();
+            } else Toast.makeText(this, "Failed to retrieve document", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void initializeAccount() {
+        docRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                Map<String, Object> data = new HashMap<>();
+
+                // Check and add the 'friends' field if not present
+                if (!documentSnapshot.contains("friends")) {
+                    data.put("friends", new ArrayList<String>());
+                }
+
+                // Check and add the 'lat' field if not present
+                if (!documentSnapshot.contains("lat")) {
+                    data.put("lat", "");
+                }
+
+                // Check and add the 'long' field if not present
+                if (!documentSnapshot.contains("long")) {
+                    data.put("long", "");
+                }
+
+                // Check and add the 'locationName' field if not present
+                if (!documentSnapshot.contains("locationName")) {
+                    data.put("locationName", "");
+                }
+
+                if (!data.isEmpty()) {
+                    docRef.update(data)
+                            .addOnSuccessListener(v -> Toast.makeText(this, "Account fields initialized", Toast.LENGTH_SHORT).show())
+                            .addOnFailureListener(v -> Toast.makeText(this, "Failed to initialize account fields", Toast.LENGTH_SHORT).show());
+                }
+            }
+        }).addOnFailureListener(e -> Toast.makeText(this, "Failed to retrieve document", Toast.LENGTH_SHORT).show());
+    }
+
+    /* M Osama: check whether the user has account or not */
+    private boolean isUserAuthenticated() {
+        return mUser != null; // Returns true if the user is authenticated, false otherwise
+    }
+
+    private void firebaseInitializer(){
+        db = FirebaseFirestore.getInstance();
+        mAuth= FirebaseAuth.getInstance();
+        mUser=mAuth.getCurrentUser();
+    }
+
 
 }
