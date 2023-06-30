@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements SpeechRecognition
         /* M Osama: ensure that user has an account to prevent crashes */
         if(isUserAuthenticated()) {
             docRef = db.collection(SHARE_LOCATION_COLLECTION_NAME).document(Objects.requireNonNull(mUser.getEmail()));
-            ensureDocumentIsExit(mUser.getEmail());
+            ensureDocumentIsExist(mUser.getEmail());
         }
 
         /* M Osama: activate BlindMode vocally */
@@ -199,50 +199,43 @@ public class MainActivity extends AppCompatActivity implements SpeechRecognition
     }
 
     /* M Osama: can be deleted if we used user's collection instread of FriendShip collection */
-    private void ensureDocumentIsExit(String documentId){
-        DocumentReference docRef = db.collection(SHARE_LOCATION_COLLECTION_NAME).document(documentId);
+    private void ensureDocumentIsExist(String documentId){
+        docRef = db.collection(SHARE_LOCATION_COLLECTION_NAME).document(documentId);
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
-                if (document.exists());
-                else initializeAccount();
-            } else Toast.makeText(this, "Failed to retrieve document", Toast.LENGTH_SHORT).show();
+                if (document.exists()) {
+                    // Document exists, no further action needed
+                } else {
+                    initializeAccount();
+                }
+            } else {
+                Toast.makeText(this, "Failed to retrieve document", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
+
     private void initializeAccount() {
         docRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
+            if (documentSnapshot.exists()) {}
+            else {
+                // Create a new document with the user's email as the document ID
                 Map<String, Object> data = new HashMap<>();
 
-                // Check and add the 'friends' field if not present
-                if (!documentSnapshot.contains("friends")) {
-                    data.put("friends", new ArrayList<String>());
-                }
+                // Add initial fields to the document
+                data.put("friends", new ArrayList<String>());
+                data.put("lat", "");
+                data.put("long", "");
+                data.put("locationName", "");
 
-                // Check and add the 'lat' field if not present
-                if (!documentSnapshot.contains("lat")) {
-                    data.put("lat", "");
-                }
-
-                // Check and add the 'long' field if not present
-                if (!documentSnapshot.contains("long")) {
-                    data.put("long", "");
-                }
-
-                // Check and add the 'locationName' field if not present
-                if (!documentSnapshot.contains("locationName")) {
-                    data.put("locationName", "");
-                }
-
-                if (!data.isEmpty()) {
-                    docRef.update(data)
-                            .addOnSuccessListener(v -> Toast.makeText(this, "Account fields initialized", Toast.LENGTH_SHORT).show())
-                            .addOnFailureListener(v -> Toast.makeText(this, "Failed to initialize account fields", Toast.LENGTH_SHORT).show());
-                }
+                docRef.set(data)
+                        .addOnSuccessListener(v -> Toast.makeText(this, "Account document created", Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(v -> Toast.makeText(this, "Failed to create account document", Toast.LENGTH_SHORT).show());
             }
         }).addOnFailureListener(e -> Toast.makeText(this, "Failed to retrieve document", Toast.LENGTH_SHORT).show());
     }
+
 
     /* M Osama: check whether the user has account or not */
     private boolean isUserAuthenticated() {

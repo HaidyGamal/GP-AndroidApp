@@ -135,7 +135,7 @@ public class ContactUsFragment extends Fragment implements OnFriendshipCheckList
 
     /* M Osama: can be deleted if we used user's collection instread of FriendShip collection */
     private void ensureDocumentIsExit(String documentId){
-        DocumentReference docRef = db.collection(SHARE_LOCATION_COLLECTION_NAME).document(documentId);
+        docRef = db.collection(SHARE_LOCATION_COLLECTION_NAME).document(documentId);
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
