@@ -130,7 +130,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         bind = DataBindingUtil.inflate(inflater,R.layout.fragment_add_new_route,container,false);
         initializeMapActivityResultLauncher();
-        SharedPrefs.init(getActivity());
+         SharedPrefs.init(getActivity());
         firebaseInitializer();
         db = FirebaseFirestore.getInstance();
 
@@ -142,8 +142,8 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
         placesClient = Places.createClient(getContext());
 
         /* M Osama: update both autoComplete using Google Maps Places API */
-        locationTextChangeListener();
-        destinationTextChangeListener();
+        onTextChangeListener(bind.tvLocation);
+        onTextChangeListener(bind.tvDestination);
 
         /* M Osama: autoComplete onClickListeners */
         autoCompleteOnItemClick(bind.tvLocation,0);
@@ -242,16 +242,13 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
 
         editText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
-            public void afterTextChanged(Editable s) {
-            }
+            public void afterTextChanged(Editable s) {}
         });
     }
 
@@ -413,35 +410,9 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
     }
 
     private void initializeGeoApiContext() {
-        if (geoApiContext == null) {
-            geoApiContext = new GeoApiContext.Builder().apiKey(MAPS_API_KEY).build();
-        }
+        if (geoApiContext == null) geoApiContext = new GeoApiContext.Builder().apiKey(MAPS_API_KEY).build();
     }
 
-    private void locationTextChangeListener(){
-        bind.tvLocation.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
-            public void afterTextChanged(Editable s) { updateDropDownListUsingGoogleMapsAPI(bind.tvLocation); }
-        });
-    }
-    private void destinationTextChangeListener(){
-        bind.tvDestination.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
-            public void afterTextChanged(Editable s) { updateDropDownListUsingGoogleMapsAPI(bind.tvDestination); }
-        });
-    }
 
     /* M Osama: track the returned result from Map */
     private void initializeMapActivityResultLauncher() {
@@ -487,12 +458,8 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
             String selectedItem = getSelectedItem(parent,position);
             Toast.makeText(getContext(), selectedItem, Toast.LENGTH_SHORT).show();                                              /* M Osama: Only for checking the autoCompleteOnClick is working */
             getPlaceCoordinatesUsingID(stopsIDsArray[getDataSourceIndex(stopsArray,selectedItem)],stop);
-            if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1) {
-                acTextView.setText(getSubstringBeforeFirstComma(selectedItem));
-            }
-            else{
-                acTextView.setText(deleteFromSequence(selectedItem," |"));
-            }
+            if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1)   acTextView.setText(getSubstringBeforeFirstComma(selectedItem));
+            else                                                        acTextView.setText(deleteFromSequence(selectedItem," |"));
         });
     }
 
@@ -537,10 +504,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
                     stopsList.add(placeInArabic[0]);
                     stopsDetailsList.add(placeInArabic[1]);
                 }
-                else{
-                    stopsList.add(stringEnhancer(p.getPrimaryText(null) + " | " + p.getSecondaryText(null)));
-                }
-
+                else    stopsList.add(stringEnhancer(p.getPrimaryText(null) + " | " + p.getSecondaryText(null)));
             }
 
             /* M Osama: Initialize AutoCompleteTextView */
@@ -561,6 +525,18 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
 
     }
 
+    private void onTextChangeListener(AutoCompleteTextView autoCompleteTextView){
+        autoCompleteTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {  updateDropDownListUsingGoogleMapsAPI(autoCompleteTextView); }
+        });
+    }
 
     /** M Osama: other functions */
     private void showLogInDialog(){
@@ -578,6 +554,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
             public void onFailure(Call<AddNewRoute> call, Throwable t) {                                Log.i("Info","Addition Failure");    }
         });
     }
+
 }
 
 

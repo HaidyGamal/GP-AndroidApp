@@ -108,8 +108,8 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         initializeTTSandSTT();
 
         /* M Osama: update both autoComplete using Google Maps Places API */
-        locationTextChangeListener();
-        destinationTextChangeListener();
+        onTextChangeListener(binding.tvLocation);
+        onTextChangeListener(binding.tvDestination);
 
         /* M Osama: autoComplete onClickListeners */
         autoCompleteOnItemClick(binding.tvLocation,0);
@@ -168,10 +168,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
                     stopsList.add(placeInArabic[0]);
                     stopsDetailsList.add(placeInArabic[1]);
                 }
-                else{
-                    stopsList.add(stringEnhancer(p.getPrimaryText(null) + " | " + p.getSecondaryText(null)));
-                }
-
+                else stopsList.add(stringEnhancer(p.getPrimaryText(null) + " | " + p.getSecondaryText(null)));
             }
 
             /* M Osama: Initialize AutoCompleteTextView */
@@ -198,12 +195,8 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
             String selectedItem = getSelectedItem(parent,position);
             Toast.makeText(getContext(), selectedItem, Toast.LENGTH_SHORT).show();                                              /* M Osama: Only for checking the autoCompleteOnClick is working */
             getPlaceCoordinatesUsingID(stopsIDsArray[getDataSourceIndex(stopsArray,selectedItem)],stop);
-            if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1) {
-                acTextView.setText(getSubstringBeforeFirstComma(selectedItem));
-            }
-            else{
-                acTextView.setText(deleteFromSequence(selectedItem," |"));
-            }
+            if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1)   acTextView.setText(getSubstringBeforeFirstComma(selectedItem));
+            else                                                        acTextView.setText(deleteFromSequence(selectedItem," |"));
         });
     }
 
@@ -278,7 +271,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         switch (requestCode){
             case LISTEN_TO_RAW_LOCATION_NAME:                                   /* M Osama: receiving the locationName from the blind */
                 binding.tvLocation.setText(convertHaaToTaaMarbuta(speechConvertedToText.get(0)));
-                locationTextChangeListener();
+                onTextChangeListener(binding.tvLocation);
                 break;
 
             case LISTEN_TO_SPECIFIED_LOCATION_NAME:                             /* M Osama: receiving the specifiedDetails of the locationName from the blind */
@@ -294,7 +287,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
 
             case LISTEN_TO_RAW_DESTINATION_NAME:                                /* M Osama: receiving the destinationName from the blind*/
                 binding.tvDestination.setText(convertHaaToTaaMarbuta(speechConvertedToText.get(0)));
-                destinationTextChangeListener();
+                onTextChangeListener(binding.tvDestination);
                 break;
 
             case LISTEN_TO_SPECIFIED_DESTINATION_NAME:                          /* M Osama: receiving the specifiedDetails of the destinationName from the blind */
@@ -322,7 +315,6 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     }
 
 
-
     /* M Osama: States what will happen in case user clicked clicked on specific please */
     public void autoCompleteOnVoiceClick(AutoCompleteTextView acTextView,int stop,int tempPlaceNumber){
         String selectedItem = stopsDetailsList.get(tempPlaceNumber);
@@ -348,29 +340,23 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     private void listenToRawLocationName(HomeFragment homeFragment) {
         speechToTextHelper.startSpeechRecognition(homeFragment,LISTEN_TO_RAW_LOCATION_NAME);
     }
-
     private void listenToRawDestinationName(HomeFragment homeFragment){
         speechToTextHelper.startSpeechRecognition(homeFragment,LISTEN_TO_RAW_DESTINATION_NAME);
+    }
+
+    private void listenToSpecifiedLocationName(HomeFragment homeFragment){
+        speechToTextHelper.startSpeechRecognition(homeFragment,LISTEN_TO_SPECIFIED_LOCATION_NAME);
+    }
+    private void listenToSpecifiedDestinationName(HomeFragment homeFragment){
+        speechToTextHelper.startSpeechRecognition(homeFragment,LISTEN_TO_SPECIFIED_DESTINATION_NAME);
     }
 
     private void listenToSortingCriteria(HomeFragment homeFragment){
         speechToTextHelper.startSpeechRecognition(homeFragment,LISTEN_TO_SORTING_CRITERIA);
     }
 
-    private void listenToNothing(){}
-
-    private void listenToSpecifiedLocationName(HomeFragment homeFragment){
-        speechToTextHelper.startSpeechRecognition(homeFragment,LISTEN_TO_SPECIFIED_LOCATION_NAME);
-    }
-
-
-
-    private void listenToSpecifiedDestinationName(HomeFragment homeFragment){
-        speechToTextHelper.startSpeechRecognition(homeFragment,LISTEN_TO_SPECIFIED_DESTINATION_NAME);
-    }
-
-    private void locationTextChangeListener(){
-        binding.tvLocation.addTextChangedListener(new TextWatcher() {
+    private void onTextChangeListener(AutoCompleteTextView autoCompleteTextView){
+        autoCompleteTextView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -378,26 +364,13 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
-            public void afterTextChanged(Editable s) { updateDropDownListUsingGoogleMapsAPI(binding.tvLocation); }
+            public void afterTextChanged(Editable s) {  updateDropDownListUsingGoogleMapsAPI(autoCompleteTextView); }
         });
     }
-    private void destinationTextChangeListener(){
-        binding.tvDestination.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
-            public void afterTextChanged(Editable s) { updateDropDownListUsingGoogleMapsAPI(binding.tvDestination); }
-        });
-    }
 
     private void initializeGeoApiContext() {
-        if (geoApiContext == null) {
-            geoApiContext = new GeoApiContext.Builder().apiKey(MAPS_API_KEY).build();
-        }
+        if (geoApiContext == null) geoApiContext = new GeoApiContext.Builder().apiKey(MAPS_API_KEY).build();
     }
 
 
