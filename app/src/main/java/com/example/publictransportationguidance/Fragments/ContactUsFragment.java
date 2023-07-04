@@ -1,5 +1,7 @@
 package com.example.publictransportationguidance.Fragments;
 
+import static com.example.publictransportationguidance.helpers.GlobalVariables.SHARE_LOCATION_COLLECTION_NAME;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.publictransportationguidance.OnFriendshipCheckListener;
+import com.example.publictransportationguidance.shareLocation.OnFriendshipCheckListener;
 import com.example.publictransportationguidance.R;
 import com.example.publictransportationguidance.databinding.FragmentContactUsBinding;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,7 +24,6 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,8 +31,6 @@ import java.util.Objects;
 
 public class ContactUsFragment extends Fragment implements OnFriendshipCheckListener {
     public ContactUsFragment() {}
-
-    public static final String SHARE_LOCATION_COLLECTION_NAME= "Friendships";
 
     FirebaseAuth mAuth;
     FirebaseUser mUser;
@@ -54,7 +53,7 @@ public class ContactUsFragment extends Fragment implements OnFriendshipCheckList
         /* M Osama: ensure that user has an account to prevent crashes */
         if(isUserAuthenticated()) {
             docRef = db.collection(SHARE_LOCATION_COLLECTION_NAME).document(Objects.requireNonNull(mUser.getEmail()));
-            ensureDocumentIsExit(mUser.getEmail());
+            ensureDocumentIsExist(mUser.getEmail());
         }
 
         /* M Osama: add a friend to currentUser */
@@ -134,7 +133,7 @@ public class ContactUsFragment extends Fragment implements OnFriendshipCheckList
     }
 
     /* M Osama: can be deleted if we used user's collection instread of FriendShip collection */
-    private void ensureDocumentIsExit(String documentId){
+    private void ensureDocumentIsExist(String documentId){
         docRef = db.collection(SHARE_LOCATION_COLLECTION_NAME).document(documentId);
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -178,8 +177,8 @@ public class ContactUsFragment extends Fragment implements OnFriendshipCheckList
     private void deleteFriend(String friendEmail) {
         if(isUserAuthenticated()){
             docRef.update("friends", FieldValue.arrayRemove(friendEmail))
-                    .addOnSuccessListener(v -> Toast.makeText(getContext(), "Friend deleted", Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(v -> Toast.makeText(getContext(), "Failed to delete friend", Toast.LENGTH_SHORT).show());
+                    .addOnSuccessListener(v -> fireToast("Friend is deleted successfully"))
+                    .addOnFailureListener(v -> fireToast("Failed to delete friend"));
         }
         else Toast.makeText(getContext(), "Log In first", Toast.LENGTH_SHORT).show();
     }
@@ -188,8 +187,8 @@ public class ContactUsFragment extends Fragment implements OnFriendshipCheckList
     private void addFriend(String friendEmail) {
         if(isUserAuthenticated()) {
             docRef.update("friends", FieldValue.arrayUnion(friendEmail))
-                    .addOnSuccessListener(v -> Toast.makeText(getContext(), "Friend added", Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(v -> Toast.makeText(getContext(), "Failed to add friend", Toast.LENGTH_SHORT).show());
+                    .addOnSuccessListener(v -> fireToast("Friend is added successfully"))
+                    .addOnFailureListener(v -> fireToast("Failed to add friend"));
         }
         else Toast.makeText(getContext(), "Log In first", Toast.LENGTH_SHORT).show();
     }
@@ -216,6 +215,7 @@ public class ContactUsFragment extends Fragment implements OnFriendshipCheckList
                                             } else {
                                                 if (listener != null) {
                                                     listener.onFriendshipDoesNotExist();
+                                                    fireToast("You aren't Friends");
                                                 }
                                             }
                                         } else {
@@ -227,11 +227,13 @@ public class ContactUsFragment extends Fragment implements OnFriendshipCheckList
                                     .addOnFailureListener(e -> {
                                         if (listener != null) {
                                             listener.onFailedToRetrieveData();
+                                            fireToast("Bad Internet Connection");
                                         }
                                     });
                         } else {
                             if (listener != null) {
                                 listener.onFriendshipDoesNotExist();
+                                fireToast("This isn't a friend");
                             }
                         }
                     } else {
@@ -266,6 +268,10 @@ public class ContactUsFragment extends Fragment implements OnFriendshipCheckList
 
     public void emptyEditTextIsNotAllowedToast(){
         Toast.makeText(getContext(), "لا يمكن ترك الصندوق فارغا", Toast.LENGTH_SHORT).show();
+    }
+
+    private void fireToast(String toastContent){
+        Toast.makeText(getContext(), toastContent, Toast.LENGTH_SHORT).show();
     }
 
 }

@@ -1,7 +1,7 @@
 package com.example.publictransportationguidance.tracking.trackingModule.trackingModule;
 
-import static com.example.publictransportationguidance.Fragments.ContactUsFragment.SHARE_LOCATION_COLLECTION_NAME;
 import static com.example.publictransportationguidance.helpers.Functions.getLocationName;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.SHARE_LOCATION_COLLECTION_NAME;
 import static com.example.publictransportationguidance.tracking.trackingModule.trackingModule.TrackLiveLocation.googleMap;
 
 import android.annotation.SuppressLint;

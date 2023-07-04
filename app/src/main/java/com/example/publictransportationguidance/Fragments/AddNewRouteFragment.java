@@ -13,7 +13,7 @@ import static com.example.publictransportationguidance.helpers.Functions.listToA
 import static com.example.publictransportationguidance.helpers.Functions.splitLatLng;
 import static com.example.publictransportationguidance.helpers.Functions.stringEnhancer;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.DESTINATION;
-import static com.example.publictransportationguidance.helpers.GlobalVariables.FIRESTORE_COLLECTION_NAME;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.FIRESTORE_ADD_NEW_ROUTE_COLLECTION_NAME;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.FOOTER;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.IS_LOGGED_IN;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.LAST_CLICKED_FOOTER_VIEW;
@@ -265,7 +265,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void hasRedundantData(String location, String destination, String cost, String pathName, String transportationType,String documentId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference collectionRef = db.collection(FIRESTORE_COLLECTION_NAME);
+        CollectionReference collectionRef = db.collection(FIRESTORE_ADD_NEW_ROUTE_COLLECTION_NAME);
 
         collectionRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -351,7 +351,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void sendData(Map<String,Object> node,String cost,String name){
-        db.collection(FIRESTORE_COLLECTION_NAME)
+        db.collection(FIRESTORE_ADD_NEW_ROUTE_COLLECTION_NAME)
                 .add(node)
                 .addOnSuccessListener(documentReference -> {
                     String documentId = documentReference.getId();
@@ -366,7 +366,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
     private void deleteData(String documentId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        db.collection(FIRESTORE_COLLECTION_NAME)
+        db.collection(FIRESTORE_ADD_NEW_ROUTE_COLLECTION_NAME)
                 .document(documentId)
                 .delete()
                 .addOnSuccessListener(aVoid -> {

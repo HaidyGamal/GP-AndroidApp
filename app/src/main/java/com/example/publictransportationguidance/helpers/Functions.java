@@ -2,7 +2,6 @@ package com.example.publictransportationguidance.helpers;
 
 import static com.example.publictransportationguidance.BuildConfig.MAPS_API_KEY;
 import static com.example.publictransportationguidance.api.Api.GOOGLE_MAPS_BASE_URL;
-import static com.example.publictransportationguidance.helpers.GlobalVariables.BLIND_MODE_ACCEPTANCE;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.BUS;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.METRO;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.MODE;
@@ -15,8 +14,9 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.example.publictransportationguidance.R;
-import com.example.publictransportationguidance.TripsTimeCallback;
-import com.example.publictransportationguidance.adapters.CustomAutoCompleteAdapter;
+import com.example.publictransportationguidance.pojo.estimatedTimeResponse.Duration;
+import com.example.publictransportationguidance.pojo.estimatedTimeResponse.Route;
+import com.example.publictransportationguidance.tracking.TripsTimeCallback;
 import com.example.publictransportationguidance.api.RetrofitClient;
 import com.example.publictransportationguidance.blindMode.ArrowFunction;
 import com.example.publictransportationguidance.pojo.estimatedTimeResponse.EstimatedTime;
@@ -42,7 +42,6 @@ public class Functions {
     public static final int LISTEN_TO_SPECIFIED_DESTINATION_NAME = 6666;
     public static final int LISTEN_TO_SORTING_CRITERIA = 5555;
     public static final int LISTEN_TO_CHOSEN_MODE = 4444;
-    public static final int RE_LISTEN_TO_CHOSEN_MODE= 3333;
 
     public static String[] listToArray(List<String> list) {
         String[] array = new String[list.size()];
@@ -154,6 +153,9 @@ public class Functions {
         Toast.makeText(context, R.string.CheckInternetConnection, Toast.LENGTH_SHORT).show();
     }
 
+    public static void failedToEstimateTime(Context context) {
+        Toast.makeText(context, "هناك مشكلة أدت للفشل في تقدير الوقت", Toast.LENGTH_SHORT).show();
+    }
     public static void sortingByCostToast(Context context) {
         Toast.makeText(context, R.string.PathsSortedAccordingToCost, Toast.LENGTH_SHORT).show();
     }
@@ -167,16 +169,24 @@ public class Functions {
     }
 
     public static void tryAgainToast(Context context) {
-        Toast.makeText(context, R.string.TryAgain, Toast.LENGTH_SHORT);
+        Toast.makeText(context, R.string.TryAgain, Toast.LENGTH_SHORT).show();
     }
 
     public static String getDurationText(Response<EstimatedTime> response) {
-        return response.body().getRoutes().get(0).getLegs().get(0).getDuration().getText();
+        List<Route> routes = response.body().getRoutes();
+        if(routes.size()>0) {
+            Duration duration = routes.get(0).getLegs().get(0).getDuration();
+            if (duration != null) return duration.getText();
+        }
+        return "-";
     }
 
     public static int extractMinutes(String duration) {
-        String numberString = duration.replaceAll("[^0-9]", "");
-        return Integer.parseInt(numberString);
+        if(!duration.equals("-")) {
+            String numberString = duration.replaceAll("[^0-9]", "");
+            return Integer.parseInt(numberString);
+        }
+        else return 0;
     }
 
     public static List<NearestPaths> getPathByNumber(List<List<NearestPaths>> paths, int pathNumber) {
@@ -289,18 +299,6 @@ public class Functions {
         return input;
     }
 
-//    public static String availableStopsToBeRead(CustomAutoCompleteAdapter list) {
-//        StringBuilder resultBuilder = new StringBuilder();
-//        int count = list.getCount();
-//        for (int i = 0; i < count; i++) {
-//            String currentItem = list.getItem(i);
-//            resultBuilder.append(currentItem);
-//
-//            if (i + 1 < count) { resultBuilder.append(" | أَم | "); }
-//        }
-//        return resultBuilder.toString();
-//    }
-
     public static String availableStopsToBeRead(boolean firstTime,List<String> items) {
         StringBuilder resultBuilder = new StringBuilder();
 
@@ -320,35 +318,6 @@ public class Functions {
         }
         return resultBuilder.toString();
     }
-
-//    public static String reAvailableStopsToBeRead(List<String> items) {
-//        StringBuilder resultBuilder = new StringBuilder();
-//        resultBuilder.append("هناك خطأ| نرجو الإعادة مرةأُخَرَيَ | ");
-//        resultBuilder.append("أي من هذهِ الأماكن تريد | |");
-//        int count = items.size();
-//        for (int i = 0; i < count; i++) {
-//            String currentItem = items.get(i);
-//            resultBuilder.append(currentItem);
-//            if (i + 1 < count) {
-//                resultBuilder.append(" | أَم | ");
-//            }
-//        }
-//        return resultBuilder.toString();
-//    }
-
-//    public static String availableStopsToBeRead(List<String> items) {
-//        StringBuilder resultBuilder = new StringBuilder();
-//        resultBuilder.append("أي من هذهِ الأماكن تريد | |");
-//        int count = items.size();
-//        for (int i = 0; i < count; i++) {
-//            String currentItem = items.get(i);
-//            resultBuilder.append(currentItem);
-//            if (i + 1 < count) {
-//                resultBuilder.append(" | أَم | ");
-//            }
-//        }
-//        return resultBuilder.toString();
-//    }
 
     public static String removeCommas(String input) {
         if (input == null) {
@@ -404,3 +373,53 @@ public class Functions {
 //public static boolean freeOfNumbers(String str) {
 //    return str.matches("[a-zA-Z]+");
 //}
+
+//    public static String reAvailableStopsToBeRead(List<String> items) {
+//        StringBuilder resultBuilder = new StringBuilder();
+//        resultBuilder.append("هناك خطأ| نرجو الإعادة مرةأُخَرَيَ | ");
+//        resultBuilder.append("أي من هذهِ الأماكن تريد | |");
+//        int count = items.size();
+//        for (int i = 0; i < count; i++) {
+//            String currentItem = items.get(i);
+//            resultBuilder.append(currentItem);
+//            if (i + 1 < count) {
+//                resultBuilder.append(" | أَم | ");
+//            }
+//        }
+//        return resultBuilder.toString();
+//    }
+
+//    public static String availableStopsToBeRead(List<String> items) {
+//        StringBuilder resultBuilder = new StringBuilder();
+//        resultBuilder.append("أي من هذهِ الأماكن تريد | |");
+//        int count = items.size();
+//        for (int i = 0; i < count; i++) {
+//            String currentItem = items.get(i);
+//            resultBuilder.append(currentItem);
+//            if (i + 1 < count) {
+//                resultBuilder.append(" | أَم | ");
+//            }
+//        }
+//        return resultBuilder.toString();
+//    }
+
+//    public static String availableStopsToBeRead(CustomAutoCompleteAdapter list) {
+//        StringBuilder resultBuilder = new StringBuilder();
+//        int count = list.getCount();
+//        for (int i = 0; i < count; i++) {
+//            String currentItem = list.getItem(i);
+//            resultBuilder.append(currentItem);
+//
+//            if (i + 1 < count) { resultBuilder.append(" | أَم | "); }
+//        }
+//        return resultBuilder.toString();
+//    }
+
+//    public static String getDurationText(Response<EstimatedTime> response) {
+//        return response.body().getRoutes().get(0).getLegs().get(0).getDuration().getText();
+//    }
+//
+//    public static int extractMinutes(String duration) {
+//        String numberString = duration.replaceAll("[^0-9]", "");
+//        return Integer.parseInt(numberString);
+//    }

@@ -1,5 +1,7 @@
 package com.example.publictransportationguidance.Authentication;
 
+import static com.example.publictransportationguidance.helpers.GlobalVariables.FIRESTORE_AUTHENTICATION_COLLECTION_NAME;
+
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
@@ -81,7 +83,7 @@ public class SignUp extends AppCompatActivity {
                     FirebaseUser user = mAuth.getCurrentUser();
                     String mail = user.getEmail();
 
-                    db.collection("users").document(mail)
+                    db.collection(FIRESTORE_AUTHENTICATION_COLLECTION_NAME).document(mail)
                             .set(data)
                             .addOnSuccessListener(unused -> Log.d("TAG", "DocumentSnapshot added with ID: " + mail))
                             .addOnFailureListener(e -> Log.e("Firestore", "Error adding document", e));

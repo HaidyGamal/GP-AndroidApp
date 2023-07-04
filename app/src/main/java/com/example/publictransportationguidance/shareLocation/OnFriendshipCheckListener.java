@@ -1,4 +1,4 @@
-package com.example.publictransportationguidance;
+package com.example.publictransportationguidance.shareLocation;
 
 public interface OnFriendshipCheckListener {
     void onFriendshipExists(String friendEmail);

@@ -1,6 +1,5 @@
 package com.example.publictransportationguidance.ui;
 
-import static com.example.publictransportationguidance.Fragments.ContactUsFragment.SHARE_LOCATION_COLLECTION_NAME;
 import static com.example.publictransportationguidance.helpers.Functions.LISTEN_TO_CHOSEN_MODE;
 import static com.example.publictransportationguidance.helpers.Functions.execute;
 import static com.example.publictransportationguidance.helpers.Functions.stringIsFound;
@@ -11,6 +10,7 @@ import static com.example.publictransportationguidance.helpers.GlobalVariables.B
 import static com.example.publictransportationguidance.helpers.GlobalVariables.IS_LOGGED_IN;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.ON_BLIND_MODE;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.RE_ASKING_FOR_MODE;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.SHARE_LOCATION_COLLECTION_NAME;
 
 import android.app.Activity;
 import android.content.Intent;

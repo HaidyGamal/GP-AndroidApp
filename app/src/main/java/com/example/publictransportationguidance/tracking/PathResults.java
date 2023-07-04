@@ -2,9 +2,9 @@ package com.example.publictransportationguidance.tracking;
 
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 import static com.example.publictransportationguidance.api.Api.NEO4J_BASE_URL;
-import static com.example.publictransportationguidance.helpers.Functions.availableStopsToBeRead;
 import static com.example.publictransportationguidance.helpers.Functions.calcEstimatedTripsTime;
 import static com.example.publictransportationguidance.helpers.Functions.checkInternetConnectionToast;
+import static com.example.publictransportationguidance.helpers.Functions.failedToEstimateTime;
 import static com.example.publictransportationguidance.helpers.Functions.noAvailablePathsToast;
 import static com.example.publictransportationguidance.helpers.Functions.sortingByCostToast;
 import static com.example.publictransportationguidance.helpers.Functions.sortingByDistanceToast;
@@ -36,7 +36,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
-import com.example.publictransportationguidance.TripsTimeCallback;
 import com.example.publictransportationguidance.blindMode.speechToText.SpeechToTextHelper;
 import com.example.publictransportationguidance.blindMode.textToSpeech.TextToSpeechHelper;
 import com.example.publictransportationguidance.pojo.pathsResponse.PathInfo;
@@ -206,6 +205,7 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
         binding.cost.setText(path.getCost()+"");
         binding.distance.setText(path.getDistance()+"");
         binding.time.setText(path.getTime()+"");
+        if(path.getTime()==0) failedToEstimateTime(getApplicationContext());
     }
 
     public ArrayList<ArrayList<LatLng>> extractNodesLatLng(List<List<NearestPaths>> shortestPaths){
@@ -261,14 +261,4 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
 
     private void listenToNothing(){}
 
-
 }
-
-
-/** M Osama:  Old functions to be deleted*/
-//    public List<PathInfo> sortPathsDescUsing(String sortingCriteria){
-//        List<PathInfo> paths = dao.getSortedPathsDESC(sortingCriteria);
-//        dao.clearAllPaths();
-//        dao.insertPaths(paths);
-//        return paths;
-//    }

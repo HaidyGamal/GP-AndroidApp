@@ -25,9 +25,6 @@ public class GlobalVariables {
     public static String LONGITUDE_KEY="LONGITUDE";
     public static String LOCATION_NAME_KEY="LOCATION_NAME";
 
-    /* M Osama: requestCode from MapActivity */
-    public static final int REQUEST_CODE=1234;
-
     /* M Osama: selected PickOnLocation tracker */
     public static int LAST_CLICKED_FOOTER_VIEW=0;
 
@@ -58,7 +55,12 @@ public class GlobalVariables {
     public static final String[] BLIND_MODE_ACCEPTANCE = {"نعم","اة","أيوة","ايوة","آة","اوك","تمام","ماشي"};
     public static final String[] BLIND_MODE_REJECTANCE = {"لا","لأ","ليه","لية"};
     public static final String[] SORTING_CRITERIA_ACCEPTANCE = {"الوقت","وقت","المسافة","مسافة","التكلفة","تكلفة"};
-    public static final String FIRESTORE_COLLECTION_NAME = "Nodes";
+
+
+    /* M Osama: Firebase collections */
+    public static final String FIRESTORE_ADD_NEW_ROUTE_COLLECTION_NAME = "Nodes";
+    public static final String FIRESTORE_AUTHENTICATION_COLLECTION_NAME = "users";
+    public static final String SHARE_LOCATION_COLLECTION_NAME= "Friendships";
 }
 
 
@@ -82,3 +84,5 @@ public class GlobalVariables {
 //    public static final int PERMISSION_ALL = 1;
 //    public static String TRACKER_BASE_TXT="أنت الآن في ";
 //public static final String TAG="route";         /* haidy: intent tag between pathResults & selectedPath */
+/* M Osama: requestCode from MapActivity */
+//public static final int REQUEST_CODE=1234;
