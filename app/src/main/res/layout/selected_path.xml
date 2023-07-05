@@ -33,9 +33,10 @@
 
         <Button
             android:id="@+id/startLiveLocationBtn"
-            android:layout_width="212dp"
-            android:layout_height="54dp"
-            android:text="Start Live Location"
+            android:layout_width="131dp"
+            android:layout_height="69dp"
+            android:text="تتبع رحلتى"
+            android:textSize="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"

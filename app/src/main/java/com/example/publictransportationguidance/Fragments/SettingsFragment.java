@@ -27,7 +27,7 @@ public class SettingsFragment extends Fragment{
 
         SharedPrefs.init(getContext());
 
-        binding.modeBtn.setText(R.string.OFF);
+        binding.modeBtn.setText(R.string.mode);
 
         //haidy: we used Shared Preferences to save the mode if exit the app and go back again; m Ossama: we used SingletonSharedPrefs
         dark=SharedPrefs.readMap("night",false);   // light is default mode
@@ -38,8 +38,7 @@ public class SettingsFragment extends Fragment{
             if(dark){ AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);    SharedPrefs.write("night",false); }
             else {    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);   SharedPrefs.write("night",true);  }
 
-            if(binding.modeBtn.getText()=="OFF")  { binding.modeBtn.setText(R.string.ON); }
-            else                                  { binding.modeBtn.setText(R.string.OFF); }
+
         });
         binding.accountBtn.setOnClickListener(v -> startActivity(new Intent(getActivity(), com.example.publictransportationguidance.ui.Account.class)));
 
