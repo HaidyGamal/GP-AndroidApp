@@ -300,25 +300,10 @@ public class LocationUpdatesService extends Service {
             if (documentSnapshot.exists()) {
                 Map<String, Object> data = new HashMap<>();
 
-                // Check and add the 'friends' field if not present
-                if (!documentSnapshot.contains("friends")) {
-                    data.put("friends", new ArrayList<String>());
-                }
-
-                // Check and add the 'lat' field if not present
-                if (!documentSnapshot.contains("lat")) {
-                    data.put("lat", "");
-                }
-
-                // Check and add the 'long' field if not present
-                if (!documentSnapshot.contains("long")) {
-                    data.put("long", "");
-                }
-
-                // Check and add the 'locationName' field if not present
-                if (!documentSnapshot.contains("locationName")) {
-                    data.put("locationName", "");
-                }
+                if (!documentSnapshot.contains("friends"))          data.put("friends", new ArrayList<Map<String,Object>>());   // Check and add the 'friends' field if not present
+                if (!documentSnapshot.contains("lat"))              data.put("lat", "");                            // Check and add the 'lat' field if not present
+                if (!documentSnapshot.contains("long"))             data.put("long", "");                           // Check and add the 'long' field if not present
+                if (!documentSnapshot.contains("locationName"))     data.put("locationName", "");                   // Check and add the 'locationName' field if not present
 
                 if (!data.isEmpty()) {
                     docRef.update(data)
@@ -329,7 +314,8 @@ public class LocationUpdatesService extends Service {
         }).addOnFailureListener(e -> Toast.makeText(this, "Failed to retrieve document", Toast.LENGTH_SHORT).show());
     }
 
-    /* M Osama: updates user's current location Information to be listened to his friends */
+
+    /* M Osama: updates user's current location information to be listened to by his friends */
     private void updateUserSharedLocation(String currentLat, String currentLong, String locationName) {
         if (isUserAuthenticated()) {
             Map<String, Object> data = new HashMap<>();
@@ -339,10 +325,8 @@ public class LocationUpdatesService extends Service {
 
             docRef.get().addOnSuccessListener(documentSnapshot -> {
                 if (documentSnapshot.exists()) {
-                    List<String> friendsList = (List<String>) documentSnapshot.get("friends");
-                    if (friendsList != null) {
-                        data.put("friends", friendsList);
-                    }
+                    List<Map<String, Object>> friendsList = (List<Map<String, Object>>) documentSnapshot.get("friends");
+                    if (friendsList != null) data.put("friends", friendsList);
                 }
 
                 docRef.set(data)
@@ -351,5 +335,27 @@ public class LocationUpdatesService extends Service {
             }).addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Failed to retrieve document data", Toast.LENGTH_SHORT).show());
         }
     }
+
+
+    //    /* M Osama: updates user's current location Information to be listened to his friends */
+//    private void updateUserSharedLocation(String currentLat, String currentLong, String locationName) {
+//        if (isUserAuthenticated()) {
+//            Map<String, Object> data = new HashMap<>();
+//            data.put("lat", currentLat);
+//            data.put("long", currentLong);
+//            data.put("locationName", locationName);
+//
+//            docRef.get().addOnSuccessListener(documentSnapshot -> {
+//                if (documentSnapshot.exists()) {
+//                    List<String> friendsList = (List<String>) documentSnapshot.get("friends");
+//                    if (friendsList != null) data.put("friends", friendsList);
+//                }
+//
+//                docRef.set(data)
+//                        .addOnSuccessListener(v -> Toast.makeText(getApplicationContext(), "Done", Toast.LENGTH_SHORT).show())
+//                        .addOnFailureListener(v -> Toast.makeText(getApplicationContext(), "De7k", Toast.LENGTH_SHORT).show());
+//            }).addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Failed to retrieve document data", Toast.LENGTH_SHORT).show());
+//        }
+//    }
 
 }

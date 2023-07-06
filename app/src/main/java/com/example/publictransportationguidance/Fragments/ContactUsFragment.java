@@ -8,14 +8,17 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.publictransportationguidance.shareLocation.RequestSharingLocationDialog;
 import com.example.publictransportationguidance.shareLocation.OnFriendshipCheckListener;
 import com.example.publictransportationguidance.R;
 import com.example.publictransportationguidance.databinding.FragmentContactUsBinding;
+import com.example.publictransportationguidance.shareLocation.ShareLocationDialogListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -29,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class ContactUsFragment extends Fragment implements OnFriendshipCheckListener {
+public class ContactUsFragment extends Fragment implements OnFriendshipCheckListener, ShareLocationDialogListener {
     public ContactUsFragment() {}
 
     FirebaseAuth mAuth;
@@ -72,11 +75,15 @@ public class ContactUsFragment extends Fragment implements OnFriendshipCheckList
 
         /* M Osama; track the user's friend */
         binding.startTracking.setOnClickListener(v -> {
-            String friendEmailToTrack = binding.friendEmailToTrackEt.getText().toString();
-            if(friendEmailToTrack.equals("")) emptyEditTextIsNotAllowedToast();
-            else checkFriendship(mUser.getEmail(),friendEmailToTrack,this);
+            String trackedEmail = binding.friendEmailToTrackEt.getText().toString();
+            if(trackedEmail.equals("")) emptyEditTextIsNotAllowedToast();
+            else checkFriendship(mUser.getEmail(),trackedEmail,this);
         });
 
+        if(mUser!=null) {
+            listenToWhichFriendWantToTrack(mUser.getEmail());
+            listenToTrackingResponse();
+        }
     }
 
 
@@ -85,43 +92,15 @@ public class ContactUsFragment extends Fragment implements OnFriendshipCheckList
         mUser=mAuth.getCurrentUser();
     }
 
-    /* M Osama: updates user's current location Information to be listened to his friends */
-    private void updateUserSharedLocation(String currentLat, String currentLong, String locationName) {
-        if(isUserAuthenticated()) {
-            Map<String, Object> data = new HashMap<>();
-            data.put("lat", currentLat);
-            data.put("long", currentLong);
-            data.put("locationName", locationName);
-            docRef.set(data)
-                    .addOnSuccessListener(v -> Toast.makeText(getContext(), "Done", Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(v -> Toast.makeText(getContext(), "De7k", Toast.LENGTH_SHORT).show());
-        }
-    }
-
     private void initializeAccount() {
         docRef.get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {
                 Map<String, Object> data = new HashMap<>();
 
-                // Check and add the 'friends' field if not present
-                if (!documentSnapshot.contains("friends")) {
-                    data.put("friends", new ArrayList<String>());
-                }
-
-                // Check and add the 'lat' field if not present
-                if (!documentSnapshot.contains("lat")) {
-                    data.put("lat", "");
-                }
-
-                // Check and add the 'long' field if not present
-                if (!documentSnapshot.contains("long")) {
-                    data.put("long", "");
-                }
-
-                // Check and add the 'locationName' field if not present
-                if (!documentSnapshot.contains("locationName")) {
-                    data.put("locationName", "");
-                }
+                if (!documentSnapshot.contains("friends"))      data.put("friends", new ArrayList<Map<String,Object>>());           // Check and add the 'friends' field if not present
+                if (!documentSnapshot.contains("lat"))          data.put("lat", "");                                                // Check and add the 'lat' field if not present
+                if (!documentSnapshot.contains("long"))         data.put("long", "");                                               // Check and add the 'long' field if not present
+                if (!documentSnapshot.contains("locationName")) data.put("locationName", "");                                       // Check and add the 'locationName' field if not present
 
                 if (!data.isEmpty()) {
                     docRef.update(data)
@@ -164,89 +143,10 @@ public class ContactUsFragment extends Fragment implements OnFriendshipCheckList
                             binding.locationName.setText(locationName);
 
                             // Handle the updated location data here
-                        } else {
-                            Toast.makeText(getContext(), "Document does not exist", Toast.LENGTH_SHORT).show();
-                        }
+                        } else Toast.makeText(getContext(), "Document does not exist", Toast.LENGTH_SHORT).show();
                     });
-        } else {
-            Toast.makeText(getContext(), "Please Log In first", Toast.LENGTH_SHORT).show();
-        }
-    }
+        } else Toast.makeText(getContext(), "Please Log In first", Toast.LENGTH_SHORT).show();
 
-    /* M Osama: delete specific friend from the user's friends */
-    private void deleteFriend(String friendEmail) {
-        if(isUserAuthenticated()){
-            docRef.update("friends", FieldValue.arrayRemove(friendEmail))
-                    .addOnSuccessListener(v -> fireToast("Friend is deleted successfully"))
-                    .addOnFailureListener(v -> fireToast("Failed to delete friend"));
-        }
-        else Toast.makeText(getContext(), "Log In first", Toast.LENGTH_SHORT).show();
-    }
-
-    /* M Osama: add specific friend to the user's friends */
-    private void addFriend(String friendEmail) {
-        if(isUserAuthenticated()) {
-            docRef.update("friends", FieldValue.arrayUnion(friendEmail))
-                    .addOnSuccessListener(v -> fireToast("Friend is added successfully"))
-                    .addOnFailureListener(v -> fireToast("Failed to add friend"));
-        }
-        else Toast.makeText(getContext(), "Log In first", Toast.LENGTH_SHORT).show();
-    }
-
-    /* M Osama: check whether a friendship exists between two user's*/
-    private void checkFriendship(String documentId, String email, OnFriendshipCheckListener listener) {
-        db.collection(SHARE_LOCATION_COLLECTION_NAME)
-                .document(documentId)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        List<String> friendsList = (List<String>) documentSnapshot.get("friends");
-                        if (friendsList != null && friendsList.contains(email)) {
-                            db.collection(SHARE_LOCATION_COLLECTION_NAME)
-                                    .document(email)
-                                    .get()
-                                    .addOnSuccessListener(documentTwoSnapshot -> {
-                                        if (documentTwoSnapshot.exists()) {
-                                            List<String> listFriends = (List<String>) documentTwoSnapshot.get("friends");
-                                            if (listFriends != null && listFriends.contains(documentId)) {
-                                                if (listener != null) {
-                                                    listener.onFriendshipExists(email);
-                                                }
-                                            } else {
-                                                if (listener != null) {
-                                                    listener.onFriendshipDoesNotExist();
-                                                    fireToast("You aren't Friends");
-                                                }
-                                            }
-                                        } else {
-                                            if (listener != null) {
-                                                listener.onFriendshipDoesNotExist();
-                                            }
-                                        }
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        if (listener != null) {
-                                            listener.onFailedToRetrieveData();
-                                            fireToast("Bad Internet Connection");
-                                        }
-                                    });
-                        } else {
-                            if (listener != null) {
-                                listener.onFriendshipDoesNotExist();
-                                fireToast("This isn't a friend");
-                            }
-                        }
-                    } else {
-                        if (listener != null) {
-                            listener.onFriendshipDoesNotExist();
-                        }
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    if (listener != null) {
-                        listener.onFailedToRetrieveData();
-                    }
-                });
     }
 
     /* M Osama: check whether the user has account or not */
@@ -254,11 +154,256 @@ public class ContactUsFragment extends Fragment implements OnFriendshipCheckList
         return mUser != null; // Returns true if the user is authenticated, false otherwise
     }
 
+    /* M Osama: add specific friend to the user's friends */
+    private void addFriend(String friendEmail) {
+        if (isUserAuthenticated()) {
+            docRef.get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        List<Map<String, Object>> friends = (List<Map<String, Object>>) documentSnapshot.get("friends");
+
+                        boolean friendExists = false;
+                        for (Map<String, Object> friend : friends) {
+                            String email = (String) friend.keySet().iterator().next();
+                            if (email != null && email.equals(friendEmail)) {
+                                friendExists = true;
+                                break;
+                            }
+                        }
+
+                        if (!friendExists) {
+                            Map<String, Object> newFriend = new HashMap<>();
+                            newFriend.put(friendEmail, "No");
+                            docRef.update("friends", FieldValue.arrayUnion(newFriend))
+                                    .addOnSuccessListener(v -> fireToast("Friend is added successfully"))
+                                    .addOnFailureListener(v -> fireToast("Failed to add friend"));
+                        } else {
+                            fireToast("Friend already exists");
+                        }
+                    })
+                    .addOnFailureListener(v -> fireToast("Failed to add friend"));
+        } else {
+            Toast.makeText(getContext(), "Log In first", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /* M Osama: delete a friend using his email*/
+    private void deleteFriend(String friendEmail) {
+        if (isUserAuthenticated()) {
+            docRef.get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        List<Map<String, Object>> friends = (List<Map<String, Object>>) documentSnapshot.get("friends");
+                        List<Map<String, Object>> updatedFriends = new ArrayList<>();
+
+                        boolean friendDeleted = false;
+                        for (Map<String, Object> friend : friends) {
+                            String email = (String) friend.keySet().iterator().next();
+                            if (email != null && email.equals(friendEmail)) {
+                                friendDeleted = true;
+                            } else {
+                                updatedFriends.add(friend);
+                            }
+                        }
+
+                        if (friendDeleted) {
+                            docRef.update("friends", updatedFriends)
+                                    .addOnSuccessListener(v -> fireToast("Friend is deleted successfully"))
+                                    .addOnFailureListener(v -> fireToast("Failed to delete friend"));
+                        } else {
+                            fireToast("Friend not found");
+                        }
+                    })
+                    .addOnFailureListener(v -> fireToast("Failed to delete friend"));
+        } else {
+            Toast.makeText(getContext(), "Log In first", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void editFriend(String friendEmail,String newValue) {
+        if (isUserAuthenticated()) {
+            DocumentReference editDocRef = db.collection(SHARE_LOCATION_COLLECTION_NAME).document(Objects.requireNonNull(friendEmail));
+            editDocRef.get().addOnSuccessListener(documentSnapshot -> {
+                List<Map<String, Object>> friends = (List<Map<String, Object>>) documentSnapshot.get("friends");
+                boolean friendFound = false;
+                for (Map<String, Object> friend : friends) {
+                    String email = friend.keySet().iterator().next();
+                    if (email != null && email.equals(mUser.getEmail())) {
+                        friendFound = true;
+                        friend.put(mUser.getEmail(), newValue);
+                        break;
+                    }
+                }
+
+                if (friendFound) {
+                    editDocRef.update("friends", friends)
+                            .addOnSuccessListener(v -> fireToast("Friend updated successfully"))
+                            .addOnFailureListener(v -> fireToast("Failed to update friend"));
+                } else fireToast("Friend not found");
+            })
+                    .addOnFailureListener(v -> fireToast("Failed to update friend"));
+        } else Toast.makeText(getContext(), "Log In first", Toast.LENGTH_SHORT).show();
+    }
+
+    /* M Osama: check the existence of friendShip between two persons */
+    private void checkFriendship(String userEmail, String friendEmail, OnFriendshipCheckListener listener) {
+        db.collection(SHARE_LOCATION_COLLECTION_NAME)
+                .document(userEmail)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        List<Map<String, Object>> friendsList = (List<Map<String, Object>>) documentSnapshot.get("friends");
+                        if (friendsList != null) {
+                            boolean friendshipExists = false;
+                            for(int i=0;i<friendsList.size();i++){
+                                String currentFriendEmail = friendsList.get(i).keySet().toArray()[0]+"";
+                                if(friendEmail.equals(currentFriendEmail)){
+                                    friendshipExists=true;
+                                    break;
+                                }
+                            }
+
+                            if (friendshipExists) {
+                                db.collection(SHARE_LOCATION_COLLECTION_NAME)
+                                        .document(friendEmail)
+                                        .get()
+                                        .addOnSuccessListener(documentTwoSnapshot -> {
+                                            if (documentTwoSnapshot.exists()) {
+                                                List<Map<String, Object>> listFriends = (List<Map<String, Object>>) documentTwoSnapshot.get("friends");
+                                                if (listFriends != null) {
+                                                    boolean reverseFriendshipExists = false;
+                                                    for(int i=0;i<listFriends.size();i++){
+                                                        String tempEmail = listFriends.get(i).keySet().toArray()[0]+"";
+                                                        if(userEmail.equals(tempEmail)){
+                                                            reverseFriendshipExists=true;
+                                                            break;
+                                                        }
+                                                    }
+
+                                                    if (reverseFriendshipExists) if (listener != null) {
+                                                        listener.onFriendshipExists(friendEmail);
+                                                        fireToast("You are friends");
+                                                    }
+                                                    else {
+                                                        if (listener != null) {
+                                                            listener.onFriendshipDoesNotExist();
+                                                            fireToast("You aren't Friends");
+                                                        }
+                                                    }
+                                                } else if (listener != null) listener.onFriendshipDoesNotExist();
+                                            } else if (listener != null) listener.onFriendshipDoesNotExist();
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            if (listener != null) {
+                                                listener.onFailedToRetrieveData();
+                                                fireToast("Bad Internet Connection");
+                                            }
+                                        });
+                            } else {
+                                if (listener != null) {
+                                    listener.onFriendshipDoesNotExist();
+                                    fireToast("This isn't a friend"+friendsList.get(0).keySet().toArray()[0]);
+                                }
+                            }
+                        } else if (listener != null) listener.onFriendshipDoesNotExist();
+                    } else if (listener != null) listener.onFriendshipDoesNotExist();
+                })
+                .addOnFailureListener(e -> {
+                    if (listener != null) listener.onFailedToRetrieveData();
+                });
+    }
+
+
     /* M Osama: enable location tracking incase of friendship existing */
     @Override
-    public void onFriendshipExists(String email) {
-        readFriendSharedLocation(email);
+    public void onFriendshipExists(String trackedEmail) {
+        editFriend(trackedEmail,"Yes");
     }
+
+    private void listenToTrackingResponse() {
+        if (isUserAuthenticated()) {
+            Map<String, String> friendStates = new HashMap<>();  // To store previous states of friends
+
+            DocumentReference documentReference = db.collection(SHARE_LOCATION_COLLECTION_NAME)
+                    .document(Objects.requireNonNull(mUser.getEmail()));
+
+            documentReference.addSnapshotListener((snapshot, error) -> {
+                if (error != null) {
+                    Log.i("TAG", "Failed to retrieve document data");
+                    return;
+                }
+
+                if (snapshot != null && snapshot.exists()) {
+                    List<Map<String, Object>> friends = (List<Map<String, Object>>) snapshot.get("friends");
+                    if (friends != null) {
+                        for (Map<String, Object> friend : friends) {
+                            String email = "";
+                            String value = "";
+
+                            for (Map.Entry<String, Object> entry : friend.entrySet()) {
+                                email = entry.getKey();
+                                value = entry.getValue().toString();
+                                break;
+                            }
+
+                            if (email != null && value != null) {
+                                String previousValue = friendStates.get(email);
+                                if (previousValue != null && previousValue.equals("No") && value.equals("YesYes")) {
+                                    Log.i("TAG", "Friend " + email + " changed from No to Yes");
+                                    readFriendSharedLocation(email);
+                                }
+
+                                friendStates.put(email, value);
+                            }
+                        }
+                    }
+                }
+            });
+        } else {
+            Toast.makeText(getContext(), "Log In first", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    private void listenToWhichFriendWantToTrack(String specificEmail) {
+        if (isUserAuthenticated()) {
+            Map<String, String> friendStates = new HashMap<>();  // To store previous states of friends
+
+            docRef.addSnapshotListener((snapshot, error) -> {
+                if (error != null) {
+                    fireToast("Failed to listen for friend updates");
+                    return;
+                }
+
+                if (snapshot != null && snapshot.exists()) {
+                    List<Map<String, Object>> friends = (List<Map<String, Object>>) snapshot.get("friends");
+                    if (friends != null) {
+                        for (Map<String, Object> friend : friends) {
+                            String email = "";
+                            String value = "";
+                            for (Map.Entry<String, Object> entry : friend.entrySet()) {
+                                email = entry.getKey();
+                                value = entry.getValue().toString();
+                                break;  // Assume only one key-value pair per friend map
+                            }
+
+                            if (email != null && value != null) {
+                                String previousValue = friendStates.get(email);
+                                if (previousValue != null && previousValue.equals("No") && value.equals("Yes")) {
+                                    if(mUser.getEmail().equals(specificEmail)) {
+                                        showRequestSharingLocationDialog(email);
+                                    }
+                                    fireToast("Friend with email " + email + " Want to track you");
+                                }
+                                friendStates.put(email, value);  // Update the previous state for the email
+                            }
+                        }
+                    }
+                }
+            });
+        } else Toast.makeText(getContext(), "Log In first", Toast.LENGTH_SHORT).show();
+
+    }
+
+
 
     @Override
     public void onFriendshipDoesNotExist() {}
@@ -274,4 +419,73 @@ public class ContactUsFragment extends Fragment implements OnFriendshipCheckList
         Toast.makeText(getContext(), toastContent, Toast.LENGTH_SHORT).show();
     }
 
+    private void showRequestSharingLocationDialog(String email){
+        RequestSharingLocationDialog dialog = new RequestSharingLocationDialog(email);
+        dialog.setShareLocationDialogListener(this);
+        dialog.show(getFragmentManager(),RequestSharingLocationDialog.TAG);
+    }
+
+    @Override
+    public void onOptionSelected(int option, String email) {
+        if(option==1) editOther(email,"YesYes");
+        else          editMe(email,"No");
+
+    }
+
+    private void editOther(String friendEmail, String newValue) {
+        if (isUserAuthenticated()) {
+
+            DocumentReference editDocRef = db.collection(SHARE_LOCATION_COLLECTION_NAME).document(Objects.requireNonNull(friendEmail));
+            editDocRef.get().addOnSuccessListener(documentSnapshot -> {
+                        List<Map<String, Object>> friends = (List<Map<String, Object>>) documentSnapshot.get("friends");
+                        boolean friendFound = false;
+                        for (Map<String, Object> friend : friends) {
+                            String email = friend.keySet().iterator().next();
+                            if (email != null && email.equals(mUser.getEmail())) {
+                                friendFound = true;
+                                friend.put(mUser.getEmail(), newValue);
+                                break;
+                            }
+                        }
+
+                        if (friendFound) {
+                            editDocRef.update("friends", friends)
+                                    .addOnSuccessListener(v -> fireToast("Friend updated successfully"))
+                                    .addOnFailureListener(v -> fireToast("Failed to update friend"));
+                        } else fireToast("Friend not found");
+                    })
+                    .addOnFailureListener(v -> fireToast("Failed to update friend"));
+        } else Toast.makeText(getContext(), "Log In first", Toast.LENGTH_SHORT).show();
+    }
+
+    private void editMe(String friendEmail,String newValue) {
+        if (isUserAuthenticated()) {
+
+            DocumentReference editDocRef = db.collection(SHARE_LOCATION_COLLECTION_NAME).document(Objects.requireNonNull(mUser.getEmail()));
+            editDocRef.get().addOnSuccessListener(documentSnapshot -> {
+                        List<Map<String, Object>> friends = (List<Map<String, Object>>) documentSnapshot.get("friends");
+                        boolean friendFound = false;
+                        for (Map<String, Object> friend : friends) {
+                            String email = friend.keySet().iterator().next();
+                            if (email != null && email.equals(friendEmail)) {
+                                friendFound = true;
+                                friend.put(friendEmail, newValue);
+                                break;
+                            }
+                        }
+
+                        if (friendFound) {
+                            editDocRef.update("friends", friends)
+                                    .addOnSuccessListener(v -> fireToast("Friend updated successfully"))
+                                    .addOnFailureListener(v -> fireToast("Failed to update friend"));
+                        } else fireToast("Friend not found");
+                    })
+                    .addOnFailureListener(v -> fireToast("Failed to update friend"));
+        } else Toast.makeText(getContext(), "Log In first", Toast.LENGTH_SHORT).show();
+    }
+
+
+    @Override
+    public void onOptionSelected(int option, String trackingEmail, String trackedEmail) {
+    }
 }

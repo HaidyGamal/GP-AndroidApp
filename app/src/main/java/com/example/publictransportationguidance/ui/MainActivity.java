@@ -15,6 +15,7 @@ import static com.example.publictransportationguidance.helpers.GlobalVariables.S
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.view.View;
@@ -30,6 +31,7 @@ import com.example.publictransportationguidance.sharedPrefs.SharedPrefs;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.RequiresApi;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -46,6 +48,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -66,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements SpeechRecognition
     FirebaseFirestore db;
     DocumentReference docRef;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +78,8 @@ public class MainActivity extends AppCompatActivity implements SpeechRecognition
         Uri uri = getIntent().getData();
         if (uri != null) {
             String url = uri.toString();
-            Toast.makeText(getApplicationContext(),"url >> "+url, Toast.LENGTH_SHORT).show();}
+            Toast.makeText(getApplicationContext(),"url >> "+url, Toast.LENGTH_SHORT).show();
+        }
 
         /* M Osama: Initialize SharedPrefs */
         SharedPrefs.init(this);
@@ -117,9 +122,12 @@ public class MainActivity extends AppCompatActivity implements SpeechRecognition
 
         /* M Osama: ensure that user has an account to prevent crashes */
         if(isUserAuthenticated()) {
+            Toast.makeText(this, "de7k", Toast.LENGTH_SHORT).show();
             docRef = db.collection(SHARE_LOCATION_COLLECTION_NAME).document(Objects.requireNonNull(mUser.getEmail()));
             ensureDocumentIsExist(mUser.getEmail());
         }
+
+        clearLocationSharingHistory();
 
         /* M Osama: activate BlindMode vocally */
         initializeTTSandSTT();
@@ -198,20 +206,15 @@ public class MainActivity extends AppCompatActivity implements SpeechRecognition
         binding.appBarMain.fab.setImageResource(R.drawable.ic_blind_mode);
     }
 
-    /* M Osama: can be deleted if we used user's collection instread of FriendShip collection */
+    /* M Osama: can be deleted if we used user's collection instead of FriendShip collection */
     private void ensureDocumentIsExist(String documentId){
         docRef = db.collection(SHARE_LOCATION_COLLECTION_NAME).document(documentId);
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    // Document exists, no further action needed
-                } else {
-                    initializeAccount();
-                }
-            } else {
-                Toast.makeText(this, "Failed to retrieve document", Toast.LENGTH_SHORT).show();
-            }
+                if (document.exists()) {}
+                else initializeAccount();
+            } else Toast.makeText(this, "Failed to retrieve document", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -220,11 +223,9 @@ public class MainActivity extends AppCompatActivity implements SpeechRecognition
         docRef.get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {}
             else {
-                // Create a new document with the user's email as the document ID
-                Map<String, Object> data = new HashMap<>();
+                Map<String, Object> data = new HashMap<>();                                         // Create a new document with the user's email as the document ID
 
-                // Add initial fields to the document
-                data.put("friends", new ArrayList<String>());
+                data.put("friends", new ArrayList<Map<String,Object>>());
                 data.put("lat", "");
                 data.put("long", "");
                 data.put("locationName", "");
@@ -246,6 +247,40 @@ public class MainActivity extends AppCompatActivity implements SpeechRecognition
         db = FirebaseFirestore.getInstance();
         mAuth= FirebaseAuth.getInstance();
         mUser=mAuth.getCurrentUser();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void clearLocationSharingHistory() {
+        if (isUserAuthenticated()) {
+            DocumentReference editDocRef = db.collection(SHARE_LOCATION_COLLECTION_NAME).document(Objects.requireNonNull(mUser.getEmail()));
+            editDocRef.get().addOnSuccessListener(documentSnapshot -> {
+                        List<Map<String, Object>> friends = (List<Map<String, Object>>) documentSnapshot.get("friends");
+
+                        if (friends != null) {
+                            List<Map<String, Object>> updatedFriends = new ArrayList<>();
+
+                            for (Map<String, Object> friend : friends) {
+                                Map<String, Object> updatedFriend = new HashMap<>(friend);
+                                updatedFriend.replaceAll((key, value) -> "No");
+                                updatedFriends.add(updatedFriend);
+                            }
+
+                            editDocRef.update("friends", updatedFriends)
+                                    .addOnSuccessListener(v -> fireToast("Location sharing history cleared successfully"))
+                                    .addOnFailureListener(v -> fireToast("Failed to clear location sharing history"));
+                        } else {
+                            fireToast("No friends found");
+                        }
+                    })
+                    .addOnFailureListener(v -> fireToast("Failed to retrieve friends"));
+        } else {
+            Toast.makeText(this, "Log In first", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    private void fireToast(String friend_updated_successfully) {
+        Toast.makeText(getApplicationContext(), friend_updated_successfully, Toast.LENGTH_SHORT).show();
     }
 
 

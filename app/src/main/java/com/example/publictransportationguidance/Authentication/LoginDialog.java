@@ -1,11 +1,13 @@
 package com.example.publictransportationguidance.Authentication;
 
 import static com.example.publictransportationguidance.helpers.GlobalVariables.IS_LOGGED_IN;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.SHARE_LOCATION_COLLECTION_NAME;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,14 @@ import com.example.publictransportationguidance.ui.MainActivity;
 import com.example.publictransportationguidance.databinding.FragmentLoginBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class LoginDialog extends DialogFragment {
     FragmentLoginBinding binding;
@@ -28,6 +38,10 @@ public class LoginDialog extends DialogFragment {
     ProgressDialog dialog;
     AlertDialog.Builder LoginDialogBuilder;
     FirebaseAuth mAuth;
+    FirebaseUser mUser;
+    FirebaseFirestore db;
+    DocumentReference docRef;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_login,container,false);
@@ -40,8 +54,7 @@ public class LoginDialog extends DialogFragment {
         dialog=new ProgressDialog(getActivity());
         LoginDialogBuilder =new AlertDialog.Builder(getActivity());
 
-        // haidy:Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
+        firebaseInitializer();
 
         binding.signup.setOnClickListener((View v)-> startActivity(new Intent(getActivity().getBaseContext(), SignUp.class)));
 
@@ -83,6 +96,8 @@ public class LoginDialog extends DialogFragment {
                             LoginDialogBuilder.setPositiveButton(android.R.string.ok, (dialog, which) -> { /* Continue with delete operation */ });
                         } else {
                             dismiss();
+                            docRef = db.collection(SHARE_LOCATION_COLLECTION_NAME).document(Objects.requireNonNull(mUser.getEmail()));
+                            ensureDocumentIsExist(mUser.getEmail());
                             Toast.makeText(getActivity(), R.string.SuccessfulLogin , Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -93,4 +108,40 @@ public class LoginDialog extends DialogFragment {
     }
 
     public static String TAG = "Dialog";
+
+    /* M Osama: can be deleted if we used user's collection instead of FriendShip collection */
+    private void ensureDocumentIsExist(String documentId){
+        docRef = db.collection(SHARE_LOCATION_COLLECTION_NAME).document(documentId);
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {}
+                else initializeAccount();
+            } else Toast.makeText(getActivity(), "Failed to retrieve document", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void initializeAccount() {
+        docRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {}
+            else {
+                Map<String, Object> data = new HashMap<>();                                         // Create a new document with the user's email as the document ID
+
+                data.put("friends", new ArrayList<Map<String,Object>>());
+                data.put("lat", "");
+                data.put("long", "");
+                data.put("locationName", "");
+
+                docRef.set(data)
+                        .addOnSuccessListener(v -> Log.i("OSOS","Done"))
+                        .addOnFailureListener(v -> Log.i("OSOS","De7k"));
+            }
+        }).addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to retrieve document", Toast.LENGTH_SHORT).show());
+    }
+
+    private void firebaseInitializer(){
+        db = FirebaseFirestore.getInstance();
+        mAuth= FirebaseAuth.getInstance();
+        mUser=mAuth.getCurrentUser();
+    }
 }
