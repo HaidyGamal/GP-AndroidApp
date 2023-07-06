@@ -30,18 +30,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/FnameET"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="15dp"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:hint="First Name"
-                android:textColor="@color/gray"
-                android:textStyle="bold" />
+
 
             <EditText
                 android:id="@+id/LnameET"
@@ -56,6 +45,18 @@
                 android:hint="@string/lname"
                 android:textColor="@color/gray"
                 android:textStyle="bold" />
+            <EditText
+                android:id="@+id/FnameET"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:hint="الاسم الأول"
+                android:textColor="@color/gray"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <EditText
@@ -67,6 +68,7 @@
             android:ems="10"
             android:inputType="textEmailAddress"
             android:hint="@string/email"
+            android:paddingRight="4dp"
             android:textColor="@color/gray"
             android:textStyle="bold" />
 
@@ -79,6 +81,7 @@
             android:ems="10"
             android:inputType="numberPassword"
             android:hint="@string/pass"
+            android:paddingRight="4dp"
             android:textColor="@color/gray"
             android:textStyle="bold" />
 
@@ -91,6 +94,7 @@
             android:ems="10"
             android:inputType="phone"
             android:hint="@string/phone"
+            android:paddingRight="4dp"
             android:textColor="@color/gray"
             android:textStyle="bold" />
 

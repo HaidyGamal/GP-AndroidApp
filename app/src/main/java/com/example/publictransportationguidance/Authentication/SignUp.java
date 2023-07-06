@@ -63,15 +63,15 @@ public class SignUp extends AppCompatActivity {
         data.put("Phone", phone);
 
         if (fname.isEmpty()) {
-            binding.FnameET.setError("Required field!");
+            binding.FnameET.setError("مطلوب!");
         } else if (lname.isEmpty()) {
-            binding.LnameET.setError("Required field!");
+            binding.LnameET.setError("مطلوب!");
         } else if (!email.matches(emailPattern)) {
             binding.em.setError(getString(R.string.EnterCorrectEmail));
         } else if (password.isEmpty() || password.length() < 6) {
             binding.pass.setError(getString(R.string.EnterCorrectPassword));
         } else if (phone.isEmpty() || phone.length() < 11 || phone.length() > 11 || !matcher.matches()) {
-            binding.phoneET.setError("Enter Correct Mobile Number");
+            binding.phoneET.setError("يرجى اضافة رقم هاتف صحيح");
         } else {
             dialog.setMessage(getResources().getString(R.string.PleaseWait));
             dialog.setTitle(getString(R.string.Registration));
