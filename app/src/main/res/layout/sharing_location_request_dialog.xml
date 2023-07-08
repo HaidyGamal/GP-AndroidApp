@@ -28,6 +28,7 @@
             android:autoSizeTextType="uniform"
             android:gravity="center"
             android:text="هذا الصديق يريد تتبع رحلتك، هل توافق ؟"
+            android:textColor="@color/dark_green"
             android:padding="4dp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -48,13 +49,15 @@
                 android:id="@+id/radioButtonYes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Yes" />
+                android:text="Yes"
+                android:textColor="@color/dark_gray1"/>
 
             <RadioButton
                 android:id="@+id/radioButtonNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No" />
+                android:text="No"
+                android:textColor="@color/dark_gray1"/>
 
         </RadioGroup>
 
