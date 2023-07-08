@@ -15,7 +15,6 @@ import static com.example.publictransportationguidance.helpers.GlobalVariables.B
 import static com.example.publictransportationguidance.helpers.GlobalVariables.COST;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.DISTANCE;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.INTENT_PATH;
-import static com.example.publictransportationguidance.helpers.GlobalVariables.LOCATION;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.SELECTED_PATH;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.SORTING_CRITERIA;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.TIME;
@@ -28,6 +27,7 @@ import static com.example.publictransportationguidance.helpers.PathsTokenizer.li
 import static com.example.publictransportationguidance.helpers.PathsTokenizer.enumeratePaths;
 import static com.example.publictransportationguidance.helpers.PathsTokenizer.stopsAndMeans;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
 import com.example.publictransportationguidance.blindMode.speechToText.SpeechToTextHelper;
@@ -70,6 +71,10 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
     private SpeechToTextHelper speechToTextHelper;
     private TextToSpeechHelper textToSpeechHelper;
 
+    TextAnimator textAnimator;
+
+    String stringToBeAnimated="";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,12 +94,14 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
         dao = RoomDB.getInstance(getApplication()).Dao();
         loadingDialog.startLoadingDialog();
 
+        textAnimator=new TextAnimator();
 
         if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1){
             textToSpeechHelper.speak(getString(R.string.SearchingForAvaliablePaths),()-> listenToNothing());
         }
         getNearestPaths(LOCATION,DESTINATION,this);
 
+        textAnimator.startAnimation(binding.textView,"");
     }
 
 
@@ -157,17 +164,36 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
     }
 
     public void sortingOnClickListeners(){
-        binding.sortByCost.setOnClickListener(v -> {        sortingByCostToast(this);       SORTING_CRITERIA=COST;     updateViewsOnReSorting(sortPathsAscUsing(COST));     });
-        binding.sortByDistance.setOnClickListener(v -> {    sortingByDistanceToast(this);   SORTING_CRITERIA=DISTANCE; updateViewsOnReSorting(sortPathsAscUsing(DISTANCE)); });
-        binding.sortByTime.setOnClickListener(v -> {        sortingByTimeToast(this);       SORTING_CRITERIA=TIME;     updateViewsOnReSorting(sortPathsAscUsing(TIME));     });
+        binding.sortByCost.setOnClickListener(v -> {
+            sortingByCostToast(this);
+            SORTING_CRITERIA=COST;
+            updateViewsOnReSorting(sortPathsAscUsing(COST));
+            stringToBeAnimated=sortPathsAscUsing(COST).get(0).getPath();
+        });
+        binding.sortByDistance.setOnClickListener(v -> {
+            sortingByDistanceToast(this);
+            SORTING_CRITERIA=DISTANCE;
+            updateViewsOnReSorting(sortPathsAscUsing(DISTANCE));
+            stringToBeAnimated=sortPathsAscUsing(COST).get(0).getPath();
+        });
+        binding.sortByTime.setOnClickListener(v -> {
+            sortingByTimeToast(this);
+            SORTING_CRITERIA=TIME;
+            updateViewsOnReSorting(sortPathsAscUsing(TIME));
+            stringToBeAnimated=sortPathsAscUsing(COST).get(0).getPath();
+        });
+//        List<PathInfo> pathsInfos = sortPathsAscUsing(SORTING_CRITERIA);
+//        updateViewsOnReSorting(pathsInfos);
+//        stringToBeAnimated=pathsInfos.get(0).getPath();
+//        textAnimator.refreshAnimation(stringToBeAnimated,binding.textView);
     }
-
 
     public void updateViewsOnReSorting(List<PathInfo> newSortedPaths){
         initCostDistanceTime(newSortedPaths);                                                /* M Osama: put cost,distance,time of the best root */
         setWheelSettings(combineSinglePathNodes(newSortedPaths));                            /* M Osama: Build String Array from cachedPath Info & pass it to build Wheel */
         wheelOnClickListener(newSortedPaths);                                                /* M Osama: onClickListener for wheel representing choices */
         costDistanceTimeTracker(newSortedPaths);
+        textAnimator.refreshAnimation(stringToBeAnimated,binding.textView);
     }
 
     public void initCostDistanceTime(List<PathInfo> paths){
@@ -181,6 +207,10 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
         binding.wheel.setMaxValue(transportations.length - 1);          /* M Osama: wheel populated till index(len-1)*/
         binding.wheel.setValue(0);                                      /* M Osama: index0 content represent best result; to be edited after building database & mapping */
         binding.wheel.setDisplayedValues(transportations);              /* M Osama: populating wheel with data */
+//        binding.wheel.setTextColor(ContextCompat.getColor(this,R.color.dark_red));
+        binding.wheel.setTextSize(R.dimen.un_selected_size);
+        binding.wheel.setSelectedTextColor(ContextCompat.getColor(this,R.color.transparent));
+        stringToBeAnimated=transportations[0];                          /* M Osama: set inital value to be animated as the value at index0 */
     }
 
     public void wheelOnClickListener(List<PathInfo> paths){
@@ -201,7 +231,13 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
     }
 
     public void costDistanceTimeTracker(List<PathInfo> paths) {
-        binding.wheel.setOnValueChangedListener((numberPicker, oldValue, newValue) -> updateCostDistanceTime(newValue,paths));
+        binding.wheel.setOnValueChangedListener((numberPicker, oldValue, newValue) -> {
+            updateCostDistanceTime(newValue,paths);
+            stringToBeAnimated=dao.getSortedPathsASC(SORTING_CRITERIA).get(newValue).getPath();
+            textAnimator.refreshAnimation(stringToBeAnimated,binding.textView);
+        });
+
+//        binding.wheel.setOnValueChangedListener((numberPicker, oldValue, newValue) -> updateCostDistanceTime(newValue,paths));
         binding.wheel.setOnScrollListener((numberPicker, scrollState) -> {if (scrollState == SCROLL_STATE_IDLE) updateCostDistanceTime(binding.wheel.getValue(),paths);});
     }
 

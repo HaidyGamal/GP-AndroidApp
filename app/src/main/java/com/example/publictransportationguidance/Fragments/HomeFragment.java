@@ -30,7 +30,7 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
-import com.example.publictransportationguidance.OnPlaceResponseListener;
+import com.example.publictransportationguidance.tracking.OnPlaceResponseListener;
 import com.example.publictransportationguidance.blindMode.speechToText.SpeechToTextHelper;
 import com.example.publictransportationguidance.blindMode.textToSpeech.TextToSpeechHelper;
 import com.example.publictransportationguidance.googleMap.MapActivity;

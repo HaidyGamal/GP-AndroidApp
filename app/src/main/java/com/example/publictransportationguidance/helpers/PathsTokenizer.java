@@ -71,13 +71,7 @@ public class PathsTokenizer {
                 switch (mean){
                     case "microbus": mean="ميكروباص";  mean+=" ";                 mean+=path.get(stopNum).getLineNumber();  pathMeans.add(mean);  break;
                     case "bus":      mean="أوتوبيس";   mean+=" ";  mean+="رقم ";  mean+=path.get(stopNum).getLineNumber();  pathMeans.add(mean);  break;
-                    case "metro":    mean="مترو";      mean+=" ";
-                        switch (path.get(stopNum).getLineNumber()){
-                            case "line 1":  mean+="الخط الأول";      break;
-                            case "line 2":  mean+="الخط الثاني";    break;
-                            case "line 3":  mean+="الخط الثالث";    break;
-                        }
-                        pathMeans.add(mean);  break;
+                    case "metro":    mean="مترو";      mean+=" ";                 mean+=path.get(stopNum).getLineNumber();  pathMeans.add(mean);  break;
                     default:                                                                                                                      break;
                 }
             }
