@@ -3,9 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-<<<<<<< HEAD
         <entry key="..\:/FinalProject/GP-AndroidApp/app/src/main/res/layout/activity_path_results.xml" value="0.38697916666666665" />
-=======
         <entry key="..\:/GP-AndroidApp2/app/src/main/res/drawable-v24/bottom_background_light_red.xml" value="0.147" />
         <entry key="..\:/GP-AndroidApp2/app/src/main/res/drawable-v24/button_background_red1.xml" value="0.147" />
         <entry key="..\:/GP-AndroidApp2/app/src/main/res/drawable-v24/button_background_red2.xml" value="0.147" />
@@ -190,7 +188,6 @@
         <entry key="..\:/android apps/GP-AndroidApp-main/PublicTransportationGuidance/app/src/main/res/layout/fragment_signup.xml" value="0.17074275362318841" />
         <entry key="..\:/android apps/GP-AndroidApp-main/PublicTransportationGuidance/app/src/main/res/layout/fragment_submit_route.xml" value="0.17074275362318841" />
         <entry key="..\:/android apps/GP-AndroidApp-main/PublicTransportationGuidance/app/src/main/res/layout/verification.xml" value="0.17074275362318841" />
->>>>>>> 333121e7bfdfb1c9e46a0602adb2da7d08173030
       </map>
     </option>
   </component>
