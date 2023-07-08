@@ -155,7 +155,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
         ArrayAdapter<CharSequence> adapter= ArrayAdapter.createFromResource(getActivity().getBaseContext(), R.array.transportations, android.R.layout.simple_spinner_item);    // haidy: Creating an ArrayAdapter using the string array and a default spinner layout
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // haidy:  Specify the layout to use when the list of choices appears
 
-        performFocus();
+
 
         bind.spin.setAdapter(adapter);    // haidy: Applying the adapter to the spinner
         bind.spin.setOnItemSelectedListener(this);
@@ -218,45 +218,6 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
         }
 
         return mode;
-    }
-    private void focus(EditText editText,String text){
-        editText.setText(text);
-        editText.setTextColor(Color.GRAY);
-
-        editText.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                if (editText.getCurrentTextColor() == Color.GRAY) {
-                    editText.setText("");
-                    editText.setTextColor(Color.BLACK);
-                }
-            }
-            return false;
-        });
-
-        editText.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus && editText.getText().toString().isEmpty()) {
-                editText.setText(text);
-                editText.setTextColor(Color.GRAY);
-            }
-        });
-
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
-    }
-
-    private void performFocus(){
-        focus(bind.tvLocation,getString(R.string.Location));
-        focus(bind.tvDestination,getString(R.string.Destination));
-        focus(bind.transportType,getString(R.string.ConnectionName));
-        focus(bind.costET,getString(R.string.OptionalPathCost));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

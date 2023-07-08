@@ -23,7 +23,7 @@
             android:textSize="40sp"
             android:gravity="center"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="@color/dark_green1"
             android:text="سيتم إضافة نبذة عن مطوري التطبيق وعن التطبيق ذاته لاحقا"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
