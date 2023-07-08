@@ -22,9 +22,13 @@ public class NearestPaths implements Serializable {
     @Expose
     private Integer cost=0;
 
+//    @SerializedName("distance")
+//    @Expose
+//    private Double distance=0.0;
+
     @SerializedName("distance")
     @Expose
-    private Double distance=0.0;
+    private Object distance=0.0;
 
     @SerializedName("transportationType")
     @Expose
@@ -80,11 +84,19 @@ public class NearestPaths implements Serializable {
         this.cost = cost;
     }
 
-    public Double getDistance() {
+//    public Double getDistance() {
+//        return distance;
+//    }
+//    public void setDistance(Double distance) {
+//        this.distance = distance;
+//    }
+
+    public Object getDistance(){
         return distance;
     }
-    public void setDistance(Double distance) {
-        this.distance = distance;
+
+    public void setDistance(Object distance){
+        this.distance=distance;
     }
 
     public String getTransportationType() {

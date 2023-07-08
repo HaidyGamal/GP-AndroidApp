@@ -15,6 +15,7 @@ import static com.example.publictransportationguidance.helpers.GlobalVariables.B
 import static com.example.publictransportationguidance.helpers.GlobalVariables.COST;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.DISTANCE;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.INTENT_PATH;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.LOCATION;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.SELECTED_PATH;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.SORTING_CRITERIA;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.TIME;
@@ -29,6 +30,7 @@ import static com.example.publictransportationguidance.helpers.PathsTokenizer.st
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -102,7 +104,9 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
             @Override
             public void onResponse(@NonNull Call<List<List<NearestPaths>>> call, @NonNull Response<List<List<NearestPaths>>> response) {
                 List<List<NearestPaths>> paths = response.body();
-                
+
+                Log.i("TAG",response.message());
+
                 if (paths != null) {
                     if (paths.size() > 0) {
                         cacheToRoom(enumeratePaths(paths),paths, extractNodesLatLng(paths));        /* M Osama: give each Path a number then cache them to Room where each contains it's route nodes latLng*/
@@ -122,6 +126,7 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
                     textToSpeechHelper.speak(getString(R.string.BadInternetConnection),()-> listenToNothing());
                 }
                 loadingDialog.endLoadingDialog();
+                Log.i("TAG",t.getMessage());
             }
         });
 

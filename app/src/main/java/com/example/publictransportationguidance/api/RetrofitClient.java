@@ -18,7 +18,6 @@ public class RetrofitClient {
     private RetrofitClient(String baseUrl){
         // Increase the timeout duration to 30 seconds.build();
         OkHttpClient client = new OkHttpClient.Builder().connectTimeout(30, TimeUnit.SECONDS).build();
-
         Retrofit retrofit = new Retrofit.Builder().baseUrl(baseUrl).client(client).addConverterFactory(GsonConverterFactory.create()).build();
         api=retrofit.create(Api.class);
     }
