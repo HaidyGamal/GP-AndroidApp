@@ -61,7 +61,7 @@ import java.util.List;
 public class HomeFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener,OnPlaceResponseListener {
     public HomeFragment() {}
     FragmentHomeBinding binding;
-
+    int pointer=0;
     /* M Osama: to store stop lat/long & to build location & destination Strings to be send to API request to search DB */
     double [] lats=new double[2];
     public static String locationLats="0.000";            /* M Osama: to prevent bugs */
@@ -121,16 +121,19 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
 
         /* M Osama: autoComplete FooterClickListener */
         autoCompleteOnFooterClick(getView());
+        /* M Osama: decide the sorting Criteria */
+        binding.orderByCost.setOnClickListener(v -> {       sortingByCostToast(getContext());       SORTING_CRITERIA=COST; pointer=1;     });
+        binding.orderByDistance.setOnClickListener(v -> {   sortingByDistanceToast(getContext());   SORTING_CRITERIA=DISTANCE; pointer=2; });
+        binding.orderByTime.setOnClickListener(v -> {       sortingByTimeToast(getContext());       SORTING_CRITERIA=TIME;     pointer=3; });
 
         binding.searchBtn.setOnClickListener(v -> {
-            if(binding.tvLocation.getText()+""!="" && binding.tvDestination.getText()+""!="")   searchForPaths(locationLats,destinationLats);
+
+            if(binding.tvLocation.getText()+""!="" && binding.tvDestination.getText()+""!="")  {
+                if(pointer!=0)      searchForPaths(locationLats,destinationLats,pointer);
+                else                Toast.makeText(getContext(),"اختر طريقة للترتيب حسب رغبتك", Toast.LENGTH_SHORT).show(); }
             else  Toast.makeText(getContext(),R.string.AutoCompleteTextViewWarning, Toast.LENGTH_SHORT).show();
         });
 
-        /* M Osama: decide the sorting Criteria */
-        binding.orderByCost.setOnClickListener(v -> {       sortingByCostToast(getContext());       SORTING_CRITERIA=COST;      });
-        binding.orderByDistance.setOnClickListener(v -> {   sortingByDistanceToast(getContext());   SORTING_CRITERIA=DISTANCE;  });
-        binding.orderByTime.setOnClickListener(v -> {       sortingByTimeToast(getContext());       SORTING_CRITERIA=TIME;      });
 
     }
 
@@ -242,10 +245,11 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     }
 
     /* M Osama: function that passes chosen location & destination to PathResults which will search the API for available paths */
-    public void searchForPaths(String location,String destination){
+    public void searchForPaths(String location,String destination,int pointer){
         Intent intent = new Intent(getContext(), PathResults.class);
         intent.putExtra("LOCATION",location);
         intent.putExtra("DESTINATION",destination);
+        intent.putExtra("POINTER",pointer);
         startActivity(intent);
     }
 
@@ -332,7 +336,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
                     if (searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[4]) || searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[5])) {       sortingByCostToast(getContext());       SORTING_CRITERIA = COST;    }
                     else if (searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[2]) || searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[3])) {  sortingByDistanceToast(getContext());   SORTING_CRITERIA = DISTANCE;  }
                     else if (searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[0]) || searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[1])) {  sortingByTimeToast(getContext());       SORTING_CRITERIA = TIME;      }
-                    searchForPaths(locationLats, destinationLats);
+                    searchForPaths(locationLats, destinationLats,pointer);
                 }
                 else  textToSpeechHelper.speak(getString(R.string.SortingCriteriaSecondListen), () -> listenToSortingCriteria(this));
         }
