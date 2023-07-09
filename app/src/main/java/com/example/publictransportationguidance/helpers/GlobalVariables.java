@@ -61,6 +61,12 @@ public class GlobalVariables {
     public static final String FIRESTORE_ADD_NEW_ROUTE_COLLECTION_NAME = "Nodes";
     public static final String FIRESTORE_AUTHENTICATION_COLLECTION_NAME = "users";
     public static final String SHARE_LOCATION_COLLECTION_NAME= "Friendships";
+
+
+    /* M Osama: Fields of Review Collection */
+    public static final String LIKES_FIELD="Likes";
+    public static final String BAD_PATH_DISLIKES_FIELD="BadPathDislikes";
+    public static final String UNFOUND_PATH_DISLIKES_FIELD="UnFoundPathDislikes";
 }
 
 

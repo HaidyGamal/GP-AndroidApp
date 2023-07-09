@@ -27,7 +27,6 @@ import static com.example.publictransportationguidance.helpers.PathsTokenizer.li
 import static com.example.publictransportationguidance.helpers.PathsTokenizer.enumeratePaths;
 import static com.example.publictransportationguidance.helpers.PathsTokenizer.stopsAndMeans;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,6 +38,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
+import com.example.publictransportationguidance.MyApp;
 import com.example.publictransportationguidance.blindMode.speechToText.SpeechToTextHelper;
 import com.example.publictransportationguidance.blindMode.textToSpeech.TextToSpeechHelper;
 import com.example.publictransportationguidance.pojo.pathsResponse.PathInfo;
@@ -82,6 +82,7 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
 
         /* M Osama: initializing tts & stt */
         initializeTTSandSTT();
+        SharedPrefs.init(this);
 
         String LOCATION = "",DESTINATION = "";
         /* M Osama: reading values from homeFragment */
@@ -111,8 +112,10 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
             @Override
             public void onResponse(@NonNull Call<List<List<NearestPaths>>> call, @NonNull Response<List<List<NearestPaths>>> response) {
                 List<List<NearestPaths>> paths = response.body();
-
                 Log.i("TAG",response.message());
+
+                MyApp myApp = (MyApp) getApplication();
+                myApp.setPaths(paths);
 
                 if (paths != null) {
                     if (paths.size() > 0) {
@@ -222,6 +225,9 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
 
             bundle.putSerializable(BUNDLE_PATH,paths.get(selectedPathNumberInWheel).getCoordinates());                       /* M Osama: pass the nodes of selectedPath to be able to draw them on Map */
             selectedPathIntent.putExtra(INTENT_PATH,bundle);
+
+            SharedPrefs.write("CHOSEN_CRITERIA",SORTING_CRITERIA);                                  /* M Osama: to use them in review*/
+            SharedPrefs.write("CHOSEN_PATH_NUMBER",selectedPathNumberInWheel);
 
             selectedPathIntent.putExtra(SELECTED_PATH,paths.get(selectedPathNumberInWheel).getDetailedPath());               /* M Osama: pass Path details to print them on screen */
 

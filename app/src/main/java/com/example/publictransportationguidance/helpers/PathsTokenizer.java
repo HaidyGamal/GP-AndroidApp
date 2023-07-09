@@ -1,6 +1,10 @@
 package com.example.publictransportationguidance.helpers;
 
 import com.example.publictransportationguidance.pojo.pathsResponse.NearestPaths;
+import com.example.publictransportationguidance.pojo.pathsResponse.PathInfo;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -158,6 +162,10 @@ public class PathsTokenizer {
         return stopsAndMeans;
     }
 
+    @NotNull
+    public static List<String> stopAndMeans(@Nullable PathInfo get, @Nullable Integer chosenPathNumber) {
+        return null;
+    }
 }
 
 

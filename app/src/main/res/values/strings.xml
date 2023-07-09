@@ -118,8 +118,16 @@
         <item>ميكروباص</item>
         <item>أتوبيس</item>
         <item>مترو</item>
-
     </string-array>
+
+
+    <!-- Strings related to spinner -->
+    <string-array name="dislikeCause">
+        <item>الطريق/المواصلة سيئة</item>
+        <item>الطريق/المواصلة غير متوفرين</item>
+    </string-array>
+
+
     <string name="title_activity_live_location">LiveLocation</string>
     <string name="current_location_is">أنت الآن في</string>
     <string name="time">الوقت</string>

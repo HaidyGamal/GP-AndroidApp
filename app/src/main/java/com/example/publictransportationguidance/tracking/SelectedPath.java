@@ -103,8 +103,6 @@ public class SelectedPath extends AppCompatActivity implements SharedPreferences
         /* M Osama: pass path nodes to TrackLiveLocation to be viewed on Map */
         intent = new Intent(SelectedPath.this, TrackLiveLocation.class);
         intent.putExtra(INTENT_PATH,bundle);
-//        binding.startLiveLocationBtn.setOnClickListener( v -> startActivity(intent) );
-
 
     }
 
@@ -200,11 +198,8 @@ public class SelectedPath extends AppCompatActivity implements SharedPreferences
     }
 
     private void setButtonsState(boolean requestingLocationUpdates) {
-        if (requestingLocationUpdates) {
-//            binding.startLiveLocationBtn.setEnabled(false);
-        } else {
-//            binding.startLiveLocationBtn.setEnabled(true);
-        }
+        if (requestingLocationUpdates) {}
+        else {}
     }
 
 
