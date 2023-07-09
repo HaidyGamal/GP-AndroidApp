@@ -7,14 +7,14 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.widget.ImageButton
-import com.example.publictransportationguidance.DislikeDialogFragment
-import com.example.publictransportationguidance.MyApp
+import com.example.publictransportationguidance.tracking.trackingModule.Reviews.DislikeDialogFragment
+import com.example.publictransportationguidance.tracking.trackingModule.Reviews.MyApp
 import com.example.publictransportationguidance.R
 import com.example.publictransportationguidance.helpers.GlobalVariables.*
 import com.example.publictransportationguidance.helpers.PathsTokenizer.stopsAndMeans
+import com.example.publictransportationguidance.pojo.Review
 import com.example.publictransportationguidance.pojo.pathsResponse.NearestPaths
-import com.example.publictransportationguidance.room.DAO
-import com.example.publictransportationguidance.room.RoomDB
+import com.example.publictransportationguidance.room.AppRoom
 import com.example.publictransportationguidance.sharedPrefs.SharedPrefs
 import com.example.publictransportationguidance.tracking.trackingModule.util.logic.PathUtils.Companion.showExpectedPath
 import com.example.publictransportationguidance.tracking.trackingModule.util.ui.CameraUtils.Companion.showDefaultLocationOnMap
@@ -38,41 +38,64 @@ class TrackLiveLocation : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var defaultLocation: LatLng                            /* M Osama: default location to move camera to */
     lateinit var pathNodes: ArrayList<LatLng>
 
-    lateinit var dao: DAO
     lateinit var paths: List<List<NearestPaths>>
-
-    var isLiked=0
-    var color=0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.live_location)
         val likeButton: ImageButton = findViewById(R.id.like)
         val dislikeButton: ImageButton = findViewById(R.id.dislike)
+        likeButton.background.setColorFilter(Color.parseColor("#00000000"), PorterDuff.Mode.SRC_ATOP)
 
         pathNodes = (intent.getBundleExtra(INTENT_PATH)?.getSerializable(BUNDLE_PATH) as? ArrayList<LatLng>)!!
 
-        dao = RoomDB.getInstance(application).Dao()
+        var pathsDao = AppRoom.getInstance(application).pathsDao()
+        var reviewsDao = AppRoom.getInstance(application).reviewDao()
 
         SharedPrefs.init(this)
         val sortingCriteria = SharedPrefs.readMap("CHOSEN_CRITERIA", SORTING_CRITERIA)
         val chosenPathNumber = SharedPrefs.readMap("CHOSEN_PATH_NUMBER",0)
-        val defaultNumber = dao.getSortedPathsASC(sortingCriteria)[chosenPathNumber].defaultPathNumber
+        val defaultNumber = pathsDao.getSortedPathsASC(sortingCriteria)[chosenPathNumber].defaultPathNumber
 
         val myApp = application as MyApp
         paths = myApp.paths!!
         val stopsAndMeans = stopsAndMeans(paths,defaultNumber)
 
+        var isLiked=0
+        var color=0
+        var exists:Int
+
         likeButton.setOnClickListener{
+
             if(isLiked==0){
-                for (i in 0 until (stopsAndMeans.size - 2) step 2) like(stopsAndMeans[i], stopsAndMeans[i+2], stopsAndMeans[i+1])
-                isLiked=1
-                color = Color.parseColor("#B3FFFFFF")
+                for (i in 0 until (stopsAndMeans.size - 2) step 2) {
+                    exists = reviewsDao.isReviewExists(stopsAndMeans[i]+stopsAndMeans[i+2]+stopsAndMeans[i+1]+LIKES_FIELD)
+                    Log.i("TAG","$exists Before insert")
+                    if(exists>0){
+                        Snackbar.make(likeButton, "يرجي الانتباه أنه مسموح للمستخدم بتقييم واحد لنفس المواصلة/الطريق", Snackbar.LENGTH_SHORT).show()
+                    }
+                    else if(exists==0) {
+                        like(stopsAndMeans[i], stopsAndMeans[i + 2], stopsAndMeans[i + 1])
+                        reviewsDao.insert(Review(stopsAndMeans[i], stopsAndMeans[i + 2], stopsAndMeans[i + 1], LIKES_FIELD))
+                    }
+
+                    isLiked=1
+                    color = Color.parseColor("#B3FFFFFF")
+                }
             }
             else if(isLiked==1){
-                for (i in 0 until (stopsAndMeans.size - 2) step 2) unLike(stopsAndMeans[i], stopsAndMeans[i+2], stopsAndMeans[i+1])
-                isLiked=0
-                color = Color.parseColor("#00000000")
+                for (i in 0 until (stopsAndMeans.size - 2) step 2) {
+                    exists = reviewsDao.isReviewExists(stopsAndMeans[i]+stopsAndMeans[i+2]+stopsAndMeans[i+1]+LIKES_FIELD)
+                    Log.i("TAG","$exists Before delete")
+                    if(exists==0);
+                    else if(exists>0){
+                        unLike(stopsAndMeans[i], stopsAndMeans[i + 2], stopsAndMeans[i + 1])
+                        reviewsDao.deleteReview(stopsAndMeans[i]+stopsAndMeans[i + 2]+stopsAndMeans[i + 1]+LIKES_FIELD)
+                    }
+
+                    isLiked=0
+                    color = Color.parseColor("#00000000")
+                }
             }
             likeButton.background.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
         }
@@ -80,7 +103,6 @@ class TrackLiveLocation : AppCompatActivity(), OnMapReadyCallback {
         dislikeButton.setOnClickListener{
             if(isLiked==1){
                 Snackbar.make(likeButton, "يرجي الغاء الاعجاب أولا", Snackbar.LENGTH_SHORT).show()
-//                Toast.makeText(applicationContext,"يرجي الغاء الاعجاب أولا",Toast.LENGTH_SHORT).show()
             }
             else{
                 val dislikeDialog = DislikeDialogFragment()

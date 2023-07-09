@@ -336,26 +336,4 @@ public class LocationUpdatesService extends Service {
         }
     }
 
-
-    //    /* M Osama: updates user's current location Information to be listened to his friends */
-//    private void updateUserSharedLocation(String currentLat, String currentLong, String locationName) {
-//        if (isUserAuthenticated()) {
-//            Map<String, Object> data = new HashMap<>();
-//            data.put("lat", currentLat);
-//            data.put("long", currentLong);
-//            data.put("locationName", locationName);
-//
-//            docRef.get().addOnSuccessListener(documentSnapshot -> {
-//                if (documentSnapshot.exists()) {
-//                    List<String> friendsList = (List<String>) documentSnapshot.get("friends");
-//                    if (friendsList != null) data.put("friends", friendsList);
-//                }
-//
-//                docRef.set(data)
-//                        .addOnSuccessListener(v -> Toast.makeText(getApplicationContext(), "Done", Toast.LENGTH_SHORT).show())
-//                        .addOnFailureListener(v -> Toast.makeText(getApplicationContext(), "De7k", Toast.LENGTH_SHORT).show());
-//            }).addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Failed to retrieve document data", Toast.LENGTH_SHORT).show());
-//        }
-//    }
-
 }

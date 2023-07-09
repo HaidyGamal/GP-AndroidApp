@@ -1,20 +1,24 @@
-package com.example.publictransportationguidance
+package com.example.publictransportationguidance.tracking.trackingModule.Reviews
 
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import com.example.publictransportationguidance.R
 import com.example.publictransportationguidance.helpers.GlobalVariables
 import com.example.publictransportationguidance.helpers.GlobalVariables.BAD_PATH_DISLIKES_FIELD
 import com.example.publictransportationguidance.helpers.GlobalVariables.UNFOUND_PATH_DISLIKES_FIELD
 import com.example.publictransportationguidance.helpers.PathsTokenizer
-import com.example.publictransportationguidance.room.RoomDB
+import com.example.publictransportationguidance.pojo.Review
+import com.example.publictransportationguidance.room.AppRoom
 import com.example.publictransportationguidance.sharedPrefs.SharedPrefs
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -39,9 +43,14 @@ class DislikeDialogFragment : DialogFragment() {
         val myApp = requireActivity().application as MyApp
         val paths = myApp.paths!!
 
-        val dao = RoomDB.getInstance(requireContext()).Dao()
-        val defaultNumber = dao.getSortedPathsASC(sortingCriteria)[chosenPathNumber].defaultPathNumber
+        val pathsDao = AppRoom.getInstance(requireContext()).pathsDao()
+        val defaultNumber = pathsDao.getSortedPathsASC(sortingCriteria)[chosenPathNumber].defaultPathNumber
         val stopsAndMeans = PathsTokenizer.stopsAndMeans(paths, defaultNumber)
+
+        val reviewDao = AppRoom.getInstance(requireContext()).reviewDao()
+        var review:Review
+        var exists:Int
+
 
         var subPaths= ArrayList<String>()
         var path =""
@@ -57,12 +66,25 @@ class DislikeDialogFragment : DialogFragment() {
             .setPositiveButton("تم") { _: DialogInterface?, _: Int ->
                 numberOfPathToReview=pathToDislikeSpinner.selectedItemPosition
                 base=2*numberOfPathToReview
-                if(reasonOfDislike.selectedItemPosition==0) onDislikeBecauseBadPath(stopsAndMeans[base], stopsAndMeans[base+2], stopsAndMeans[base+1])
-                else                                        onDislikeBecauseUnFoundPath(stopsAndMeans[base], stopsAndMeans[base+2], stopsAndMeans[base+1])
+                if(reasonOfDislike.selectedItemPosition==0) {
+                    review = Review(stopsAndMeans[base],stopsAndMeans[base+2],stopsAndMeans[base+1], BAD_PATH_DISLIKES_FIELD)
+                    exists = reviewDao.isReviewExists(stopsAndMeans[base]+stopsAndMeans[base+2]+stopsAndMeans[base+1]+BAD_PATH_DISLIKES_FIELD)
+                    if(exists>0) showSnackbar(activity?.findViewById(android.R.id.content), "غير مسموح لنفس المستخدم بتقييم نفس الشئ أكثر من مرة")
+                    else if(exists==0) {
+                        reviewDao.insert(review)
+                        onDislikeBecauseBadPath(stopsAndMeans[base], stopsAndMeans[base + 2], stopsAndMeans[base + 1])
+                    }
+                }
+                else {
+                    review = Review(stopsAndMeans[base],stopsAndMeans[base+2],stopsAndMeans[base+1], UNFOUND_PATH_DISLIKES_FIELD)
+                    exists = reviewDao.isReviewExists(stopsAndMeans[base]+stopsAndMeans[base+2]+stopsAndMeans[base+1]+UNFOUND_PATH_DISLIKES_FIELD)
+                    if(exists>0) showSnackbar(activity?.findViewById(android.R.id.content), "غير مسموح لنفس المستخدم بتقييم نفس الشئ أكثر من مرة")
+                    else if(exists==0){
+                        reviewDao.insert(review)
+                        onDislikeBecauseUnFoundPath(stopsAndMeans[base], stopsAndMeans[base+2], stopsAndMeans[base+1])
+                    }
+                }
 
-                Toast.makeText(context,"${pathToDislikeSpinner.selectedItemPosition}",Toast.LENGTH_SHORT).show()
-                Toast.makeText(context,"${reasonOfDislike.selectedItemPosition}",Toast.LENGTH_SHORT).show()
-                Log.i("TAG","${pathToDislikeSpinner.selectedItemPosition} +++ ${reasonOfDislike.selectedItemPosition}")
             }
             .setNegativeButton("الغاء") { _: DialogInterface?, _: Int ->
                 Toast.makeText(context, "تم العودة بنجاح", Toast.LENGTH_SHORT).show()
@@ -148,6 +170,12 @@ class DislikeDialogFragment : DialogFragment() {
                     }
                     .addOnFailureListener { e -> Log.e("TAG", "Failed to create document", e) }
             } else { callback.invoke() }
+        }
+    }
+
+    private fun showSnackbar(view: View?, message: String) {
+        view?.let {
+            Snackbar.make(it, message, Snackbar.LENGTH_LONG).show()
         }
     }
 }

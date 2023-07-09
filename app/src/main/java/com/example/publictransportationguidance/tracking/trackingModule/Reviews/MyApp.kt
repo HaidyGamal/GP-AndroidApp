@@ -1,4 +1,4 @@
-package com.example.publictransportationguidance
+package com.example.publictransportationguidance.tracking.trackingModule.Reviews
 
 import android.app.Application
 import com.example.publictransportationguidance.pojo.pathsResponse.NearestPaths

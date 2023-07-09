@@ -38,14 +38,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
-import com.example.publictransportationguidance.MyApp;
+import com.example.publictransportationguidance.tracking.trackingModule.Reviews.MyApp;
 import com.example.publictransportationguidance.blindMode.speechToText.SpeechToTextHelper;
 import com.example.publictransportationguidance.blindMode.textToSpeech.TextToSpeechHelper;
 import com.example.publictransportationguidance.pojo.pathsResponse.PathInfo;
 import com.example.publictransportationguidance.api.RetrofitClient;
 import com.example.publictransportationguidance.R;
-import com.example.publictransportationguidance.room.DAO;
-import com.example.publictransportationguidance.room.RoomDB;
+import com.example.publictransportationguidance.room.AppRoom;
+import com.example.publictransportationguidance.room.PathsDao;
 import com.example.publictransportationguidance.pojo.pathsResponse.NearestPaths;
 import com.example.publictransportationguidance.databinding.ActivityPathResultsBinding;
 import com.example.publictransportationguidance.sharedPrefs.SharedPrefs;
@@ -62,7 +62,7 @@ import retrofit2.Response;
 
 public class PathResults extends AppCompatActivity implements TripsTimeCallback {
     ActivityPathResultsBinding binding;
-    DAO dao;
+    PathsDao dao;
 
     /* M Osama: instance to put loadingDialog inFront of UI */
     LoadingDialog loadingDialog = new LoadingDialog(PathResults.this);
@@ -99,7 +99,7 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
             }
         }
 
-        dao = RoomDB.getInstance(getApplication()).Dao();
+        dao = AppRoom.getInstance(getApplication()).pathsDao();
         loadingDialog.startLoadingDialog();
 
         textAnimator=new TextAnimator();
@@ -126,7 +126,7 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
 
                 if (paths != null) {
                     if (paths.size() > 0) {
-                        cacheToRoom(enumeratePaths(paths),paths, extractNodesLatLng(paths));        /* M Osama: give each Path a number then cache them to Room where each contains it's route nodes latLng*/
+                        cacheToRoom(enumeratePaths(paths),paths, extractNodesLatLng(paths));        /* M Osama: give each Path a number then cache them to AppRoom where each contains it's route nodes latLng*/
                         calcEstimatedTripsTime(paths,callback);
                         sortingOnClickListeners();                                                  /* M Osama: onClickListener for two sorting Buttons */
                     }
@@ -159,7 +159,7 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
         /*ToBe Deleted*/
         dao.deleteAllPaths();
 
-        /* M Osama: caching Paths in Room (only if PathsTable is empty) */
+        /* M Osama: caching Paths in AppRoom (only if PathsTable is empty) */
         if (dao.getNumberOfRowsOfPathsTable() == 0) {
             for (int pathNum = 0; pathNum < pathMap.size(); pathNum++) {
                 double tempDistance = getPathDistance(shortestPaths, pathNum);
@@ -192,10 +192,7 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
             updateViewsOnReSorting(sortPathsAscUsing(TIME));
             stringToBeAnimated=sortPathsAscUsing(COST).get(0).getPath();
         });
-//        List<PathInfo> pathsInfos = sortPathsAscUsing(SORTING_CRITERIA);
-//        updateViewsOnReSorting(pathsInfos);
-//        stringToBeAnimated=pathsInfos.get(0).getPath();
-//        textAnimator.refreshAnimation(stringToBeAnimated,binding.textView);
+
     }
 
     public void updateViewsOnReSorting(List<PathInfo> newSortedPaths){
@@ -217,7 +214,6 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
         binding.wheel.setMaxValue(transportations.length - 1);          /* M Osama: wheel populated till index(len-1)*/
         binding.wheel.setValue(0);                                      /* M Osama: index0 content represent best result; to be edited after building database & mapping */
         binding.wheel.setDisplayedValues(transportations);              /* M Osama: populating wheel with data */
-//        binding.wheel.setTextColor(ContextCompat.getColor(this,R.color.dark_red));
         binding.wheel.setTextSize(R.dimen.un_selected_size);
         binding.wheel.setSelectedTextColor(ContextCompat.getColor(this,R.color.transparent));
         stringToBeAnimated=transportations[0];                          /* M Osama: set inital value to be animated as the value at index0 */
