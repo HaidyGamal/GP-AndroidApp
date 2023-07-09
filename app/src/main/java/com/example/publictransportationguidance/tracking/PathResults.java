@@ -85,11 +85,18 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
         SharedPrefs.init(this);
 
         String LOCATION = "",DESTINATION = "";
+        int pointer;
         /* M Osama: reading values from homeFragment */
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             LOCATION = extras.getString("LOCATION");
             DESTINATION = extras.getString("DESTINATION");
+            pointer= extras.getInt("POINTER");
+            switch (pointer){
+                case 1: binding.sortByCost.setChecked(true); break;
+                case 2: binding.sortByDistance.setChecked(true); break;
+                case 3: binding.sortByTime.setChecked(true); break;
+            }
         }
 
         dao = RoomDB.getInstance(getApplication()).Dao();

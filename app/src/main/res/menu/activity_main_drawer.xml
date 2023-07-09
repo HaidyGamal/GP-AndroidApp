@@ -18,8 +18,8 @@
             android:title="@string/menu_add_new_route" />
         <item
             android:id="@+id/nav_contact_us"
-            android:icon="@drawable/ic_nav_contact_us"
-            android:title="@string/menu_contact_us" />
+            android:icon="@drawable/ic_current_location"
+            android:title="مشاركة الموقع الحالى" />
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_nav_about"

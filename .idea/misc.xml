@@ -48,6 +48,7 @@
         <entry key="..\:/GP-AndroidApp2/app/src/main/res/layout/selected_path.xml" value="0.20416666666666666" />
         <entry key="..\:/GP-AndroidApp2/app/src/main/res/layout/sharing_location_request_dialog.xml" value="0.20416666666666666" />
         <entry key="..\:/GP-AndroidApp2/app/src/main/res/layout/verification.xml" value="0.20416666666666666" />
+        <entry key="..\:/GP-AndroidApp2/app/src/main/res/menu/activity_main_drawer.xml" value="0.20416666666666666" />
         <entry key="..\:/GP/GP-AndroidApp-main/PublicTransportationGuidance/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/GP/GP-AndroidApp-main/PublicTransportationGuidance/app/src/main/res/layout/activity_path_results.xml" value="0.1" />
         <entry key="..\:/GP/GP-AndroidApp-main/PublicTransportationGuidance/app/src/main/res/layout/activity_select_path.xml" value="0.17074275362318841" />
@@ -201,5 +202,8 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="SuppressKotlinCodeStyleNotification">
+    <option name="disableForAll" value="true" />
   </component>
 </project>
