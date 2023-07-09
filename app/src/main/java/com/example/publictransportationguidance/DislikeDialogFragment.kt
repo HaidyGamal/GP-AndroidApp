@@ -106,6 +106,18 @@ class DislikeDialogFragment : DialogFragment() {
             .addOnFailureListener { e -> Log.i("TAG","De7k") }
     }
 
+    private fun decerementFieldInReviews(reviewField: String,startLatLng: String,endLatLng: String,mean: String) {
+        val documentId = "$startLatLng|$endLatLng|$mean"
+
+        val db = FirebaseFirestore.getInstance()
+
+        val reviewRef: DocumentReference = db.collection("Reviews").document(documentId)
+
+        reviewRef.update(reviewField, FieldValue.increment(-1))
+            .addOnSuccessListener { Log.i("TAG","Done") }
+            .addOnFailureListener { e -> Log.i("TAG","De7k") }
+    }
+
     private fun checkDocumentExistence(documentId: String, callback: (Boolean) -> Unit) {
         val db = FirebaseFirestore.getInstance()
 

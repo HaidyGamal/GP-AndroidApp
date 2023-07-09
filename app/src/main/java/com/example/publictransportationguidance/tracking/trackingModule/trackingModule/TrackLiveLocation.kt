@@ -1,6 +1,7 @@
 package com.example.publictransportationguidance.tracking.trackingModule.trackingModule
 
 import android.graphics.Color
+import android.graphics.PorterDuff
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -21,6 +22,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -39,6 +41,9 @@ class TrackLiveLocation : AppCompatActivity(), OnMapReadyCallback {
     lateinit var dao: DAO
     lateinit var paths: List<List<NearestPaths>>
 
+    var isLiked=0
+    var color=0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.live_location)
@@ -52,17 +57,35 @@ class TrackLiveLocation : AppCompatActivity(), OnMapReadyCallback {
         SharedPrefs.init(this)
         val sortingCriteria = SharedPrefs.readMap("CHOSEN_CRITERIA", SORTING_CRITERIA)
         val chosenPathNumber = SharedPrefs.readMap("CHOSEN_PATH_NUMBER",0)
-        val defaultNumber = dao.getSortedPathsASC(sortingCriteria).get(chosenPathNumber).defaultPathNumber
+        val defaultNumber = dao.getSortedPathsASC(sortingCriteria)[chosenPathNumber].defaultPathNumber
 
         val myApp = application as MyApp
         paths = myApp.paths!!
         val stopsAndMeans = stopsAndMeans(paths,defaultNumber)
 
-        likeButton.setOnClickListener{ for (i in 0 until (stopsAndMeans.size - 2) step 2) like(stopsAndMeans.get(i), stopsAndMeans.get(i+2), stopsAndMeans.get(i+1)) }
+        likeButton.setOnClickListener{
+            if(isLiked==0){
+                for (i in 0 until (stopsAndMeans.size - 2) step 2) like(stopsAndMeans[i], stopsAndMeans[i+2], stopsAndMeans[i+1])
+                isLiked=1
+                color = Color.parseColor("#B3FFFFFF")
+            }
+            else if(isLiked==1){
+                for (i in 0 until (stopsAndMeans.size - 2) step 2) unLike(stopsAndMeans[i], stopsAndMeans[i+2], stopsAndMeans[i+1])
+                isLiked=0
+                color = Color.parseColor("#00000000")
+            }
+            likeButton.background.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+        }
 
         dislikeButton.setOnClickListener{
-            val dislikeDialog = DislikeDialogFragment()
-            dislikeDialog.show(supportFragmentManager, "dislike_dialog")
+            if(isLiked==1){
+                Snackbar.make(likeButton, "يرجي الغاء الاعجاب أولا", Snackbar.LENGTH_SHORT).show()
+//                Toast.makeText(applicationContext,"يرجي الغاء الاعجاب أولا",Toast.LENGTH_SHORT).show()
+            }
+            else{
+                val dislikeDialog = DislikeDialogFragment()
+                dislikeDialog.show(supportFragmentManager, "dislike_dialog")
+            }
         }
 
         /* M Osama: buildingMap for tracking user's location(Car) */
@@ -84,6 +107,11 @@ class TrackLiveLocation : AppCompatActivity(), OnMapReadyCallback {
         createDocumentIfNotExists(documentId,data){ incrementFieldInReviews(LIKES_FIELD,startNode,endNode,mean) }
     }
 
+    private fun unLike(startNode: String, endNode: String, mean: String){
+        val (documentId, data) = getDocumentIdAndData(startNode, endNode, mean)
+        createDocumentIfNotExists(documentId,data){ decrementFieldInReviews(LIKES_FIELD,startNode,endNode,mean) }
+    }
+
 
     private fun createDocumentId(startNode: String, endNode: String, mean: String):String = "$startNode|$endNode|$mean"
     private fun createReviewInitialValues(): Map<String,Int> = mapOf(BAD_PATH_DISLIKES_FIELD to 0, LIKES_FIELD to 0, UNFOUND_PATH_DISLIKES_FIELD to 0)
@@ -101,6 +129,18 @@ class TrackLiveLocation : AppCompatActivity(), OnMapReadyCallback {
         val reviewRef: DocumentReference = db.collection("Reviews").document(documentId)
 
         reviewRef.update(reviewField, FieldValue.increment(1))
+            .addOnSuccessListener { Log.i("TAG","Done") }
+            .addOnFailureListener { e -> Log.i("TAG","De7k") }
+    }
+
+    private fun decrementFieldInReviews(reviewField: String,startLatLng: String,endLatLng: String,mean: String) {
+        val documentId = "$startLatLng|$endLatLng|$mean"
+
+        val db = FirebaseFirestore.getInstance()
+
+        val reviewRef: DocumentReference = db.collection("Reviews").document(documentId)
+
+        reviewRef.update(reviewField, FieldValue.increment(-1))
             .addOnSuccessListener { Log.i("TAG","Done") }
             .addOnFailureListener { e -> Log.i("TAG","De7k") }
     }
