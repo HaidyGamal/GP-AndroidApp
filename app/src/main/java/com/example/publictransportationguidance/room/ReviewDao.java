@@ -30,9 +30,6 @@ public interface ReviewDao {
     @Query("DELETE FROM Reviews WHERE concatenatedReviewAsId = :reviewId")
     void deleteReview(String reviewId);
 
-//    @Query("SELECT COUNT(*) FROM Reviews WHERE locationName = :location AND destinationName = :destination AND meanOfTransport = :transport AND reviewCase = :revCase")
-//    int isReviewExists(String location, String destination, String transport, String revCase);
-
     @Query("SELECT COUNT(*) FROM Reviews WHERE concatenatedReviewAsId = :reviewId")
     int isReviewExists(String reviewId);
 }

@@ -43,6 +43,8 @@ public class GlobalVariables {
     public final static String METRO="subway";
     public final static String MODE="transit";
 
+
+    /* M Osama: to track sortingCriteria */
     public static final String COST="cost";
     public static final String TIME="time";
     public static final String DISTANCE="distance";
@@ -67,28 +69,5 @@ public class GlobalVariables {
     public static final String LIKES_FIELD="Likes";
     public static final String BAD_PATH_DISLIKES_FIELD="BadPathDislikes";
     public static final String UNFOUND_PATH_DISLIKES_FIELD="UnFoundPathDislikes";
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-/** M Osama: old GlobalVariables to be deleted if we didn't need them*/
-///* M Osama: locationTracker constants */
-//public static final int GPS_TIME_INTERVAL = 1000 * 60 * 2;                             // get gps location every 1 min
-//    public static final int GPS_DISTANCE = 1000;                                           // set the distance value in meter
-//    public static final int HANDLER_DELAY = 1000 * 60 * 2;
-//    public static final int START_HANDLER_DELAY = 0;
-//    public static final String[] PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-//    public static final int PERMISSION_ALL = 1;
-//    public static String TRACKER_BASE_TXT="أنت الآن في ";
-//public static final String TAG="route";         /* haidy: intent tag between pathResults & selectedPath */
-/* M Osama: requestCode from MapActivity */
-//public static final int REQUEST_CODE=1234;

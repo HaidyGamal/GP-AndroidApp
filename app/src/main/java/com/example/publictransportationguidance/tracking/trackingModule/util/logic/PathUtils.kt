@@ -68,37 +68,6 @@ class PathUtils {
             polylineAnimator.start()
         }
 
-        /* M Osama: function used to draw the path on Map */
-//        fun showActualPath(googleMap: GoogleMap, latLngList: ArrayList<LatLng>, color:Int) {
-//            val builder = LatLngBounds.Builder()
-//            for (latLng in latLngList) { builder.include(latLng) }
-//
-//            /* M Osama: adjust camera bounds */
-//            val bounds = builder.build()
-//            googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 2))
-//
-//            /* M Osama: draw the lineBackGround */
-//            val polylineOptions = PolylineOptions()
-//            polylineOptions.color(Color.BLUE)
-//            polylineOptions.width(5f)
-//            polylineOptions.addAll(latLngList)
-//            bluePolyline = googleMap.addPolyline(polylineOptions)
-//
-//            /* M Osama: draw the lineForeGround */
-//            val blackPolylineOptions = PolylineOptions()
-//            blackPolylineOptions.color(color)
-//            blackPolylineOptions.width(5f)
-//            greenPolyline = googleMap.addPolyline(blackPolylineOptions)
-//
-//            /* M Osama: animation for drawing blackLine over greyLine */
-//            val polylineAnimator = AnimationUtils.polylineAnimator()
-//            polylineAnimator.addUpdateListener { valueAnimator ->
-//                val percentValue = (valueAnimator.animatedValue as Int)
-//                val index = (bluePolyline?.points!!.size) * (percentValue / 100.0f).toInt()
-//                greenPolyline?.points = bluePolyline?.points!!.subList(0, index)
-//            }
-//            polylineAnimator.start()
-//        }
 
         /* M Osama: function used to draw the path on Map */
         @JvmStatic

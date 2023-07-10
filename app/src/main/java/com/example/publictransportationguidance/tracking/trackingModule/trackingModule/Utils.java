@@ -34,11 +34,6 @@ public class Utils {
         return location == null ? "Unknown location" : "(" + location.getLatitude() + ", " + location.getLongitude() + ")";
     }
 
-//    /* NotificationTitle */
-//    static String getLocationTitle(Context context,String location) {
-//        return context.getString(R.string.location_updated, DateFormat.getDateTimeInstance().format(new Date()));
-//    }
-
     /* NotificationTitle */
     static String getLocationTitle(Context context,Location location) {
         if(location!=null) return context.getString(R.string.current_location_is) + " " + getLocationName(context, location.getLatitude(), location.getLongitude()) + " ... " + DateFormat.getDateTimeInstance().format(new Date());

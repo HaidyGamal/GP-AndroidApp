@@ -262,10 +262,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
                         Log.i("Info", "Count: " + count);
 
                         /* M Osama: If redundancy is >5 : No suggestions is added to firestore 5 */
-                        if(count>5){
-//                            Toast.makeText(getContext(), count+"الطريق موجود بالفعل", Toast.LENGTH_SHORT).show();         /* M Osama: for debugging only */
-                            deleteData(documentId);
-                        }
+                        if(count>5){deleteData(documentId);}
 
                         /* M Osama: if redundancy =5    : A connection is added(in case nodes are avaliable) */
                         else if (count == 5) {
