@@ -7,8 +7,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.widget.ImageButton
-import com.example.publictransportationguidance.tracking.trackingModule.Reviews.DislikeDialogFragment
-import com.example.publictransportationguidance.tracking.trackingModule.Reviews.MyApp
+import com.example.publictransportationguidance.tracking.trackingModule.reviews.DislikeDialogFragment
+import com.example.publictransportationguidance.tracking.trackingModule.reviews.MyApp
 import com.example.publictransportationguidance.R
 import com.example.publictransportationguidance.helpers.GlobalVariables.*
 import com.example.publictransportationguidance.helpers.PathsTokenizer.stopsAndMeans

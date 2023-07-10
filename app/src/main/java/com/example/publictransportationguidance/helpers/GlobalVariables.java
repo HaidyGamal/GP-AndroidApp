@@ -39,6 +39,7 @@ public class GlobalVariables {
     public static String BUNDLE_PATH="";
     public static String INTENT_PATH="";
 
+    /* M Osama: to be used in Google Maps API requests */
     public final static String BUS="bus";
     public final static String METRO="subway";
     public final static String MODE="transit";

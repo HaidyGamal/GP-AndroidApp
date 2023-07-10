@@ -38,7 +38,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
-import com.example.publictransportationguidance.tracking.trackingModule.Reviews.MyApp;
+import com.example.publictransportationguidance.tracking.trackingModule.reviews.MyApp;
 import com.example.publictransportationguidance.blindMode.speechToText.SpeechToTextHelper;
 import com.example.publictransportationguidance.blindMode.textToSpeech.TextToSpeechHelper;
 import com.example.publictransportationguidance.pojo.pathsResponse.PathInfo;

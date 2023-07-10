@@ -18,6 +18,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.widget.EditText;
@@ -266,15 +267,15 @@ public class MainActivity extends AppCompatActivity implements SpeechRecognition
                             }
 
                             editDocRef.update("friends", updatedFriends)
-                                    .addOnSuccessListener(v -> fireToast("Location sharing history cleared successfully"))
-                                    .addOnFailureListener(v -> fireToast("Failed to clear location sharing history"));
+                                    .addOnSuccessListener(v -> Log.i("TAG","Location sharing history cleared successfully"))
+                                    .addOnFailureListener(v -> Log.i("TAG","Failed to clear location sharing history"));
                         } else {
                             fireToast("No friends found");
                         }
                     })
                     .addOnFailureListener(v -> fireToast("Failed to retrieve friends"));
         } else {
-            Toast.makeText(this, "Log In first", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "نرجو التحقق من تسجيل الدخول أولا", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -38,7 +38,6 @@ public class SettingsFragment extends Fragment{
             if(dark){ AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);    SharedPrefs.write("night",false); }
             else {    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);   SharedPrefs.write("night",true);  }
 
-
         });
         binding.accountBtn.setOnClickListener(v -> startActivity(new Intent(getActivity(), com.example.publictransportationguidance.ui.Account.class)));
 

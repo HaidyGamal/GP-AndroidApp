@@ -117,7 +117,7 @@ public class LoginDialog extends DialogFragment {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {}
                 else initializeAccount();
-            } else Toast.makeText(getActivity(), "Failed to retrieve document", Toast.LENGTH_SHORT).show();
+            } else Log.i("TAG","Failed to retrieve document");
         });
     }
 
@@ -136,7 +136,7 @@ public class LoginDialog extends DialogFragment {
                         .addOnSuccessListener(v -> Log.i("OSOS","Done"))
                         .addOnFailureListener(v -> Log.i("OSOS","De7k"));
             }
-        }).addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to retrieve document", Toast.LENGTH_SHORT).show());
+        }).addOnFailureListener(e -> Log.i("TAG","Failed to retrieve document"));
     }
 
     private void firebaseInitializer(){

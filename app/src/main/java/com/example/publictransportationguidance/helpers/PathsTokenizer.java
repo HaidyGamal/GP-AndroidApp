@@ -162,8 +162,4 @@ public class PathsTokenizer {
         return stopsAndMeans;
     }
 
-    @NotNull
-    public static List<String> stopAndMeans(@Nullable PathInfo get, @Nullable Integer chosenPathNumber) {
-        return null;
-    }
 }

@@ -1,4 +1,4 @@
-package com.example.publictransportationguidance.tracking.trackingModule.Reviews
+package com.example.publictransportationguidance.tracking.trackingModule.reviews
 
 import android.app.AlertDialog
 import android.app.Dialog

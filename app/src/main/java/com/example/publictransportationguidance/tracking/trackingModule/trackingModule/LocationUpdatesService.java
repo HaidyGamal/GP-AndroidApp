@@ -74,8 +74,7 @@ public class LocationUpdatesService extends Service {
     /* notification ID */
     private static final int NOTIFICATION_ID = 12345678;
 
-    /**
-     * Used to check whether the bound activity has really gone away and not unbound as part of orientation change. We create a foreground service notification only if the former take place.*/
+    /** Used to check whether the bound activity has really gone away and not unbound as part of orientation change. We create a foreground service notification only if the former take place.*/
     private boolean mChangingConfiguration = false;
 
     private NotificationManager mNotificationManager;
@@ -291,7 +290,7 @@ public class LocationUpdatesService extends Service {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists());
                 else initializeAccount();
-            } else Toast.makeText(this, "Failed to retrieve document", Toast.LENGTH_SHORT).show();
+            } else Log.i("TAG","Failed to retrieve FireStore document data");
         });
     }
 
@@ -307,11 +306,11 @@ public class LocationUpdatesService extends Service {
 
                 if (!data.isEmpty()) {
                     docRef.update(data)
-                            .addOnSuccessListener(v -> Toast.makeText(this, "Account fields initialized", Toast.LENGTH_SHORT).show())
-                            .addOnFailureListener(v -> Toast.makeText(this, "Failed to initialize account fields", Toast.LENGTH_SHORT).show());
+                            .addOnSuccessListener(v -> Log.i("TAG","FireStore account initialized successfully"))
+                            .addOnFailureListener(v -> Log.i("TAG","FireStore account initialization failed"));
                 }
             }
-        }).addOnFailureListener(e -> Toast.makeText(this, "Failed to retrieve document", Toast.LENGTH_SHORT).show());
+        }).addOnFailureListener(e -> Log.i("TAG","Failed to return with data"));
     }
 
 
@@ -330,9 +329,9 @@ public class LocationUpdatesService extends Service {
                 }
 
                 docRef.set(data)
-                        .addOnSuccessListener(v -> Toast.makeText(getApplicationContext(), "Done", Toast.LENGTH_SHORT).show())
-                        .addOnFailureListener(v -> Toast.makeText(getApplicationContext(), "De7k", Toast.LENGTH_SHORT).show());
-            }).addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Failed to retrieve document data", Toast.LENGTH_SHORT).show());
+                        .addOnSuccessListener(v -> Log.i("TAG","Location Sharing update is successful"))
+                        .addOnFailureListener(v -> Log.i("TAG","Location Sharing update failed"));
+            }).addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "نأسف للفشل في تتبع صديقك", Toast.LENGTH_SHORT).show());
         }
     }
 

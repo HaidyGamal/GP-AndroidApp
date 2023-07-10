@@ -14,10 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.publictransportationguidance.databinding.FragmentShareLocationBinding;
 import com.example.publictransportationguidance.shareLocation.RequestSharingLocationDialog;
 import com.example.publictransportationguidance.shareLocation.OnFriendshipCheckListener;
 import com.example.publictransportationguidance.R;
-import com.example.publictransportationguidance.databinding.FragmentContactUsBinding;
 import com.example.publictransportationguidance.shareLocation.ShareLocationDialogListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,19 +32,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class ContactUsFragment extends Fragment implements OnFriendshipCheckListener, ShareLocationDialogListener {
-    public ContactUsFragment() {}
+public class ShareLocationFragment extends Fragment implements OnFriendshipCheckListener, ShareLocationDialogListener {
+    public ShareLocationFragment() {}
 
     FirebaseAuth mAuth;
     FirebaseUser mUser;
     FirebaseFirestore db;
     DocumentReference docRef;
 
-    FragmentContactUsBinding binding;
+    FragmentShareLocationBinding binding;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_contact_us,container,false);
+        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_share_location,container,false);
         firebaseInitializer();
         db = FirebaseFirestore.getInstance();
         return binding.getRoot();
@@ -484,8 +484,4 @@ public class ContactUsFragment extends Fragment implements OnFriendshipCheckList
         } else Toast.makeText(getContext(), "Log In first", Toast.LENGTH_SHORT).show();
     }
 
-
-    @Override
-    public void onOptionSelected(int option, String trackingEmail, String trackedEmail) {
-    }
 }
