@@ -31,14 +31,14 @@ class TrackLiveLocation : AppCompatActivity(), OnMapReadyCallback {
 
     companion object {
         @kotlin.jvm.JvmField
-        var listOfActualPathNodes: ArrayList<LatLng> = ArrayList<LatLng>()
+        var listOfActualPathNodes: ArrayList<LatLng> = ArrayList()
         lateinit var googleMap: GoogleMap
     }
 
     private lateinit var defaultLocation: LatLng                            /* M Osama: default location to move camera to */
-    lateinit var pathNodes: ArrayList<LatLng>
 
-    lateinit var paths: List<List<NearestPaths>>
+    private lateinit var paths: List<List<NearestPaths>>
+    private lateinit var pathNodes: ArrayList<LatLng>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,10 +47,8 @@ class TrackLiveLocation : AppCompatActivity(), OnMapReadyCallback {
         val dislikeButton: ImageButton = findViewById(R.id.dislike)
         likeButton.background.setColorFilter(Color.parseColor("#00000000"), PorterDuff.Mode.SRC_ATOP)
 
-        pathNodes = (intent.getBundleExtra(INTENT_PATH)?.getSerializable(BUNDLE_PATH) as? ArrayList<LatLng>)!!
-
-        var pathsDao = AppRoom.getInstance(application).pathsDao()
-        var reviewsDao = AppRoom.getInstance(application).reviewDao()
+        val pathsDao = AppRoom.getInstance(application).pathsDao()
+        val reviewsDao = AppRoom.getInstance(application).reviewDao()
 
         SharedPrefs.init(this)
         val sortingCriteria = SharedPrefs.readMap("CHOSEN_CRITERIA", SORTING_CRITERIA)
@@ -110,12 +108,22 @@ class TrackLiveLocation : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
+        val pathSize = paths[defaultNumber].size
+
+        pathNodes = ArrayList()
+
+        for(i in 0 until pathSize){
+            var path = paths[defaultNumber][i]
+            var latLng = LatLng(path.latitude,path.longitude)
+            pathNodes.add(latLng)
+        }
+
         /* M Osama: buildingMap for tracking user's location(Car) */
         val mapFragment = supportFragmentManager.findFragmentById(R.id.trackingLocationMap) as SupportMapFragment
         mapFragment.getMapAsync(this)
     }
 
-    
+
     /* M Osama: called once; only when the map is loaded on the screen */
     override fun onMapReady(googleMap: GoogleMap) {
         Companion.googleMap = googleMap
@@ -152,7 +160,7 @@ class TrackLiveLocation : AppCompatActivity(), OnMapReadyCallback {
 
         reviewRef.update(reviewField, FieldValue.increment(1))
             .addOnSuccessListener { Log.i("TAG","Done") }
-            .addOnFailureListener { e -> Log.i("TAG","De7k") }
+            .addOnFailureListener { Log.i("TAG","De7k") }
     }
 
     private fun decrementFieldInReviews(reviewField: String,startLatLng: String,endLatLng: String,mean: String) {
@@ -164,7 +172,7 @@ class TrackLiveLocation : AppCompatActivity(), OnMapReadyCallback {
 
         reviewRef.update(reviewField, FieldValue.increment(-1))
             .addOnSuccessListener { Log.i("TAG","Done") }
-            .addOnFailureListener { e -> Log.i("TAG","De7k") }
+            .addOnFailureListener { Log.i("TAG","De7k") }
     }
 
     private fun checkDocumentExistence(documentId: String, callback: (Boolean) -> Unit) {

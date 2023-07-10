@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements SpeechRecognition
 
         /* M Osama: ensure that user has an account to prevent crashes */
         if(isUserAuthenticated()) {
-            Toast.makeText(this, "de7k", Toast.LENGTH_SHORT).show();
+            Log.i("TAG","User is authenticated");
             docRef = db.collection(SHARE_LOCATION_COLLECTION_NAME).document(Objects.requireNonNull(mUser.getEmail()));
             ensureDocumentIsExist(mUser.getEmail());
         }
@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements SpeechRecognition
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {}
                 else initializeAccount();
-            } else Toast.makeText(this, "Failed to retrieve document", Toast.LENGTH_SHORT).show();
+            } else Log.i("TAG","Failed to retreive document");
         });
     }
 
@@ -232,10 +232,10 @@ public class MainActivity extends AppCompatActivity implements SpeechRecognition
                 data.put("locationName", "");
 
                 docRef.set(data)
-                        .addOnSuccessListener(v -> Toast.makeText(this, "Account document created", Toast.LENGTH_SHORT).show())
-                        .addOnFailureListener(v -> Toast.makeText(this, "Failed to create account document", Toast.LENGTH_SHORT).show());
+                        .addOnSuccessListener(v -> Log.i("TAG","Account document created"))
+                        .addOnFailureListener(v -> Log.i("TAG","Failed to create account document"));
             }
-        }).addOnFailureListener(e -> Toast.makeText(this, "Failed to retrieve document", Toast.LENGTH_SHORT).show());
+        }).addOnFailureListener(e -> Log.i("TAG","Failed to retrieve document"));
     }
 
 
@@ -270,10 +270,10 @@ public class MainActivity extends AppCompatActivity implements SpeechRecognition
                                     .addOnSuccessListener(v -> Log.i("TAG","Location sharing history cleared successfully"))
                                     .addOnFailureListener(v -> Log.i("TAG","Failed to clear location sharing history"));
                         } else {
-                            fireToast("No friends found");
+                            fireToast("لا يوجد أصدقاء");
                         }
                     })
-                    .addOnFailureListener(v -> fireToast("Failed to retrieve friends"));
+                    .addOnFailureListener(v -> fireToast("فضل في الوصول لقائمة الأصدقاء"));
         } else {
             Toast.makeText(this, "نرجو التحقق من تسجيل الدخول أولا", Toast.LENGTH_SHORT).show();
         }

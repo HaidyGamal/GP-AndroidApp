@@ -3,7 +3,6 @@ package com.example.publictransportationguidance.tracking;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
-import android.widget.EditText;
 import android.widget.TextView;
 
 public class TextAnimator {
