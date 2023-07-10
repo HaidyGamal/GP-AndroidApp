@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -217,11 +218,17 @@ public class Functions {
         return path.size();
     }
 
+
+//   M Osama: Faster method to calculate estimated time by Google
     public static void calcEstimatedTripsTime(List<List<NearestPaths>> paths, TripsTimeCallback callback) {
 
         /* M Osama: to store the estimated time of each Possible Path */
         int[] globalDurations = new int[paths.size()];
         Arrays.fill(globalDurations, 0);
+
+        ExecutorService executor = Executors.newFixedThreadPool(paths.size());                      /* M Osama: Creating multiple threads to calculate the duration between each two intermediate Nodes */
+
+        List<Future<List<String>>> responses = new ArrayList<>();
 
         for (int pathNumber = 0; pathNumber < paths.size(); pathNumber++) {
             List<NearestPaths> path = getPathByNumber(paths, pathNumber);
@@ -229,32 +236,40 @@ public class Functions {
 
             ArrayList<String> nodes = getPathNodes(path);
             ArrayList<String> means = getPathMeans(path);
-            ArrayList<String> localDurations = new ArrayList<>();
-            ArrayList<Future<Response<EstimatedTime>>> responses = new ArrayList<>();
 
-            ExecutorService executor = Executors.newFixedThreadPool(numberOfIntermediatePaths);     /* M Osama: Creating multiple threads to calculate the duration between each two intermediate Nodes */
+            Callable<List<String>> task = () -> {
+                List<String> localDurations = new ArrayList<>();
 
-            /* M Osama: iteration to calculate the totalTime of each possible Path */
-            for (int nodeNumber = 0; nodeNumber < numberOfIntermediatePaths; nodeNumber++) {
-                int constantNodeNumberForRequest = nodeNumber;
-                Future<Response<EstimatedTime>> apiResponse = executor.submit(() -> RetrofitClient.getInstance(GOOGLE_MAPS_BASE_URL).getApi().getEstimatedTime(nodes.get(constantNodeNumberForRequest), nodes.get(constantNodeNumberForRequest + 1), MODE, means.get(constantNodeNumberForRequest), MAPS_API_KEY).execute());
-                responses.add(apiResponse);
-
-                /* M Osama: summing the time between pathNodes to calculate the Path total time */
-                try {
-                    localDurations.add(getDurationText(responses.get(nodeNumber).get()));       /* M Osama: Getting a response from the multiple responses we runned then Getting duration of moving between two intermediate Nodes */
-                    globalDurations[pathNumber] += extractMinutes(localDurations.get(nodeNumber));        /* M Osama: Summing all subDurations to calculate the totalDuration */
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
+                for (int nodeNumber = 0; nodeNumber < numberOfIntermediatePaths; nodeNumber++) {
+                    int constantNodeNumberForRequest = nodeNumber;
+                    Response<EstimatedTime> response = RetrofitClient.getInstance(GOOGLE_MAPS_BASE_URL)
+                            .getApi().getEstimatedTime(nodes.get(constantNodeNumberForRequest), nodes.get(constantNodeNumberForRequest + 1), MODE, means.get(constantNodeNumberForRequest), MAPS_API_KEY).execute();
+                    localDurations.add(getDurationText(response));                          /* M Osama: Getting a response from the multiple responses we runned then Getting duration of moving between two intermediate Nodes */
                 }
-            }
 
-            executor.shutdown();                        // Shutdown the executor after completing the tasks
+                return localDurations;
+            };
+
+            Future<List<String>> future = executor.submit(task);
+            responses.add(future);
+        }
+
+        executor.shutdown();                                    // Shutdown the executor after completing the tasks
+
+        for (int i = 0; i < responses.size(); i++) {
+            try {
+                List<String> localDurations = responses.get(i).get();
+                for (String duration : localDurations) {
+                    globalDurations[i] += extractMinutes(duration);                     /* M Osama: Summing all subDurations to calculate the totalDuration */
+                }
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
         }
 
         callback.onTripsTimeCalculated(globalDurations);
-
     }
+
 
     /* M Osama: execute any function without the need of buttons */
     public static void execute(ArrowFunction function) {

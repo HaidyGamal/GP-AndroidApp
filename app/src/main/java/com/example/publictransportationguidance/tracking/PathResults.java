@@ -246,7 +246,6 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
             textAnimator.refreshAnimation(stringToBeAnimated,binding.textView);
         });
 
-//        binding.wheel.setOnValueChangedListener((numberPicker, oldValue, newValue) -> updateCostDistanceTime(newValue,paths));
         binding.wheel.setOnScrollListener((numberPicker, scrollState) -> {if (scrollState == SCROLL_STATE_IDLE) updateCostDistanceTime(binding.wheel.getValue(),paths);});
     }
 
