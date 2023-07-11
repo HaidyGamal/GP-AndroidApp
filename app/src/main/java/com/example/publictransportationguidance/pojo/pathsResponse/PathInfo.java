@@ -8,6 +8,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 @Entity(tableName = "Paths")
@@ -16,22 +17,16 @@ public class PathInfo {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
-    @NotNull
     private int defaultPathNumber;
 
-    @NotNull
     private Double distance;
 
-    @NotNull
     private int cost;
 
-    @NotNull
     private int time;
 
-    @NotNull
     private String path;
 
-    @NotNull
     private String detailedPath;
 
     @NotNull
@@ -67,6 +62,12 @@ public class PathInfo {
 
     public Double getDistance() {
         return distance;
+    }
+
+    //Afnan :Approximating distance to only one number after the decimal point
+    public Double getDistance(String pattern) {
+        DecimalFormat distanceFormatted = new DecimalFormat(pattern);             // pattern = "#.#"
+        return Double.valueOf(distanceFormatted.format(distance));
     }
 
     public void setDistance(Double distance) {

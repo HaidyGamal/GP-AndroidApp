@@ -59,6 +59,27 @@ public class GlobalVariables {
     public static final String[] BLIND_MODE_REJECTANCE = {"لا","لأ","ليه","لية"};
     public static final String[] SORTING_CRITERIA_ACCEPTANCE = {"الوقت","وقت","المسافة","مسافة","التكلفة","تكلفة"};
 
+    //Afnan : used in pathResults
+    public static final String[] CHOOSING_PATH_OR_NOT = { "إختيار","اختيار","أختيار","التالي","التالى", "سماع المسار" , "سمع المسار" , "سماع المسر" , "سمع المسر"};
+    public static final String PATH = "الطريق";
+    public static final String ITS_COST = "و تكلفتهُ   ";
+    public static final String ITS_DISTANCE = "و مسافتهُ   ";
+    public static final String ITS_TIME = "و سيستغرِقُ ";
+    public static final String POUND = "جنيهاً  ";
+    public static final String KM = "كيلومتراً  ";
+    public static final String MINUTE = "دقيقةً  ";
+    public static final String LISTEN_TO_PATH = "سماع المسار. ";
+    public static final String NEXT = "التالي. ";
+    public static final String CHOOSE = "إختيار. ";
+    public static final String OR = "أَم.";
+    public static final String DOT = ".";
+    public static final String YOUR_PATH_IS = "مسارك هو. ";
+    public static final String SORRY = "عفوا !";
+    public static final String DO_YOU_WANT = "هل تريد ";
+    public static final String[] TRACKING_OR_NOT ={"نعم","اة","أيوة","ايوة","آة","اوك","تمام","ماشي","لا","لأ","ليه","لية"};
+
+
+
 
     /* M Osama: Firebase collections */
     public static final String FIRESTORE_ADD_NEW_ROUTE_COLLECTION_NAME = "Nodes";

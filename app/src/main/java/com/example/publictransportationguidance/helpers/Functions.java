@@ -43,6 +43,8 @@ public class Functions {
     public static final int LISTEN_TO_SPECIFIED_DESTINATION_NAME = 6666;
     public static final int LISTEN_TO_SORTING_CRITERIA = 5555;
     public static final int LISTEN_TO_CHOSEN_MODE = 4444;
+    public static final int LISTEN_TO_CHOOSING_PATH_OR_NOT =3333; //Afnan: in PathResults for Blind Mode
+    public static final int LISTEN_TO_TRACKING_OR_NOT =2222;      //Afnan: in SelectedPath for Blind Mode
 
     public static String[] listToArray(List<String> list) {
         String[] array = new String[list.size()];
@@ -354,6 +356,15 @@ public class Functions {
         String longitude = splitCoordinates[1].trim();
 
         return new String[] { latitude, longitude };
+    }
+
+    //Afnan: To replace <- in the path with a meaningful word
+    public static String convertMathIntoThoma(String input) {
+        return input.replace(">", "إلى");
+    }
+
+    public static String convertSlashIntoSharta(String input) {
+        return input.replace("/", "شْرطة");
     }
 
 }

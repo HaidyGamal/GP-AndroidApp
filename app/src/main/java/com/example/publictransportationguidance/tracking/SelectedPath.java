@@ -1,9 +1,17 @@
 package com.example.publictransportationguidance.tracking;
 
+import static com.example.publictransportationguidance.blindMode.speechToText.SpeechToTextHelper.convertHaaToTaaMarbuta;
+import static com.example.publictransportationguidance.helpers.Functions.LISTEN_TO_TRACKING_OR_NOT;
+import static com.example.publictransportationguidance.helpers.Functions.convertSlashIntoSharta;
+import static com.example.publictransportationguidance.helpers.Functions.stringIsFound;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.ARABIC;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.BUNDLE_PATH;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.CHOOSING_PATH_OR_NOT;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.INTENT_PATH;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.NAVIGATING_TO_LIVE_LOCATION_REQUEST_CODE;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.SELECTED_PATH;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.SORRY;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.TRACKING_OR_NOT;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -18,24 +26,30 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.publictransportationguidance.R;
+import com.example.publictransportationguidance.blindMode.speechToText.SpeechToTextHelper;
+import com.example.publictransportationguidance.blindMode.textToSpeech.TextToSpeechHelper;
 import com.example.publictransportationguidance.databinding.SelectedPathBinding;
+import com.example.publictransportationguidance.sharedPrefs.SharedPrefs;
 import com.example.publictransportationguidance.tracking.trackingModule.trackingModule.LocationUpdatesService;
 import com.example.publictransportationguidance.tracking.trackingModule.trackingModule.TrackLiveLocation;
 import com.example.publictransportationguidance.tracking.trackingModule.trackingModule.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class SelectedPath extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     SelectedPathBinding binding;
@@ -56,6 +70,10 @@ public class SelectedPath extends AppCompatActivity implements SharedPreferences
 
     // Tracks the bound state of the service.
     private boolean mBound = false;
+
+    /* Afnan: instances for Blind Mode */
+    private SpeechToTextHelper speechToTextHelper;
+    private TextToSpeechHelper textToSpeechHelper;
 
     // Monitors the state of the connection to the service.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -85,6 +103,9 @@ public class SelectedPath extends AppCompatActivity implements SharedPreferences
 
         requestPermissions();
 
+        /* Afnan: initializing Blind Mode */
+        initializeTTSandSTT();
+
         // Check that the user hasn't revoked permissions by going to Settings.
         if (Utils.requestingLocationUpdates(this)) if (!checkPermissions()) requestPermissions();
 
@@ -101,6 +122,10 @@ public class SelectedPath extends AppCompatActivity implements SharedPreferences
         intent = new Intent(SelectedPath.this, TrackLiveLocation.class);
         intent.putExtra(INTENT_PATH,bundle);
 
+        //Afnan: In case of Blind Mode
+        if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1){
+            textToSpeechHelper.speak(convertSlashIntoSharta(String.valueOf(binding.selectedPath.getText()))+"."+"هل تريد تتبع رحلتكْ . نعم أَمْ لا " ,()-> listenToTracking(this));
+        }
     }
 
     @Override
@@ -199,5 +224,38 @@ public class SelectedPath extends AppCompatActivity implements SharedPreferences
         else {}
     }
 
+    /* Afnan: Blind Mode */
+    void initializeTTSandSTT(){
+        textToSpeechHelper = TextToSpeechHelper.getInstance(this,ARABIC);
+        speechToTextHelper = SpeechToTextHelper.getInstance(ARABIC);
+    }
+
+    /* Afnan: Blind Mode */
+    private void listenToTracking(SelectedPath selectedPath) {
+        speechToTextHelper.startSpeechRecognition(selectedPath , LISTEN_TO_TRACKING_OR_NOT);
+    }
+
+    /* Afnan: receiving answer from the user in Blind Mode */
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        speechToTextHelper.onActivityResult(requestCode, resultCode, data);                                         // Pass the onActivityResult event to the SpeechToTextHelper
+        ArrayList<String> speechConvertedToText = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+        switch (requestCode) {
+            case LISTEN_TO_TRACKING_OR_NOT:
+                String trackingResponse = convertHaaToTaaMarbuta(speechConvertedToText.get(0));
+                if (stringIsFound(trackingResponse, TRACKING_OR_NOT)) {
+                    //Afnan: in case of Yes for Tracking
+                    if (trackingResponse.equals(TRACKING_OR_NOT[0]) || trackingResponse.equals(TRACKING_OR_NOT[1]) || trackingResponse.equals(TRACKING_OR_NOT[2]) || trackingResponse.equals(TRACKING_OR_NOT[3]) || trackingResponse.equals(TRACKING_OR_NOT[4]) || trackingResponse.equals(TRACKING_OR_NOT[5]) || trackingResponse.equals(TRACKING_OR_NOT[6]) || trackingResponse.equals(TRACKING_OR_NOT[7])) {
+                        binding.startLiveLocationBtn.performClick();            /* Button startLiveLocation= findViewById(R.id.startLiveLocationBtn);    startLiveLocation.performClick();*/
+                    }
+                    //Afnan: in case of No Tracking
+                    else if (trackingResponse.equals(TRACKING_OR_NOT[8]) || trackingResponse.equals(TRACKING_OR_NOT[9]) || trackingResponse.equals(TRACKING_OR_NOT[10]) || trackingResponse.equals(TRACKING_OR_NOT[11])) {
+                    }
+                }
+                else
+                    textToSpeechHelper.speak(SORRY, () -> listenToTracking(this));
+        }
+    }
 
 }

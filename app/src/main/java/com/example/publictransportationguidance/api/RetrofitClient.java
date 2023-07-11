@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClient {
     public static RetrofitClient instanceForNeo4j =null;
     public static RetrofitClient instanceForGoogleMaps =null;
-    private Api api;
+    private final Api api;
 
     private RetrofitClient(String baseUrl){
         // Increase the timeout duration to 30 seconds.build();

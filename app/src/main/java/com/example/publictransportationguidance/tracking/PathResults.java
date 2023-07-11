@@ -2,22 +2,42 @@ package com.example.publictransportationguidance.tracking;
 
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 import static com.example.publictransportationguidance.api.Api.NEO4J_BASE_URL;
+import static com.example.publictransportationguidance.blindMode.speechToText.SpeechToTextHelper.convertHaaToTaaMarbuta;
+import static com.example.publictransportationguidance.helpers.Functions.LISTEN_TO_CHOOSING_PATH_OR_NOT;
 import static com.example.publictransportationguidance.helpers.Functions.calcEstimatedTripsTime;
 import static com.example.publictransportationguidance.helpers.Functions.checkInternetConnectionToast;
+import static com.example.publictransportationguidance.helpers.Functions.convertMathIntoThoma;
 import static com.example.publictransportationguidance.helpers.Functions.failedToEstimateTime;
 import static com.example.publictransportationguidance.helpers.Functions.noAvailablePathsToast;
 import static com.example.publictransportationguidance.helpers.Functions.sortingByCostToast;
 import static com.example.publictransportationguidance.helpers.Functions.sortingByDistanceToast;
 import static com.example.publictransportationguidance.helpers.Functions.sortingByTimeToast;
+import static com.example.publictransportationguidance.helpers.Functions.stringIsFound;
 import static com.example.publictransportationguidance.helpers.Functions.tryAgainToast;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.ARABIC;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.BUNDLE_PATH;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.CHOOSE;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.CHOOSING_PATH_OR_NOT;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.COST;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.DISTANCE;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.DOT;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.DO_YOU_WANT;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.INTENT_PATH;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.ITS_COST;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.ITS_DISTANCE;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.ITS_TIME;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.KM;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.LISTEN_TO_PATH;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.MINUTE;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.NEXT;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.OR;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.PATH;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.POUND;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.SELECTED_PATH;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.SORRY;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.SORTING_CRITERIA;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.TIME;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.YOUR_PATH_IS;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.selectedPathNumberInWheel;
 import static com.example.publictransportationguidance.helpers.PathsTokenizer.detailedPathToPrint;
 import static com.example.publictransportationguidance.helpers.PathsTokenizer.getPathCost;
@@ -29,11 +49,13 @@ import static com.example.publictransportationguidance.helpers.PathsTokenizer.st
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
@@ -55,6 +77,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -74,6 +97,12 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
     TextAnimator textAnimator;
 
     String stringToBeAnimated="";
+
+
+    private static List<PathInfo> TRANSPORTATION =null ; //Afnan: To use it in Blind Mode in Choosing a path
+    private static String[] HeardTransportation;
+    int wheelValue=0;           //Afnan: To use it in Blind Mode in Choosing a path
+    String pathNumber;          //Afnan: To use it in Blind Mode in Choosing a path
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,8 +133,13 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
 
         textAnimator=new TextAnimator();
 
+
+        /** M Osama: for testing the blindMode here because of the googleAPI key problem */
+        SharedPrefs.write("ON_BLIND_MODE",1);
+        /** TO BE DELETED */
+
         if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1){
-            textToSpeechHelper.speak(getString(R.string.SearchingForAvaliablePaths),()-> listenToNothing());
+            textToSpeechHelper.speak(getString(R.string.SearchingForAvaliablePaths), this::listenToNothing);
         }
         getNearestPaths(LOCATION,DESTINATION,this);
 
@@ -115,7 +149,7 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
 
     public void getNearestPaths(String location, String destination, TripsTimeCallback callback) {
 
-        RetrofitClient.getInstance(NEO4J_BASE_URL).getApi().getNearestPaths(location,destination).enqueue(new Callback<List<List<NearestPaths>>>() {
+        Objects.requireNonNull(RetrofitClient.getInstance(NEO4J_BASE_URL)).getApi().getNearestPaths(location,destination).enqueue(new Callback<List<List<NearestPaths>>>() {
             @Override
             public void onResponse(@NonNull Call<List<List<NearestPaths>>> call, @NonNull Response<List<List<NearestPaths>>> response) {
                 List<List<NearestPaths>> paths = response.body();
@@ -217,6 +251,15 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
         binding.wheel.setTextSize(R.dimen.un_selected_size);
         binding.wheel.setSelectedTextColor(ContextCompat.getColor(this,R.color.transparent));
         stringToBeAnimated=transportations[0];                          /* M Osama: set inital value to be animated as the value at index0 */
+
+        /*Afnan: Blind Mode*/
+        if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1) {
+            binding.wheel.setValue(wheelValue);
+            HeardTransportation= transportations;
+            readPathsForBlinds();
+        }
+        else binding.wheel.setValue(0); /* M Osama: index0 content represent best result; to be edited after building database & mapping */
+
     }
 
     public void wheelOnClickListener(List<PathInfo> paths){
@@ -285,6 +328,9 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
         List<PathInfo> paths = dao.getSortedPathsASC(sortingCriteria);
         dao.clearAllPaths();
         dao.insertPaths(paths);
+
+        TRANSPORTATION=paths; // Afnan : Blind Mode to use in Choosing a path
+
         return paths;
     }
 
@@ -297,7 +343,7 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
         Arrays.fill(temp, getString(R.string.NoPathsFound));
 
         if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1){
-            textToSpeechHelper.speak(getString(R.string.NoPathsFound),()-> listenToNothing());
+            textToSpeechHelper.speak(getString(R.string.NoPathsFound), this::listenToNothing);
         }
 
         binding.wheel.setDisplayedValues(temp);
@@ -309,5 +355,82 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
     }
 
     private void listenToNothing(){}
+
+
+    //Afnan : Blind Mode Choosing a path
+    public void readPathsForBlinds(){
+        updateCostDistanceTime(binding.wheel.getValue(), TRANSPORTATION);
+        pathNumber = Integer.toString(wheelValue + 1);
+
+        String pathSentence = PATH + pathNumber;
+        String costSentence = ITS_COST + binding.cost.getText() + POUND;
+        String distanceSentence = ITS_DISTANCE + binding.distance.getText() + KM;
+        String timeSentence = ITS_TIME + binding.time.getText() + MINUTE;
+
+        switch (SORTING_CRITERIA) {
+            case COST:      textToSpeechHelper.speak(pathSentence + costSentence + distanceSentence + timeSentence + DOT + DO_YOU_WANT + LISTEN_TO_PATH + OR + NEXT + OR + CHOOSE, () -> listenToChangingPath(this));     break;
+            case DISTANCE:  textToSpeechHelper.speak(pathSentence + distanceSentence + costSentence + timeSentence + DOT + DO_YOU_WANT + LISTEN_TO_PATH + OR + NEXT + OR + CHOOSE, () -> listenToChangingPath(this));     break;
+            case TIME:      textToSpeechHelper.speak(pathSentence + timeSentence + costSentence + distanceSentence + DOT + DO_YOU_WANT + LISTEN_TO_PATH + OR + NEXT + OR + CHOOSE, () -> listenToChangingPath(this));     break;
+            default:        break;
+        }
+    }
+
+    @Override
+    /* Afnan: receiving answer from the user in Blind Mode */
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        speechToTextHelper.onActivityResult(requestCode, resultCode, data);                                         // Pass the onActivityResult event to the SpeechToTextHelper
+        ArrayList<String> speechConvertedToText = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+        switch (requestCode) {
+            case LISTEN_TO_CHOOSING_PATH_OR_NOT:
+                String ChooseOrNot = convertHaaToTaaMarbuta(speechConvertedToText.get(0));
+                if(stringIsFound(ChooseOrNot,CHOOSING_PATH_OR_NOT)) {
+                    if (ChooseOrNot.equals(CHOOSING_PATH_OR_NOT[0]) || ChooseOrNot.equals(CHOOSING_PATH_OR_NOT[1]) || ChooseOrNot.equals(CHOOSING_PATH_OR_NOT[2])) ChoosingThePath(TRANSPORTATION);
+                    else if(ChooseOrNot.equals(CHOOSING_PATH_OR_NOT[3]) || ChooseOrNot.equals(CHOOSING_PATH_OR_NOT[4])) {
+                        wheelValue = (wheelValue + 1) % binding.wheel.getMaxValue();
+                        binding.wheel.setValue(wheelValue);
+                        pathNumber = Integer.toString(wheelValue + 1);
+
+                        updateCostDistanceTime(binding.wheel.getValue(), TRANSPORTATION);
+                        textAnimator.refreshAnimation(TRANSPORTATION.get(binding.wheel.getValue()).getPath(),binding.textView);
+
+                        String pathSentence = PATH + pathNumber;
+                        String costSentence = ITS_COST + binding.cost.getText() + POUND;
+                        String distanceSentence = ITS_DISTANCE + binding.distance.getText() + KM;
+                        String timeSentence = ITS_TIME + binding.time.getText() + MINUTE;
+
+                        switch (SORTING_CRITERIA) {
+                            case COST:      textToSpeechHelper.speak(pathSentence + costSentence + distanceSentence + timeSentence + DOT + DO_YOU_WANT + LISTEN_TO_PATH + OR + NEXT + OR + CHOOSE, () -> listenToChangingPath(this));       break;
+                            case DISTANCE:  textToSpeechHelper.speak(pathSentence + distanceSentence + costSentence + timeSentence + DOT + DO_YOU_WANT + LISTEN_TO_PATH + OR + NEXT + OR + CHOOSE, () -> listenToChangingPath(this));        break;
+                            case TIME:      textToSpeechHelper.speak(pathSentence + timeSentence + costSentence + distanceSentence + DOT + DO_YOU_WANT + LISTEN_TO_PATH + OR + NEXT + OR + CHOOSE, () -> listenToChangingPath(this));        break;
+                            default:        break;
+                        }
+                    }
+                    else if(ChooseOrNot.equals(CHOOSING_PATH_OR_NOT[5])|| ChooseOrNot.equals(CHOOSING_PATH_OR_NOT[6])|| ChooseOrNot.equals(CHOOSING_PATH_OR_NOT[7])|| ChooseOrNot.equals(CHOOSING_PATH_OR_NOT[8])) {
+                        textToSpeechHelper.speak(YOUR_PATH_IS + convertMathIntoThoma(HeardTransportation[binding.wheel.getValue()])+DOT+CHOOSE+OR+NEXT, () -> listenToChangingPath(this));
+                    }
+                }
+                else textToSpeechHelper.speak(SORRY, () -> listenToChangingPath(this));
+
+        }
+    }
+
+    public void ChoosingThePath(List<PathInfo> paths){
+        Intent selectedPathIntent = new Intent(PathResults.this, SelectedPath.class);
+        Bundle bundle = new Bundle();
+
+        selectedPathNumberInWheel=binding.wheel.getValue();
+
+        bundle.putSerializable(BUNDLE_PATH,paths.get(selectedPathNumberInWheel).getCoordinates());
+        selectedPathIntent.putExtra(INTENT_PATH,bundle);
+        selectedPathIntent.putExtra(SELECTED_PATH,paths.get(selectedPathNumberInWheel).getDetailedPath());
+
+        startActivity(selectedPathIntent);
+    }
+
+    private void listenToChangingPath(PathResults pathResults) {
+        speechToTextHelper.startSpeechRecognition(pathResults,LISTEN_TO_CHOOSING_PATH_OR_NOT);
+    }
 
 }
