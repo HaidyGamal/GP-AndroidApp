@@ -6,7 +6,6 @@ import static com.example.publictransportationguidance.helpers.Functions.convert
 import static com.example.publictransportationguidance.helpers.Functions.stringIsFound;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.ARABIC;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.BUNDLE_PATH;
-import static com.example.publictransportationguidance.helpers.GlobalVariables.CHOOSING_PATH_OR_NOT;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.INTENT_PATH;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.NAVIGATING_TO_LIVE_LOCATION_REQUEST_CODE;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.SELECTED_PATH;
@@ -45,7 +44,7 @@ import com.example.publictransportationguidance.databinding.SelectedPathBinding;
 import com.example.publictransportationguidance.sharedPrefs.SharedPrefs;
 import com.example.publictransportationguidance.tracking.trackingModule.trackingModule.LocationUpdatesService;
 import com.example.publictransportationguidance.tracking.trackingModule.trackingModule.TrackLiveLocation;
-import com.example.publictransportationguidance.tracking.trackingModule.trackingModule.Utils;
+import com.example.publictransportationguidance.tracking.trackingModule.util.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.Serializable;
@@ -208,15 +207,14 @@ public class SelectedPath extends AppCompatActivity implements SharedPreferences
         @Override
         public void onReceive(Context context, Intent intent) {
             Location location = intent.getParcelableExtra(LocationUpdatesService.EXTRA_LOCATION);
-            if (location != null) Toast.makeText(SelectedPath.this, Utils.getLocationText(location), Toast.LENGTH_SHORT).show();
+            if (location != null) Log.i("TAG","From (SelectedPath.java)"+Utils.getLocationText(location));
         }
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         // Update the buttons state depending on whether location updates are being requested.
-        if (s.equals(Utils.KEY_REQUESTING_LOCATION_UPDATES)) {setButtonsState(sharedPreferences.getBoolean(Utils.KEY_REQUESTING_LOCATION_UPDATES, false));
-        }
+        if (s.equals(Utils.KEY_REQUESTING_LOCATION_UPDATES)) {setButtonsState(sharedPreferences.getBoolean(Utils.KEY_REQUESTING_LOCATION_UPDATES, false));}
     }
 
     private void setButtonsState(boolean requestingLocationUpdates) {
@@ -253,8 +251,7 @@ public class SelectedPath extends AppCompatActivity implements SharedPreferences
                     else if (trackingResponse.equals(TRACKING_OR_NOT[8]) || trackingResponse.equals(TRACKING_OR_NOT[9]) || trackingResponse.equals(TRACKING_OR_NOT[10]) || trackingResponse.equals(TRACKING_OR_NOT[11])) {
                     }
                 }
-                else
-                    textToSpeechHelper.speak(SORRY, () -> listenToTracking(this));
+                else textToSpeechHelper.speak(SORRY, () -> listenToTracking(this));
         }
     }
 

@@ -1,4 +1,4 @@
-package com.example.publictransportationguidance.tracking;
+package com.example.publictransportationguidance.tracking.trackingModule.trackingHelpers;
 
 
 public interface TripsTimeCallback {

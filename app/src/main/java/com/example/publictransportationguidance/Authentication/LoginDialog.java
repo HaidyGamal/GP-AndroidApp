@@ -115,16 +115,14 @@ public class LoginDialog extends DialogFragment {
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
-                if (document.exists()) {}
-                else initializeAccount();
+                if(!document.exists()) initializeAccount();
             } else Log.i("TAG","Failed to retrieve document");
         });
     }
 
     private void initializeAccount() {
         docRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {}
-            else {
+            if(!documentSnapshot.exists()){
                 Map<String, Object> data = new HashMap<>();                                         // Create a new document with the user's email as the document ID
 
                 data.put("friends", new ArrayList<Map<String,Object>>());

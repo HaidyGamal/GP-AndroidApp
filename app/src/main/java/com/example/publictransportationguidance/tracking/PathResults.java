@@ -52,7 +52,6 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -71,6 +70,8 @@ import com.example.publictransportationguidance.room.PathsDao;
 import com.example.publictransportationguidance.pojo.pathsResponse.NearestPaths;
 import com.example.publictransportationguidance.databinding.ActivityPathResultsBinding;
 import com.example.publictransportationguidance.sharedPrefs.SharedPrefs;
+import com.example.publictransportationguidance.tracking.trackingModule.trackingHelpers.TextAnimator;
+import com.example.publictransportationguidance.tracking.trackingModule.trackingHelpers.TripsTimeCallback;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -135,7 +136,7 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
 
 
         /** M Osama: for testing the blindMode here because of the googleAPI key problem */
-        SharedPrefs.write("ON_BLIND_MODE",1);
+//        SharedPrefs.write("ON_BLIND_MODE",1);
         /** TO BE DELETED */
 
         if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1){
@@ -277,7 +278,8 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
 
             selectedPathIntent.putExtra(SELECTED_PATH,paths.get(selectedPathNumberInWheel).getDetailedPath());               /* M Osama: pass Path details to print them on screen */
 
-            Toast.makeText(this, paths.get(selectedPathNumberInWheel).getPath(), Toast.LENGTH_SHORT).show();
+            Log.i("TAG",paths.get(selectedPathNumberInWheel).getPath());                                                /* M Osama: for debugging only */
+
             startActivity(selectedPathIntent);
         });
     }

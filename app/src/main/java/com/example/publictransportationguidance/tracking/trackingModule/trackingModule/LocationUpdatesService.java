@@ -30,6 +30,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.publictransportationguidance.R;
 import com.example.publictransportationguidance.tracking.SelectedPath;
+import com.example.publictransportationguidance.tracking.trackingModule.util.Utils;
 import com.example.publictransportationguidance.tracking.trackingModule.util.logic.MapUtils;
 import com.example.publictransportationguidance.tracking.trackingModule.util.logic.PathUtils;
 import com.example.publictransportationguidance.tracking.trackingModule.util.ui.CameraUtils;
@@ -240,14 +241,14 @@ public class LocationUpdatesService extends Service {
 
         LatLng currentLocation = new LatLng(location.getLatitude(),location.getLongitude());
 
-        Toast.makeText(getApplicationContext(), currentLocation.latitude+","+currentLocation.longitude, Toast.LENGTH_SHORT).show();
+        Log.i("TAG","From (locationUpdatesService.java)"+currentLocation.latitude+","+currentLocation.longitude);
 
         updateUserSharedLocation(currentLocation.latitude+"",currentLocation.longitude+"",getLocationName(this,currentLocation.latitude,currentLocation.longitude));
 
         TrackLiveLocation.listOfActualPathNodes.add(currentLocation);
         MapUtils.moveCar(googleMap,getApplicationContext(), currentLocation);
         CameraUtils.moveCamera(googleMap,currentLocation);
-        PathUtils.showActualPath(googleMap, TrackLiveLocation.listOfActualPathNodes, Color.GREEN);
+        PathUtils.showActualPath(googleMap, TrackLiveLocation.listOfActualPathNodes, Color.BLUE);
 
     }
 

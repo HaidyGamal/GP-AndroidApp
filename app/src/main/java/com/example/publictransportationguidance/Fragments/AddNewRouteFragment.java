@@ -411,7 +411,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
     public void autoCompleteOnItemClick(AutoCompleteTextView acTextView, int stop){
         acTextView.setOnItemClickListener((parent, view, position, id) -> {             /* M Osama: Only For debugging */
             String selectedItem = getSelectedItem(parent,position);
-            Toast.makeText(getContext(), selectedItem, Toast.LENGTH_SHORT).show();                                              /* M Osama: Only for checking the autoCompleteOnClick is working */
+            Log.i("TAG","From (AddNewRoute) "+selectedItem);                   /* M Osama: Only for checking the autoCompleteOnClick is working */
             getPlaceCoordinatesUsingID(stopsIDsArray[getDataSourceIndex(stopsArray,selectedItem)],stop);
             if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1)   acTextView.setText(getSubstringBeforeFirstComma(selectedItem));
             else                                                        acTextView.setText(deleteFromSequence(selectedItem," |"));

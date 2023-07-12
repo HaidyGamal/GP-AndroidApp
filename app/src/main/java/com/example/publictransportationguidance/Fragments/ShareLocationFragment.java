@@ -104,11 +104,11 @@ public class ShareLocationFragment extends Fragment implements OnFriendshipCheck
 
                 if (!data.isEmpty()) {
                     docRef.update(data)
-                            .addOnSuccessListener(v -> Toast.makeText(getContext(), "Account fields initialized", Toast.LENGTH_SHORT).show())
-                            .addOnFailureListener(v -> Toast.makeText(getContext(), "Failed to initialize account fields", Toast.LENGTH_SHORT).show());
+                            .addOnSuccessListener(v -> Log.i("TAG","From(ShareLocationFragment)"+"Account fields initialized"))
+                            .addOnFailureListener(v -> Log.i("TAG","From(ShareLocationFragment)"+"Failed to initialize account fields"));
                 }
             }
-        }).addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to retrieve document", Toast.LENGTH_SHORT).show());
+        }).addOnFailureListener(e -> Log.i("TAG","From(ShareLocationFragment)"+"Failed to retrieve document"));
     }
 
     /* M Osama: can be deleted if we used user's collection instread of FriendShip collection */
@@ -119,7 +119,7 @@ public class ShareLocationFragment extends Fragment implements OnFriendshipCheck
                 DocumentSnapshot document = task.getResult();
                 if (document.exists());
                 else initializeAccount();
-            } else Toast.makeText(getContext(), "Failed to retrieve document", Toast.LENGTH_SHORT).show();
+            } else Log.i("TAG","From(SharedLocationFragment)"+"Failed to retrieve document");
         });
     }
 
@@ -130,7 +130,7 @@ public class ShareLocationFragment extends Fragment implements OnFriendshipCheck
                     .document(friendEmail)
                     .addSnapshotListener((documentSnapshot, error) -> {
                         if (error != null) {
-                            Toast.makeText(getContext(), "Failed to retrieve document data", Toast.LENGTH_SHORT).show();
+                            Log.i("TAG","From(SharedLocationFragment)"+"Failed to retrieve document data");
                             return;
                         }
 
@@ -143,9 +143,9 @@ public class ShareLocationFragment extends Fragment implements OnFriendshipCheck
                             binding.locationName.setText(locationName);
 
                             // Handle the updated location data here
-                        } else Toast.makeText(getContext(), "Document does not exist", Toast.LENGTH_SHORT).show();
+                        } else Log.i("TAG","From(SharedLocationFragment)"+"Document Doesn't Exist");
                     });
-        } else Toast.makeText(getContext(), "Please Log In first", Toast.LENGTH_SHORT).show();
+        } else fireToast(getString(R.string.PleaseLogInFirst));
 
     }
 
@@ -181,9 +181,8 @@ public class ShareLocationFragment extends Fragment implements OnFriendshipCheck
                         }
                     })
                     .addOnFailureListener(v -> fireToast("Failed to add friend"));
-        } else {
-            Toast.makeText(getContext(), "Log In first", Toast.LENGTH_SHORT).show();
-        }
+        } else fireToast(getString(R.string.PleaseLogInFirst));
+
     }
 
     /* M Osama: delete a friend using his email*/
@@ -213,9 +212,8 @@ public class ShareLocationFragment extends Fragment implements OnFriendshipCheck
                         }
                     })
                     .addOnFailureListener(v -> fireToast("Failed to delete friend"));
-        } else {
-            Toast.makeText(getContext(), "Log In first", Toast.LENGTH_SHORT).show();
-        }
+        } else fireToast(getString(R.string.PleaseLogInFirst));
+
     }
 
     private void editFriend(String friendEmail,String newValue) {
@@ -240,7 +238,7 @@ public class ShareLocationFragment extends Fragment implements OnFriendshipCheck
                 } else fireToast("Friend not found");
             })
                     .addOnFailureListener(v -> fireToast("Failed to update friend"));
-        } else Toast.makeText(getContext(), "Log In first", Toast.LENGTH_SHORT).show();
+        } else fireToast(getString(R.string.PleaseLogInFirst));
     }
 
     /* M Osama: check the existence of friendShip between two persons */
@@ -357,9 +355,8 @@ public class ShareLocationFragment extends Fragment implements OnFriendshipCheck
                     }
                 }
             });
-        } else {
-            Toast.makeText(getContext(), "Log In first", Toast.LENGTH_SHORT).show();
-        }
+        } else fireToast(getString(R.string.PleaseLogInFirst));
+
     }
 
 
@@ -399,7 +396,7 @@ public class ShareLocationFragment extends Fragment implements OnFriendshipCheck
                     }
                 }
             });
-        } else Toast.makeText(getContext(), "Log In first", Toast.LENGTH_SHORT).show();
+        } else fireToast(getString(R.string.PleaseLogInFirst));
 
     }
 
@@ -450,12 +447,12 @@ public class ShareLocationFragment extends Fragment implements OnFriendshipCheck
 
                         if (friendFound) {
                             editDocRef.update("friends", friends)
-                                    .addOnSuccessListener(v -> fireToast("Friend updated successfully"))
-                                    .addOnFailureListener(v -> fireToast("Failed to update friend"));
-                        } else fireToast("Friend not found");
+                                    .addOnSuccessListener(v -> fireToast("تم تحديث قائمة الأصدقاء بنجاح"))
+                                    .addOnFailureListener(v -> fireToast("فشلنا في تحديث قائمة الأصدقاء"));
+                        } else fireToast("لم نجد هذا الصديق");
                     })
-                    .addOnFailureListener(v -> fireToast("Failed to update friend"));
-        } else Toast.makeText(getContext(), "Log In first", Toast.LENGTH_SHORT).show();
+                    .addOnFailureListener(v -> fireToast("فشلنا في تحديث قائمة الأصدقاء"));
+        } else fireToast(getString(R.string.PleaseLogInFirst));
     }
 
     private void editMe(String friendEmail,String newValue) {
@@ -476,12 +473,12 @@ public class ShareLocationFragment extends Fragment implements OnFriendshipCheck
 
                         if (friendFound) {
                             editDocRef.update("friends", friends)
-                                    .addOnSuccessListener(v -> fireToast("Friend updated successfully"))
-                                    .addOnFailureListener(v -> fireToast("Failed to update friend"));
-                        } else fireToast("Friend not found");
+                                    .addOnSuccessListener(v -> fireToast("تم تحديث قائمة الأصدقاء بنجاح"))
+                                    .addOnFailureListener(v -> fireToast("فشلنا في تحديث قائمة الأصدقاء"));
+                        } else fireToast("لم نجد هذا الصديق");
                     })
-                    .addOnFailureListener(v -> fireToast("Failed to update friend"));
-        } else Toast.makeText(getContext(), "Log In first", Toast.LENGTH_SHORT).show();
+                    .addOnFailureListener(v -> fireToast("فشلنا في تحديث قائمة الأصدقاء"));
+        } else fireToast(getString(R.string.PleaseLogInFirst));
     }
 
 }

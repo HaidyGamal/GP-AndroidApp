@@ -16,7 +16,7 @@ public class PathsTokenizer {
     public static int getPathCost(List<List<NearestPaths>> listOfList, int pathNumber){
         if(pathNumber<getNumberOfPaths(listOfList)){
             List<NearestPaths> path=listOfList.get(pathNumber);
-            Integer pathSize = path.size();
+            int pathSize = path.size();
             return path.get(pathSize-1).getTotalCost();
         }
         else return -1;
@@ -24,7 +24,7 @@ public class PathsTokenizer {
     public static Double getPathDistance(List<List<NearestPaths>> listOfList, int pathNumber){
         if(pathNumber<getNumberOfPaths(listOfList)){
             List<NearestPaths> path=listOfList.get(pathNumber);
-            Integer pathSize = path.size();
+            int pathSize = path.size();
             return path.get(pathSize-1).getTotalDistance();
         }
         else return -1.0;
@@ -46,7 +46,7 @@ public class PathsTokenizer {
     public static List<String> getPathMeans(List<List<NearestPaths>> listOfList, int pathNumber){
         if(pathNumber<getNumberOfPaths(listOfList)){
             List<String> pathMeans=new ArrayList<>();
-            String mean="";
+            String mean;
             List<NearestPaths> path = getPath(listOfList,pathNumber);
             for (int stopNum=0;stopNum<path.size();stopNum++){
                 mean=path.get(stopNum).getTransportationType();
@@ -64,7 +64,7 @@ public class PathsTokenizer {
     public static List<String> getPathMeansDetailed(List<List<NearestPaths>> listOfList, int pathNumber){
         if(pathNumber<getNumberOfPaths(listOfList)){
             List<String> pathMeans=new ArrayList<>();
-            String mean="";
+            String mean;
             List<NearestPaths> path = getPath(listOfList,pathNumber);
             for (int stopNum=0;stopNum<path.size();stopNum++){
                 mean=path.get(stopNum).getTransportationType();
@@ -90,8 +90,8 @@ public class PathsTokenizer {
         int x=1;
         for (String s: str){
             detailedPath+=(s+" ");
-            if(x%2==0){detailedPath+=" ثم من "; x++;}
-            else{x++;}
+            if(x%2==0){ detailedPath+=" ثم من ";}
+            x++;
         }
 
         String path = detailedPath.substring(0,detailedPath.length()-1);
@@ -115,7 +115,7 @@ public class PathsTokenizer {
 
         int numberOfPaths= PathsTokenizer.getNumberOfPaths(listOfList);
         for(int pathNum=0;pathNum<numberOfPaths;pathNum++){
-            tempPath=new ArrayList<String>();
+            tempPath= new ArrayList<>();
             List<NearestPaths> path= listOfList.get(pathNum);
             int numberOfPathStops= PathsTokenizer.getNumberOfPathStops(path);
 
@@ -137,9 +137,7 @@ public class PathsTokenizer {
 
         if (lastIndex == -1) return inputString;  // oldSubstring not found in inputString
 
-        String result = inputString.substring(0, lastIndex) + newSubstring + inputString.substring(lastIndex + oldSubstring.length());
-
-        return result;
+        return inputString.substring(0, lastIndex) + newSubstring + inputString.substring(lastIndex + oldSubstring.length());
     }
 
     public static List<String> stopsAndMeans(List<List<NearestPaths>> listOfList , int pathNumber){
@@ -150,8 +148,7 @@ public class PathsTokenizer {
         String prevMean="";
 
         for(int temp=0;temp<size-1;temp++){
-            if(means.get(temp).equals(prevMean));
-            else{ stopsAndMeans.add(stops.get(temp)); stopsAndMeans.add(means.get(temp));}
+            if(!means.get(temp).equals(prevMean)){ stopsAndMeans.add(stops.get(temp)); stopsAndMeans.add(means.get(temp)); }
             prevMean=means.get(temp);
         }
         stopsAndMeans.add(stops.get(size-1));

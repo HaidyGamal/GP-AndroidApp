@@ -1,7 +1,6 @@
 package com.example.publictransportationguidance.room;
 
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
@@ -17,9 +16,6 @@ public interface ReviewDao {
 
     @Update
     void update(Review review);
-
-//    @Delete
-//    void delete(Review review);
 
     @Query("SELECT * FROM Reviews")
     List<Review> getAllReviews();

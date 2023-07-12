@@ -30,7 +30,7 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
-import com.example.publictransportationguidance.tracking.OnPlaceResponseListener;
+import com.example.publictransportationguidance.tracking.trackingModule.trackingHelpers.OnPlaceResponseListener;
 import com.example.publictransportationguidance.blindMode.speechToText.SpeechToTextHelper;
 import com.example.publictransportationguidance.blindMode.textToSpeech.TextToSpeechHelper;
 import com.example.publictransportationguidance.googleMap.MapActivity;
@@ -128,7 +128,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
 
         binding.searchBtn.setOnClickListener(v -> {
 
-            if(binding.tvLocation.getText()+""!="" && binding.tvDestination.getText()+""!="")  {
+            if(!(binding.tvLocation.getText() + "").equals("") && !(binding.tvDestination.getText() + "").equals(""))  {
                 if(pointer!=0)      searchForPaths(locationLats,destinationLats,pointer);
                 else                Toast.makeText(getContext(),"اختر طريقة للترتيب حسب رغبتك", Toast.LENGTH_SHORT).show(); }
             else  Toast.makeText(getContext(),R.string.AutoCompleteTextViewWarning, Toast.LENGTH_SHORT).show();
@@ -152,7 +152,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
                     } else Log.d("TAG", "No geocoding results found");
 
                 } catch (Exception e) {
-                    Log.e("TAG", "Geocoding request failed: " + e.toString());
+                    Log.e("TAG", "Geocoding request failed: " + e);
                 }
                 return placeFullName;
             }
@@ -221,7 +221,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     public void autoCompleteOnItemClick(AutoCompleteTextView acTextView,int stop){
         acTextView.setOnItemClickListener((parent, view, position, id) -> {             /* M Osama: Only For debugging */
             String selectedItem = getSelectedItem(parent,position);
-            Toast.makeText(getContext(), selectedItem, Toast.LENGTH_SHORT).show();                                              /* M Osama: Only for checking the autoCompleteOnClick is working */
+            Log.i("TAG","From(HomeFragment)"+selectedItem);             /* M Osama: Only for checking the autoCompleteOnClick is working */
             getPlaceCoordinatesUsingID(stopsIDsArray[getDataSourceIndex(stopsArray,selectedItem)],stop);
             if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1)   acTextView.setText(getSubstringBeforeFirstComma(selectedItem));
             else                                                        acTextView.setText(deleteFromSequence(selectedItem," |"));
@@ -361,7 +361,6 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals("ON_BLIND_MODE")) {
             if (SharedPrefs.readMap(key,0) == 1) execute(() -> textToSpeechHelper.speak(getString(R.string.WhatsYourLocation), () -> listenToRawLocationName(this)));
-            else;
         }
     }
 

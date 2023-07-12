@@ -2,11 +2,11 @@ package com.example.publictransportationguidance.tracking.trackingModule.reviews
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
@@ -36,6 +36,12 @@ class DislikeDialogFragment : DialogFragment() {
         pathToDislikeSpinner = dialogView.findViewById(R.id.path_to_dislike)
         reasonOfDislike = dialogView.findViewById(R.id.reasonOfDislike)
 
+        val okButton:Button = dialogView.findViewById(R.id.ok)
+        val noButton:Button = dialogView.findViewById(R.id.no)
+
+        val titleView = inflater.inflate(R.layout.dislike_dialog_title, null)
+        builder.setCustomTitle(titleView)
+
         SharedPrefs.init(requireContext())
         val sortingCriteria = SharedPrefs.readMap("CHOSEN_CRITERIA", GlobalVariables.SORTING_CRITERIA)
         val chosenPathNumber = SharedPrefs.readMap("CHOSEN_PATH_NUMBER", 0)
@@ -51,9 +57,10 @@ class DislikeDialogFragment : DialogFragment() {
         var review:Review
         var exists:Int
 
+//        reviewDao.clearTable()
 
-        var subPaths= ArrayList<String>()
-        var path =""
+        val subPaths= ArrayList<String>()
+        var path :String
         for (i in 0 until (stopsAndMeans.size - 2) step 2) {
             path = "${stopsAndMeans[i]}->${stopsAndMeans[i+1]}->${stopsAndMeans[i+2]}"
             subPaths.add(path)
@@ -61,9 +68,9 @@ class DislikeDialogFragment : DialogFragment() {
 
         var numberOfPathToReview:Int
         var base:Int
-        builder.setView(dialogView)
-            .setTitle("ما الذي لم يعجبك")
-            .setPositiveButton("تم") { _: DialogInterface?, _: Int ->
+        builder.setView(dialogView).setCustomTitle(titleView)
+
+            okButton.setOnClickListener {
                 numberOfPathToReview=pathToDislikeSpinner.selectedItemPosition
                 base=2*numberOfPathToReview
                 if(reasonOfDislike.selectedItemPosition==0) {
@@ -84,12 +91,12 @@ class DislikeDialogFragment : DialogFragment() {
                         onDislikeBecauseUnFoundPath(stopsAndMeans[base], stopsAndMeans[base+2], stopsAndMeans[base+1])
                     }
                 }
-
+                dismiss()
             }
-            .setNegativeButton("الغاء") { _: DialogInterface?, _: Int ->
+            noButton.setOnClickListener {
                 Toast.makeText(context, "تم العودة بنجاح", Toast.LENGTH_SHORT).show()
+                dismiss()
             }
-
 
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, subPaths)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -128,18 +135,6 @@ class DislikeDialogFragment : DialogFragment() {
             .addOnFailureListener { Log.i("TAG","De7k") }
     }
 
-    private fun decerementFieldInReviews(reviewField: String,startLatLng: String,endLatLng: String,mean: String) {
-        val documentId = "$startLatLng|$endLatLng|$mean"
-
-        val db = FirebaseFirestore.getInstance()
-
-        val reviewRef: DocumentReference = db.collection("Reviews").document(documentId)
-
-        reviewRef.update(reviewField, FieldValue.increment(-1))
-            .addOnSuccessListener { Log.i("TAG","Done") }
-            .addOnFailureListener { Log.i("TAG","De7k") }
-    }
-
     private fun checkDocumentExistence(documentId: String, callback: (Boolean) -> Unit) {
         val db = FirebaseFirestore.getInstance()
 
@@ -174,8 +169,7 @@ class DislikeDialogFragment : DialogFragment() {
     }
 
     private fun showSnackbar(view: View?, message: String) {
-        view?.let {
-            Snackbar.make(it, message, Snackbar.LENGTH_LONG).show()
-        }
+        view?.let { Snackbar.make(it, message, Snackbar.LENGTH_LONG).show() }
     }
+
 }

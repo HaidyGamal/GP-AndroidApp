@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity implements SpeechRecognition
                     })
                     .addOnFailureListener(v -> fireToast("فضل في الوصول لقائمة الأصدقاء"));
         } else {
-            Toast.makeText(this, "نرجو التحقق من تسجيل الدخول أولا", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.PleaseLogInFirst), Toast.LENGTH_SHORT).show();
         }
     }
 

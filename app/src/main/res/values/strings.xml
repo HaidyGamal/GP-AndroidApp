@@ -105,7 +105,7 @@
     <string name="settings">الإعدادات</string>
     <string name="ok">OK</string>
     <string name="request_location_updates">Request location updates</string>
-    <string name="remove_location_updates">Remove location updates</string>
+    <string name="remove_location_updates">الغاء تحديثات المكان</string>
 
     <string name="location_updated">Location Updated: %1$s</string>
 
@@ -149,6 +149,9 @@
 
     <string name="ConnectionName">اسم الخط</string>
     <string name="OptionalPathCost">اختيارى</string>
+    <string name="acceptReview">تم</string>
+    <string name="rejectReview">الغاء</string>
+    <string name="PleaseLogInFirst">نرجو تسجيل الدخول أولا</string>
 
 
 </resources>

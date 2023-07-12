@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class SharedPrefs {
     private static SharedPreferences sharedPrefs = null;
-    private static String SHARED_PREFS_NAME = "TawsilaSharedPrefs"; /* xml file name */
+    private static final String SHARED_PREFS_NAME = "TawsilaSharedPrefs"; /* xml file name */
     private static SharedPreferences.Editor prefsEditor;
     private static SharedPreferences.OnSharedPreferenceChangeListener prefsListener;
 

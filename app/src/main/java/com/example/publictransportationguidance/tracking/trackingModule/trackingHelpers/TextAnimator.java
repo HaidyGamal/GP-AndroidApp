@@ -1,4 +1,4 @@
-package com.example.publictransportationguidance.tracking;
+package com.example.publictransportationguidance.tracking.trackingModule.trackingHelpers;
 
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;

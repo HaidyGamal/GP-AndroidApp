@@ -23,8 +23,8 @@ object MapUtils {
 
     /* M Osama: get the car image after adjusting it to fit screen */
     fun getCarBitmap(context: Context): Bitmap {
-        val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.ic_car)
-        return Bitmap.createScaledBitmap(bitmap, 50, 100, false)
+        val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.ic_spot)
+        return Bitmap.createScaledBitmap(bitmap, 72, 72, false)
     }
 
     /* M Osama: build a squared vertex to be used for location & destination*/

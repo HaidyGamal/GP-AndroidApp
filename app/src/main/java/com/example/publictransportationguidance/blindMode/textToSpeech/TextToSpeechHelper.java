@@ -13,7 +13,7 @@ import java.util.Locale;
 public class TextToSpeechHelper {
 
     private static TextToSpeechHelper instance;
-    private TextToSpeech textToSpeech;
+    private final TextToSpeech textToSpeech;
 
     private TextToSpeechHelper(Context context, String language) {
         textToSpeech = initialize(context, language);

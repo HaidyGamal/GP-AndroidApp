@@ -1,15 +1,14 @@
-package com.example.publictransportationguidance.tracking.trackingModule.trackingModule;
+package com.example.publictransportationguidance.tracking.trackingModule.util;
 
 import static com.example.publictransportationguidance.helpers.Functions.getLocationName;
 
 import android.content.Context;
 import android.location.Location;
 import android.preference.PreferenceManager;
-
 import com.example.publictransportationguidance.R;
-
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class Utils {
 
@@ -25,7 +24,7 @@ public class Utils {
     }
 
     /* Stores the location updates state in SharedPreferences */
-    static void setRequestingLocationUpdates(Context context, boolean requestingLocationUpdates) {
+    public static void setRequestingLocationUpdates(Context context, boolean requestingLocationUpdates) {
         PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(KEY_REQUESTING_LOCATION_UPDATES, requestingLocationUpdates).apply();
     }
 
@@ -35,8 +34,9 @@ public class Utils {
     }
 
     /* NotificationTitle */
-    static String getLocationTitle(Context context,Location location) {
-        if(location!=null) return context.getString(R.string.current_location_is) + " " + getLocationName(context, location.getLatitude(), location.getLongitude()) + " ... " + DateFormat.getDateTimeInstance().format(new Date());
+    public static String getLocationTitle(Context context, Location location) {
+        if(location!=null) return context.getString(R.string.current_location_is) + " " + getLocationName(context, location.getLatitude(), location.getLongitude()) + " ... " + new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(new Date());
         else return "";
     }
+
 }

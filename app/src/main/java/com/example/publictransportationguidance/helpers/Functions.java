@@ -10,13 +10,14 @@ import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.example.publictransportationguidance.R;
 import com.example.publictransportationguidance.pojo.estimatedTimeResponse.Duration;
 import com.example.publictransportationguidance.pojo.estimatedTimeResponse.Route;
-import com.example.publictransportationguidance.tracking.TripsTimeCallback;
+import com.example.publictransportationguidance.tracking.trackingModule.trackingHelpers.TripsTimeCallback;
 import com.example.publictransportationguidance.api.RetrofitClient;
 import com.example.publictransportationguidance.blindMode.ArrowFunction;
 import com.example.publictransportationguidance.pojo.estimatedTimeResponse.EstimatedTime;
@@ -83,9 +84,50 @@ public class Functions {
         List<Address> myList;
         try {
             myList = myLocation.getFromLocation(latitude, longitude, 1);
-            Address address = (Address) myList.get(0);
-            Toast.makeText(context, address.getLocality() + "", Toast.LENGTH_SHORT).show();
+            Address address = myList.get(0);
+            Log.i("TAG","From(Functions)"+address.getLocality()+"");
             return address.getLocality();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "هناك مشكلة في الانترنت";
+        }
+    }
+
+    public static String getStringBetweenFirstAndThirdComma(String input) {
+        int firstCommaIndex = input.indexOf('،');
+        if (firstCommaIndex != -1) {
+            int secondCommaIndex = input.indexOf('،', firstCommaIndex + 1);
+            if (secondCommaIndex != -1) {
+                int thirdCommaIndex = input.indexOf('،', secondCommaIndex + 1);
+                if (thirdCommaIndex != -1) {
+                    return deleteFirstAndLastComma(input.substring(firstCommaIndex, thirdCommaIndex + 1));
+                }
+            }
+        }
+        return "";
+    }
+
+    public static String deleteFirstAndLastComma(String input) {
+        String result = input;
+        if (!result.isEmpty()) {
+            if (result.charAt(0) == '،') {
+                result = result.substring(1);
+            }
+            if (result.charAt(result.length() - 1) == '،') {
+                result = result.substring(0, result.length() - 1);
+            }
+        }
+        return result;
+    }
+
+    /* M Osama: to be used instead of the GeoCoder */
+    public static String getLocationNameDetailsInArabic(Context context, Double latitude, Double longitude) {
+        Geocoder myLocation = new Geocoder(context, new Locale("ar"));
+        List<Address> myList;
+        try {
+            myList = myLocation.getFromLocation(latitude, longitude, 1);
+            Address address = myList.get(0);
+            return getStringBetweenFirstAndThirdComma(address.getAddressLine(0));
         } catch (IOException e) {
             e.printStackTrace();
             return "هناك مشكلة في الانترنت";

@@ -15,7 +15,6 @@ public class SpeechToTextHelper {
 
     private static SpeechToTextHelper instance;
     private Intent speechToTextIntent;
-    private HomeFragment homeFragment;
 
     private SpeechToTextHelper(String language) {
         speechToTextIntent = createSpeechRecognitionIntent(language);
@@ -27,10 +26,6 @@ public class SpeechToTextHelper {
         }
         return instance;
     }
-
-//    public void startSpeechRecognition(HomeFragment homeFragment) {
-//        homeFragment.startActivityForResult(speechToTextIntent, RECOGNIZER_RESULT);
-//    }
 
     public void startSpeechRecognition(Activity activity) {
         activity.startActivityForResult(speechToTextIntent, MAIN_ACTIVITY_RECOGNIZER);

@@ -17,6 +17,7 @@ import androidx.databinding.DataBindingUtil;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.publictransportationguidance.R;
@@ -54,7 +55,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             resultIntent.putExtra(LOCATION_NAME_KEY,getLocationName(getApplicationContext(),latitude,longitude)+"");
             setResult(Activity.RESULT_OK,resultIntent);
             finish();
-//            Toast.makeText(this, "MapActivity 1- " + latitude + ",2- " + longitude + ",3- " + getLocationName(getApplicationContext(),latitude,longitude)+"", Toast.LENGTH_SHORT).show();    /* M Osama: For debugging only */
+            Log.i("TAG","From(MapActivity)"+"1- " + latitude + ",2- " + longitude + ",3- " + getLocationName(getApplicationContext(),latitude,longitude)+"");       /* M Osama: For debugging only */
             Toast.makeText(getApplicationContext(), "تم الاختيار بنجاح", Toast.LENGTH_SHORT).show();
         });
 

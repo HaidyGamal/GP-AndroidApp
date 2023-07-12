@@ -9,8 +9,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.publictransportationguidance.databinding.SharingLocationRequestDialogBinding;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class RequestSharingLocationDialog extends DialogFragment {
     public static final String TAG = "REQUEST_SHARING_LOCATION_DIALOG";
