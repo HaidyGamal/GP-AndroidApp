@@ -46,6 +46,7 @@ public class Functions {
     public static final int LISTEN_TO_CHOSEN_MODE = 4444;
     public static final int LISTEN_TO_CHOOSING_PATH_OR_NOT =3333; //Afnan: in PathResults for Blind Mode
     public static final int LISTEN_TO_TRACKING_OR_NOT =2222;      //Afnan: in SelectedPath for Blind Mode
+    public static final int LISTEN_TO_RE_SPEAK_ROUTE_OR_NOT=1111;
 
     public static String[] listToArray(List<String> list) {
         String[] array = new String[list.size()];
@@ -407,6 +408,14 @@ public class Functions {
 
     public static String convertSlashIntoSharta(String input) {
         return input.replace("/", "شْرطة");
+    }
+
+    public static String addDotBeforeThum(String input) {
+        return input.replaceAll("ثم", ".ثم");
+    }
+
+    public static String adjustErkab(String input) {
+        return input.replaceAll("اركب", "اِركَب");
     }
 
 }

@@ -19,7 +19,7 @@
         <item
             android:id="@+id/nav_contact_us"
             android:icon="@drawable/ic_current_location"
-            android:title="مشاركة الموقع الحالى" />
+            android:title="@string/ShareLiveLocation" />
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_nav_about"

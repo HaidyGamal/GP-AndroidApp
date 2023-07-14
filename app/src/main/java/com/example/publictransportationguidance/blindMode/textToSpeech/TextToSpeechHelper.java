@@ -14,6 +14,7 @@ public class TextToSpeechHelper {
 
     private static TextToSpeechHelper instance;
     private final TextToSpeech textToSpeech;
+    private float speechRate = 1.0f; // Default speech rate
 
     private TextToSpeechHelper(Context context, String language) {
         textToSpeech = initialize(context, language);
@@ -34,6 +35,10 @@ public class TextToSpeechHelper {
                 Log.e("TTS", "Initialization Failed");
             }
         });
+    }
+
+    public void setSpeechRate(float rate) {
+        speechRate = rate;
     }
 
     public void speak(String textToBeConvertedToSpeech, final Runnable onSpeechComplete) {
@@ -61,6 +66,8 @@ public class TextToSpeechHelper {
         HashMap<String, String> params = new HashMap<>();
         params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "utteranceId");
 
+        textToSpeech.setSpeechRate(speechRate); // Set the speech rate
+
         textToSpeech.speak(textToBeConvertedToSpeech, TextToSpeech.QUEUE_FLUSH, params);
     }
 
@@ -71,4 +78,3 @@ public class TextToSpeechHelper {
         }
     }
 }
-

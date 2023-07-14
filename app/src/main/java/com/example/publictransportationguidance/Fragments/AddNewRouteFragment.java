@@ -429,7 +429,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
             else if (stopID == DESTINATION) destinationLats = getStopLatLong(lats[0], lats[1]);
 
         }).addOnFailureListener((exception) -> {
-            if (exception instanceof ApiException) Toast.makeText(getContext(), ((ApiException) exception).getStatusCode(), Toast.LENGTH_SHORT).show();
+            if (exception instanceof ApiException) Log.i("TAG","From(AddNewRoute) "+((ApiException) exception).getStatusCode());
         });
     }
 

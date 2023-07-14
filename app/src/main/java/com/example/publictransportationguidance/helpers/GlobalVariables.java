@@ -53,14 +53,17 @@ public class GlobalVariables {
 
     /* M Osama: TTS & STT*/
     public static final String ARABIC="ar";
-    public static final String ASKING_FOR_MODE="مرحبا بكم في تطبيقي توصيلة، هل تريدون العمل بنظام الضّريرِيِنْ أم لا";
-    public static final String RE_ASKING_FOR_MODE="هل تريدون العمل بنظام الضّريرِيِنْ أم لا";
-    public static final String[] BLIND_MODE_ACCEPTANCE = {"نعم","اة","أيوة","ايوة","آة","اوك","تمام","ماشي"};
-    public static final String[] BLIND_MODE_REJECTANCE = {"لا","لأ","ليه","لية"};
+    public static final String ASKING_FOR_MODE="مرحبا بكم في تطبيقي توصيلة، هل تريدون العمل بنظام المكفوفين أم لا";
+    public static final String RE_ASKING_FOR_MODE="هل تريدون العمل بنظام المكفوفين أم لا";
     public static final String[] SORTING_CRITERIA_ACCEPTANCE = {"الوقت","وقت","المسافة","مسافة","التكلفة","تكلفة"};
 
     //Afnan : used in pathResults
-    public static final String[] CHOOSING_PATH_OR_NOT = { "إختيار","اختيار","أختيار","التالي","التالى", "سماع المسار" , "سمع المسار" , "سماع المسر" , "سمع المسر"};
+    public static final String[] CHOOSE_PATH ={ "إختيار","اختيار","أختيار" };
+    public static final String[] GO_TO_NEXT_PATH = {"التالي","التالى"};
+    public static final String[] LISTEN_TO_PATH_NODES = {"سماع المسار" , "سمع المسار" , "سماع المسر" ,"سماع المصار","سماع المساري","سماع المسارى","سماع المسار","سماع المصاري","سماع المصارى"};
+    public static final String[] YES = {"نعم","اة","أيوة","ايوة","آة","اوك","تمام","ماشي"};
+    public static final String[] NO = {"لا","لأ","ليه","لية"};
+
     public static final String PATH = "الطريق";
     public static final String ITS_COST = "و تكلفتهُ   ";
     public static final String ITS_DISTANCE = "و مسافتهُ   ";
@@ -70,15 +73,12 @@ public class GlobalVariables {
     public static final String MINUTE = "دقيقةً  ";
     public static final String LISTEN_TO_PATH = "سماع المسار. ";
     public static final String NEXT = "التالي. ";
-    public static final String CHOOSE = "إختيار. ";
+    public static final String CHOOSE = "إختيارْ. ";
     public static final String OR = "أَم.";
     public static final String DOT = ".";
     public static final String YOUR_PATH_IS = "مسارك هو. ";
     public static final String SORRY = "عفوا !";
     public static final String DO_YOU_WANT = "هل تريد ";
-    public static final String[] TRACKING_OR_NOT ={"نعم","اة","أيوة","ايوة","آة","اوك","تمام","ماشي","لا","لأ","ليه","لية"};
-
-
 
 
     /* M Osama: Firebase collections */

@@ -95,7 +95,7 @@ public class PathsTokenizer {
         }
 
         String path = detailedPath.substring(0,detailedPath.length()-1);
-        return replaceLastOccurrence(path,"ثم من","إلي");
+        return replaceLastOccurrence(path,"ثم من","إلى");
     }
 
     public static ArrayList<String> getStringPathToPopulateRoom(HashMap pathMap){

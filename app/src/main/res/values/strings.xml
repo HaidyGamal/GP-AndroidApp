@@ -152,6 +152,7 @@
     <string name="acceptReview">تم</string>
     <string name="rejectReview">الغاء</string>
     <string name="PleaseLogInFirst">نرجو تسجيل الدخول أولا</string>
+    <string name="ShareLiveLocation">مشاركة الموقع الحالى</string>
 
 
 </resources>

@@ -5,12 +5,12 @@ import static com.example.publictransportationguidance.helpers.Functions.execute
 import static com.example.publictransportationguidance.helpers.Functions.stringIsFound;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.ARABIC;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.ASKING_FOR_MODE;
-import static com.example.publictransportationguidance.helpers.GlobalVariables.BLIND_MODE_ACCEPTANCE;
-import static com.example.publictransportationguidance.helpers.GlobalVariables.BLIND_MODE_REJECTANCE;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.IS_LOGGED_IN;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.NO;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.ON_BLIND_MODE;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.RE_ASKING_FOR_MODE;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.SHARE_LOCATION_COLLECTION_NAME;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.YES;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -192,9 +192,9 @@ public class MainActivity extends AppCompatActivity implements SpeechRecognition
     }
 
     private void handleChosenMode(String result){
-        if(stringIsFound(result,BLIND_MODE_ACCEPTANCE))         blindModeOnInitializer();
-        else if(stringIsFound(result,BLIND_MODE_REJECTANCE))    blindModeOffInitializer();
-        else  execute(() -> textToSpeechHelper.speak(RE_ASKING_FOR_MODE, () -> listenToChosenMode(this)));
+        if(stringIsFound(result,YES))       blindModeOnInitializer();
+        else if(stringIsFound(result,NO))   blindModeOffInitializer();
+        else                                execute(() -> textToSpeechHelper.speak(RE_ASKING_FOR_MODE, () -> listenToChosenMode(this)));
     }
 
     public  void blindModeOnInitializer(){

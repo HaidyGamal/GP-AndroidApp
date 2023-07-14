@@ -26,7 +26,7 @@
     <fragment
         android:id="@+id/nav_contact_us"
         android:name="com.example.publictransportationguidance.Fragments.ShareLocationFragment"
-        android:label="@string/menu_contact_us"
+        android:label="@string/ShareLiveLocation"
         tools:layout="@layout/fragment_share_location" />
 
     <fragment

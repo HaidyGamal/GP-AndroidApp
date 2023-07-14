@@ -1,16 +1,20 @@
 package com.example.publictransportationguidance.tracking;
 
 import static com.example.publictransportationguidance.blindMode.speechToText.SpeechToTextHelper.convertHaaToTaaMarbuta;
+import static com.example.publictransportationguidance.helpers.Functions.LISTEN_TO_RE_SPEAK_ROUTE_OR_NOT;
 import static com.example.publictransportationguidance.helpers.Functions.LISTEN_TO_TRACKING_OR_NOT;
+import static com.example.publictransportationguidance.helpers.Functions.addDotBeforeThum;
+import static com.example.publictransportationguidance.helpers.Functions.adjustErkab;
 import static com.example.publictransportationguidance.helpers.Functions.convertSlashIntoSharta;
 import static com.example.publictransportationguidance.helpers.Functions.stringIsFound;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.ARABIC;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.BUNDLE_PATH;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.INTENT_PATH;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.NAVIGATING_TO_LIVE_LOCATION_REQUEST_CODE;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.NO;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.SELECTED_PATH;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.SORRY;
-import static com.example.publictransportationguidance.helpers.GlobalVariables.TRACKING_OR_NOT;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.YES;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -100,21 +104,17 @@ public class SelectedPath extends AppCompatActivity implements SharedPreferences
 
         myReceiver = new MyReceiver();
 
+        // Check that the user hasn't revoked permissions by going to Settings.
         requestPermissions();
+        if (Utils.requestingLocationUpdates(this)) if (!checkPermissions()) requestPermissions();
 
         /* Afnan: initializing Blind Mode */
         initializeTTSandSTT();
 
-        // Check that the user hasn't revoked permissions by going to Settings.
-        if (Utils.requestingLocationUpdates(this)) if (!checkPermissions()) requestPermissions();
-
+        /* M Osama: read the path & its nodes from PathResults */
         binding.selectedPath.setText(getIntent().getStringExtra(SELECTED_PATH));
-
-        /* M Osama: read the path nodes from PathResults */
         bundle = getIntent().getBundleExtra(INTENT_PATH);
-
         Serializable data = bundle.getSerializable(BUNDLE_PATH);
-
         bundle.putSerializable(BUNDLE_PATH,data);
 
         /* M Osama: pass path nodes to TrackLiveLocation to be viewed on Map */
@@ -123,9 +123,11 @@ public class SelectedPath extends AppCompatActivity implements SharedPreferences
 
         //Afnan: In case of Blind Mode
         if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1){
-            textToSpeechHelper.speak(convertSlashIntoSharta(String.valueOf(binding.selectedPath.getText()))+"."+"هل تريد تتبع رحلتكْ . نعم أَمْ لا " ,()-> listenToTracking(this));
+            textToSpeechHelper.speak(enhanceSentence(String.valueOf(binding.selectedPath.getText()))+"."+"هل تريد قراءة الطريق مرةً أُخري. نعم أَمْ لا " ,()-> listenToReSpeakRouteOrNot(this));
         }
+
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull @org.jetbrains.annotations.NotNull String[] permissions, @NonNull @org.jetbrains.annotations.NotNull int[] grantResults) {
@@ -233,26 +235,33 @@ public class SelectedPath extends AppCompatActivity implements SharedPreferences
         speechToTextHelper.startSpeechRecognition(selectedPath , LISTEN_TO_TRACKING_OR_NOT);
     }
 
+    /* Afnan: Blind Mode */
+    private void listenToReSpeakRouteOrNot(SelectedPath selectedPath) {
+        speechToTextHelper.startSpeechRecognition(selectedPath , LISTEN_TO_RE_SPEAK_ROUTE_OR_NOT);
+    }
+
     /* Afnan: receiving answer from the user in Blind Mode */
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         speechToTextHelper.onActivityResult(requestCode, resultCode, data);                                         // Pass the onActivityResult event to the SpeechToTextHelper
         ArrayList<String> speechConvertedToText = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-
+        String response = convertHaaToTaaMarbuta(speechConvertedToText.get(0));
         switch (requestCode) {
+            case LISTEN_TO_RE_SPEAK_ROUTE_OR_NOT:
+                if(stringIsFound(response,YES))     textToSpeechHelper.speak(enhanceSentence(String.valueOf(binding.selectedPath.getText()))+"."+"هل تريد قراءة الطريق مرةً أُخرى. نعم أَمْ لا " ,()-> listenToReSpeakRouteOrNot(this));
+                else if(stringIsFound(response,NO)) textToSpeechHelper.speak("هل تريد تَتَبُّع رحلتكْ . نعم أَمْ لا " ,()-> listenToTracking(this));
+                else                                textToSpeechHelper.speak(SORRY, () -> listenToReSpeakRouteOrNot(this));
+                break;
             case LISTEN_TO_TRACKING_OR_NOT:
-                String trackingResponse = convertHaaToTaaMarbuta(speechConvertedToText.get(0));
-                if (stringIsFound(trackingResponse, TRACKING_OR_NOT)) {
-                    //Afnan: in case of Yes for Tracking
-                    if (trackingResponse.equals(TRACKING_OR_NOT[0]) || trackingResponse.equals(TRACKING_OR_NOT[1]) || trackingResponse.equals(TRACKING_OR_NOT[2]) || trackingResponse.equals(TRACKING_OR_NOT[3]) || trackingResponse.equals(TRACKING_OR_NOT[4]) || trackingResponse.equals(TRACKING_OR_NOT[5]) || trackingResponse.equals(TRACKING_OR_NOT[6]) || trackingResponse.equals(TRACKING_OR_NOT[7])) {
-                        binding.startLiveLocationBtn.performClick();            /* Button startLiveLocation= findViewById(R.id.startLiveLocationBtn);    startLiveLocation.performClick();*/
-                    }
-                    //Afnan: in case of No Tracking
-                    else if (trackingResponse.equals(TRACKING_OR_NOT[8]) || trackingResponse.equals(TRACKING_OR_NOT[9]) || trackingResponse.equals(TRACKING_OR_NOT[10]) || trackingResponse.equals(TRACKING_OR_NOT[11])) {
-                    }
-                }
-                else textToSpeechHelper.speak(SORRY, () -> listenToTracking(this));
+                if (stringIsFound(response,YES))    binding.startLiveLocationBtn.performClick();
+                else if(stringIsFound(response,NO)) finish();
+                else                                textToSpeechHelper.speak(SORRY, () -> listenToTracking(this));
+                break;
         }
+    }
+
+    public String enhanceSentence(String sentence){
+        return adjustErkab(addDotBeforeThum(convertSlashIntoSharta(sentence)));
     }
 
 }

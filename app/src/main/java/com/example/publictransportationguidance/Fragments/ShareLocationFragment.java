@@ -174,13 +174,13 @@ public class ShareLocationFragment extends Fragment implements OnFriendshipCheck
                             Map<String, Object> newFriend = new HashMap<>();
                             newFriend.put(friendEmail, "No");
                             docRef.update("friends", FieldValue.arrayUnion(newFriend))
-                                    .addOnSuccessListener(v -> fireToast("Friend is added successfully"))
-                                    .addOnFailureListener(v -> fireToast("Failed to add friend"));
+                                    .addOnSuccessListener(v -> fireToast("تم اضافة الصديق بنجاح"))
+                                    .addOnFailureListener(v -> fireToast("حدث فشل في اضافة الصديق"));
                         } else {
-                            fireToast("Friend already exists");
+                            fireToast("الصديق موجود بالفعل");
                         }
                     })
-                    .addOnFailureListener(v -> fireToast("Failed to add friend"));
+                    .addOnFailureListener(v -> fireToast("حدث فشل في اضافة الصديق"));
         } else fireToast(getString(R.string.PleaseLogInFirst));
 
     }

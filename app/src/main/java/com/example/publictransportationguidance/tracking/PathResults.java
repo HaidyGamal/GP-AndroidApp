@@ -17,17 +17,19 @@ import static com.example.publictransportationguidance.helpers.Functions.tryAgai
 import static com.example.publictransportationguidance.helpers.GlobalVariables.ARABIC;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.BUNDLE_PATH;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.CHOOSE;
-import static com.example.publictransportationguidance.helpers.GlobalVariables.CHOOSING_PATH_OR_NOT;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.CHOOSE_PATH;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.COST;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.DISTANCE;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.DOT;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.DO_YOU_WANT;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.GO_TO_NEXT_PATH;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.INTENT_PATH;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.ITS_COST;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.ITS_DISTANCE;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.ITS_TIME;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.KM;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.LISTEN_TO_PATH;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.LISTEN_TO_PATH_NODES;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.MINUTE;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.NEXT;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.OR;
@@ -99,7 +101,6 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
 
     String stringToBeAnimated="";
 
-
     private static List<PathInfo> TRANSPORTATION =null ; //Afnan: To use it in Blind Mode in Choosing a path
     private static String[] HeardTransportation;
     int wheelValue=0;           //Afnan: To use it in Blind Mode in Choosing a path
@@ -110,9 +111,14 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_path_results);
 
+        SharedPrefs.init(this);
+
         /* M Osama: initializing tts & stt */
         initializeTTSandSTT();
-        SharedPrefs.init(this);
+
+        if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1){
+            textToSpeechHelper.speak(getString(R.string.SearchingForAvaliablePaths), this::listenToNothing);
+        }
 
         String LOCATION = "",DESTINATION = "";
         int pointer;
@@ -139,14 +145,10 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
 //        SharedPrefs.write("ON_BLIND_MODE",1);
         /** TO BE DELETED */
 
-        if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1){
-            textToSpeechHelper.speak(getString(R.string.SearchingForAvaliablePaths), this::listenToNothing);
-        }
         getNearestPaths(LOCATION,DESTINATION,this);
 
         textAnimator.startAnimation(binding.textView,"");
     }
-
 
     public void getNearestPaths(String location, String destination, TripsTimeCallback callback) {
 
@@ -209,25 +211,11 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
     }
 
     public void sortingOnClickListeners(){
-        binding.sortByCost.setOnClickListener(v -> {
-            sortingByCostToast(this);
-            SORTING_CRITERIA=COST;
-            updateViewsOnReSorting(sortPathsAscUsing(COST));
-            stringToBeAnimated=sortPathsAscUsing(COST).get(0).getPath();
-        });
-        binding.sortByDistance.setOnClickListener(v -> {
-            sortingByDistanceToast(this);
-            SORTING_CRITERIA=DISTANCE;
-            updateViewsOnReSorting(sortPathsAscUsing(DISTANCE));
-            stringToBeAnimated=sortPathsAscUsing(COST).get(0).getPath();
-        });
-        binding.sortByTime.setOnClickListener(v -> {
-            sortingByTimeToast(this);
-            SORTING_CRITERIA=TIME;
-            updateViewsOnReSorting(sortPathsAscUsing(TIME));
-            stringToBeAnimated=sortPathsAscUsing(COST).get(0).getPath();
-        });
-
+        binding.sortByCost.setOnClickListener(v -> {        sortingByCostToast(this);       SORTING_CRITERIA=COST;      });
+        binding.sortByDistance.setOnClickListener(v -> {    sortingByDistanceToast(this);   SORTING_CRITERIA=DISTANCE;  });
+        binding.sortByTime.setOnClickListener(v -> {        sortingByTimeToast(this);       SORTING_CRITERIA=TIME;      });
+        updateViewsOnReSorting(sortPathsAscUsing(SORTING_CRITERIA));
+        stringToBeAnimated=sortPathsAscUsing(SORTING_CRITERIA).get(0).getPath();
     }
 
     public void updateViewsOnReSorting(List<PathInfo> newSortedPaths){
@@ -354,6 +342,7 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
     void initializeTTSandSTT(){
         textToSpeechHelper = TextToSpeechHelper.getInstance(this,ARABIC);
         speechToTextHelper = SpeechToTextHelper.getInstance(ARABIC);
+
     }
 
     private void listenToNothing(){}
@@ -387,33 +376,29 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
         switch (requestCode) {
             case LISTEN_TO_CHOOSING_PATH_OR_NOT:
                 String ChooseOrNot = convertHaaToTaaMarbuta(speechConvertedToText.get(0));
-                if(stringIsFound(ChooseOrNot,CHOOSING_PATH_OR_NOT)) {
-                    if (ChooseOrNot.equals(CHOOSING_PATH_OR_NOT[0]) || ChooseOrNot.equals(CHOOSING_PATH_OR_NOT[1]) || ChooseOrNot.equals(CHOOSING_PATH_OR_NOT[2])) ChoosingThePath(TRANSPORTATION);
-                    else if(ChooseOrNot.equals(CHOOSING_PATH_OR_NOT[3]) || ChooseOrNot.equals(CHOOSING_PATH_OR_NOT[4])) {
-                        wheelValue = (wheelValue + 1) % binding.wheel.getMaxValue();
-                        binding.wheel.setValue(wheelValue);
-                        pathNumber = Integer.toString(wheelValue + 1);
+                if(stringIsFound(ChooseOrNot,CHOOSE_PATH))  ChoosingThePath(TRANSPORTATION);
+                else if(stringIsFound(ChooseOrNot,GO_TO_NEXT_PATH)) {
+                    wheelValue = (wheelValue + 1) % binding.wheel.getMaxValue();
+                    binding.wheel.setValue(wheelValue);
+                    pathNumber = Integer.toString(wheelValue + 1);
 
-                        updateCostDistanceTime(binding.wheel.getValue(), TRANSPORTATION);
-                        textAnimator.refreshAnimation(TRANSPORTATION.get(binding.wheel.getValue()).getPath(),binding.textView);
+                    updateCostDistanceTime(binding.wheel.getValue(), TRANSPORTATION);
+                    textAnimator.refreshAnimation(TRANSPORTATION.get(binding.wheel.getValue()).getPath(), binding.textView);
 
-                        String pathSentence = PATH + pathNumber;
-                        String costSentence = ITS_COST + binding.cost.getText() + POUND;
-                        String distanceSentence = ITS_DISTANCE + binding.distance.getText() + KM;
-                        String timeSentence = ITS_TIME + binding.time.getText() + MINUTE;
+                    String pathSentence = PATH + pathNumber;
+                    String costSentence = ITS_COST + binding.cost.getText() + POUND;
+                    String distanceSentence = ITS_DISTANCE + binding.distance.getText() + KM;
+                    String timeSentence = ITS_TIME + binding.time.getText() + MINUTE;
 
-                        switch (SORTING_CRITERIA) {
-                            case COST:      textToSpeechHelper.speak(pathSentence + costSentence + distanceSentence + timeSentence + DOT + DO_YOU_WANT + LISTEN_TO_PATH + OR + NEXT + OR + CHOOSE, () -> listenToChangingPath(this));       break;
-                            case DISTANCE:  textToSpeechHelper.speak(pathSentence + distanceSentence + costSentence + timeSentence + DOT + DO_YOU_WANT + LISTEN_TO_PATH + OR + NEXT + OR + CHOOSE, () -> listenToChangingPath(this));        break;
-                            case TIME:      textToSpeechHelper.speak(pathSentence + timeSentence + costSentence + distanceSentence + DOT + DO_YOU_WANT + LISTEN_TO_PATH + OR + NEXT + OR + CHOOSE, () -> listenToChangingPath(this));        break;
-                            default:        break;
-                        }
-                    }
-                    else if(ChooseOrNot.equals(CHOOSING_PATH_OR_NOT[5])|| ChooseOrNot.equals(CHOOSING_PATH_OR_NOT[6])|| ChooseOrNot.equals(CHOOSING_PATH_OR_NOT[7])|| ChooseOrNot.equals(CHOOSING_PATH_OR_NOT[8])) {
-                        textToSpeechHelper.speak(YOUR_PATH_IS + convertMathIntoThoma(HeardTransportation[binding.wheel.getValue()])+DOT+CHOOSE+OR+NEXT, () -> listenToChangingPath(this));
+                    switch (SORTING_CRITERIA) {
+                        case COST:      textToSpeechHelper.speak(pathSentence + costSentence + distanceSentence + timeSentence + DOT + DO_YOU_WANT + LISTEN_TO_PATH + OR + NEXT + OR + CHOOSE, () -> listenToChangingPath(this));       break;
+                        case DISTANCE:  textToSpeechHelper.speak(pathSentence + distanceSentence + costSentence + timeSentence + DOT + DO_YOU_WANT + LISTEN_TO_PATH + OR + NEXT + OR + CHOOSE, () -> listenToChangingPath(this));       break;
+                        case TIME:      textToSpeechHelper.speak(pathSentence + timeSentence + costSentence + distanceSentence + DOT + DO_YOU_WANT + LISTEN_TO_PATH + OR + NEXT + OR + CHOOSE, () -> listenToChangingPath(this));       break;
+                        default:        break;
                     }
                 }
-                else textToSpeechHelper.speak(SORRY, () -> listenToChangingPath(this));
+                else if(stringIsFound(ChooseOrNot,LISTEN_TO_PATH_NODES))    textToSpeechHelper.speak(YOUR_PATH_IS + convertMathIntoThoma(HeardTransportation[binding.wheel.getValue()])+DOT+CHOOSE+OR+NEXT, () -> listenToChangingPath(this));
+                else                                                        textToSpeechHelper.speak(SORRY, () -> listenToChangingPath(this));
 
         }
     }
