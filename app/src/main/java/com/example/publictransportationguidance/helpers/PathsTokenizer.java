@@ -13,15 +13,15 @@ public class PathsTokenizer {
         return list.size();
     }
 
-    public static int getPathCost(List<List<NearestPaths>> listOfList, int pathNumber){
+    public static double getPathCost(List<List<NearestPaths>> listOfList, int pathNumber){
         if(pathNumber<getNumberOfPaths(listOfList)){
             List<NearestPaths> path=listOfList.get(pathNumber);
             int pathSize = path.size();
             return path.get(pathSize-1).getTotalCost();
         }
-        else return -1;
+        else return -1.0;
     }
-    public static Double getPathDistance(List<List<NearestPaths>> listOfList, int pathNumber){
+    public static double getPathDistance(List<List<NearestPaths>> listOfList, int pathNumber){
         if(pathNumber<getNumberOfPaths(listOfList)){
             List<NearestPaths> path=listOfList.get(pathNumber);
             int pathSize = path.size();

@@ -7,6 +7,7 @@ import static com.example.publictransportationguidance.helpers.Functions.LISTEN_
 import static com.example.publictransportationguidance.helpers.Functions.calcEstimatedTripsTime;
 import static com.example.publictransportationguidance.helpers.Functions.checkInternetConnectionToast;
 import static com.example.publictransportationguidance.helpers.Functions.convertMathIntoThoma;
+import static com.example.publictransportationguidance.helpers.Functions.extractNodesLatLng;
 import static com.example.publictransportationguidance.helpers.Functions.failedToEstimateTime;
 import static com.example.publictransportationguidance.helpers.Functions.noAvailablePathsToast;
 import static com.example.publictransportationguidance.helpers.Functions.sortingByCostToast;
@@ -111,14 +112,9 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_path_results);
 
-        SharedPrefs.init(this);
-
         /* M Osama: initializing tts & stt */
         initializeTTSandSTT();
-
-        if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1){
-            textToSpeechHelper.speak(getString(R.string.SearchingForAvaliablePaths), this::listenToNothing);
-        }
+        SharedPrefs.init(this);
 
         String LOCATION = "",DESTINATION = "";
         int pointer;
@@ -135,11 +131,15 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
             }
         }
 
+
         dao = AppRoom.getInstance(getApplication()).pathsDao();
         loadingDialog.startLoadingDialog();
 
         textAnimator=new TextAnimator();
 
+        if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1){
+            textToSpeechHelper.speak(getString(R.string.SearchingForAvaliablePaths), this::listenToNothing);
+        }
 
         /** M Osama: for testing the blindMode here because of the googleAPI key problem */
 //        SharedPrefs.write("ON_BLIND_MODE",1);
@@ -200,7 +200,7 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
         if (dao.getNumberOfRowsOfPathsTable() == 0) {
             for (int pathNum = 0; pathNum < pathMap.size(); pathNum++) {
                 double tempDistance = getPathDistance(shortestPaths, pathNum);
-                int tempCost = getPathCost(shortestPaths, pathNum);
+                double tempCost = getPathCost(shortestPaths, pathNum);
                 /* int tempTime is written down at onTripsTimeCalculated */
                 String tempPath = getStringPathToPopulateRoom(pathMap).get(pathNum);
                 String pickedPathDetails = detailedPathToPrint(stopsAndMeans(shortestPaths,pathNum));
@@ -211,11 +211,9 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
     }
 
     public void sortingOnClickListeners(){
-        binding.sortByCost.setOnClickListener(v -> {        sortingByCostToast(this);       SORTING_CRITERIA=COST;      });
-        binding.sortByDistance.setOnClickListener(v -> {    sortingByDistanceToast(this);   SORTING_CRITERIA=DISTANCE;  });
-        binding.sortByTime.setOnClickListener(v -> {        sortingByTimeToast(this);       SORTING_CRITERIA=TIME;      });
-        updateViewsOnReSorting(sortPathsAscUsing(SORTING_CRITERIA));
-        stringToBeAnimated=sortPathsAscUsing(SORTING_CRITERIA).get(0).getPath();
+        binding.sortByCost.setOnClickListener(v -> {      sortingByCostToast(this);       SORTING_CRITERIA=COST;      updateViewsOnReSorting(sortPathsAscUsing(COST));        stringToBeAnimated=sortPathsAscUsing(COST).get(0).getPath();      });
+        binding.sortByDistance.setOnClickListener(v -> {  sortingByDistanceToast(this);   SORTING_CRITERIA=DISTANCE;  updateViewsOnReSorting(sortPathsAscUsing(DISTANCE));    stringToBeAnimated=sortPathsAscUsing(DISTANCE).get(0).getPath();  });
+        binding.sortByTime.setOnClickListener(v -> {      sortingByTimeToast(this);       SORTING_CRITERIA=TIME;      updateViewsOnReSorting(sortPathsAscUsing(TIME));        stringToBeAnimated=sortPathsAscUsing(TIME).get(0).getPath();      });
     }
 
     public void updateViewsOnReSorting(List<PathInfo> newSortedPaths){
@@ -290,19 +288,7 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
         if(path.getTime()==0) failedToEstimateTime(getApplicationContext());
     }
 
-    public ArrayList<ArrayList<LatLng>> extractNodesLatLng(List<List<NearestPaths>> shortestPaths){
-        ArrayList<ArrayList<LatLng>> pathsNodesLatLng = new ArrayList<>();
-        ArrayList<LatLng> tempPathNodesLatLng=new ArrayList<>();
-        for(int pathNumber=0;pathNumber<shortestPaths.size();pathNumber++){
-            List<NearestPaths> path = shortestPaths.get(pathNumber);
-            for(int nodeNumber=0;nodeNumber<path.size();nodeNumber++) {
-                NearestPaths node = path.get(nodeNumber);
-                tempPathNodesLatLng.add(nodeNumber,new LatLng(node.getLatitude(),node.getLongitude()));
-            }
-            pathsNodesLatLng.add(pathNumber, tempPathNodesLatLng);
-        }
-        return pathsNodesLatLng;
-    }
+
 
 
     /* M Osama: Build String Array from cachedPath Info */
@@ -342,7 +328,6 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
     void initializeTTSandSTT(){
         textToSpeechHelper = TextToSpeechHelper.getInstance(this,ARABIC);
         speechToTextHelper = SpeechToTextHelper.getInstance(ARABIC);
-
     }
 
     private void listenToNothing(){}

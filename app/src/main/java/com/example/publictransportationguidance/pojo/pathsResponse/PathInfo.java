@@ -19,9 +19,9 @@ public class PathInfo {
 
     private int defaultPathNumber;
 
-    private Double distance;
+    private double distance;
 
-    private int cost;
+    private double cost;
 
     private int time;
 
@@ -33,8 +33,7 @@ public class PathInfo {
     @TypeConverters({CoordinatesConverter.class})
     private ArrayList<LatLng> coordinates;
 
-
-    public PathInfo(int defaultPathNumber, Double distance, int cost, int time, String path,String detailedPath,ArrayList<LatLng> coordinates) {
+    public PathInfo(int defaultPathNumber, double distance, double cost, int time, String path,String detailedPath,ArrayList<LatLng> coordinates) {
         this.defaultPathNumber = defaultPathNumber;
         this.distance = distance;
         this.cost = cost;
@@ -60,25 +59,25 @@ public class PathInfo {
         this.defaultPathNumber = defaultPathNumber;
     }
 
-    public Double getDistance() {
+    public double getDistance() {
         return distance;
     }
 
-    //Afnan :Approximating distance to only one number after the decimal point
-    public Double getDistance(String pattern) {
-        DecimalFormat distanceFormatted = new DecimalFormat(pattern);             // pattern = "#.#"
-        return Double.valueOf(distanceFormatted.format(distance));
-    }
+//    //Afnan :Approximating distance to only one number after the decimal point
+//    public double getDistance(String pattern) {
+//        DecimalFormat distanceFormatted = new DecimalFormat(pattern);             // pattern = "#.#"
+//        return Double.valueOf(distanceFormatted.format(distance));
+//    }
 
-    public void setDistance(Double distance) {
+    public void setDistance(double distance) {
         this.distance = distance;
     }
 
-    public int getCost() {
+    public double getCost() {
         return cost;
     }
 
-    public void setCost(int cost) {
+    public void setCost(double cost) {
         this.cost = cost;
     }
 

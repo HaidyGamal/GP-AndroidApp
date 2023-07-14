@@ -48,15 +48,23 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         binding.confirmPickUp.setOnClickListener(v -> {
+            String locationName = getLocationName(getApplicationContext(),latitude,longitude)+"";
+            if(locationName.equals("هناك مشكلة في الانترنت")){
+                latitude=0.0;
+                longitude=0.0;
+                locationName="";
+                Toast.makeText(getApplicationContext(), "هناك مشكلة في الانترنت", Toast.LENGTH_SHORT).show();
+            }
+            else Toast.makeText(getApplicationContext(), "تم الاختيار بنجاح", Toast.LENGTH_SHORT).show();
+
             /* M Osama : pass picked lat/long to HomeFragment's parent class */
             Intent resultIntent = new Intent();
             resultIntent.putExtra(LATITUDE_KEY,latitude);
             resultIntent.putExtra(LONGITUDE_KEY,longitude);
-            resultIntent.putExtra(LOCATION_NAME_KEY,getLocationName(getApplicationContext(),latitude,longitude)+"");
+            resultIntent.putExtra(LOCATION_NAME_KEY,locationName);
             setResult(Activity.RESULT_OK,resultIntent);
             finish();
             Log.i("TAG","From(MapActivity)"+"1- " + latitude + ",2- " + longitude + ",3- " + getLocationName(getApplicationContext(),latitude,longitude)+"");       /* M Osama: For debugging only */
-            Toast.makeText(getApplicationContext(), "تم الاختيار بنجاح", Toast.LENGTH_SHORT).show();
         });
 
         binding.cancelPickUp.setOnClickListener(v -> {

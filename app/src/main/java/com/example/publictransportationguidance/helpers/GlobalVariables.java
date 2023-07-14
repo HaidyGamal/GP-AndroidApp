@@ -55,7 +55,6 @@ public class GlobalVariables {
     public static final String ARABIC="ar";
     public static final String ASKING_FOR_MODE="مرحبا بكم في تطبيقي توصيلة، هل تريدون العمل بنظام المكفوفين أم لا";
     public static final String RE_ASKING_FOR_MODE="هل تريدون العمل بنظام المكفوفين أم لا";
-    public static final String[] SORTING_CRITERIA_ACCEPTANCE = {"الوقت","وقت","المسافة","مسافة","التكلفة","تكلفة"};
 
     //Afnan : used in pathResults
     public static final String[] CHOOSE_PATH ={ "إختيار","اختيار","أختيار" };
@@ -63,6 +62,9 @@ public class GlobalVariables {
     public static final String[] LISTEN_TO_PATH_NODES = {"سماع المسار" , "سمع المسار" , "سماع المسر" ,"سماع المصار","سماع المساري","سماع المسارى","سماع المسار","سماع المصاري","سماع المصارى"};
     public static final String[] YES = {"نعم","اة","أيوة","ايوة","آة","اوك","تمام","ماشي"};
     public static final String[] NO = {"لا","لأ","ليه","لية"};
+    public static final String[] SORT_BY_TIME = {"الوقت","وقت"};
+    public static final String[] SORT_BY_DISTANCE = {"المسافة","مسافة"};
+    public static final String[] SORT_BY_COST = {"التكلفة","تكلفة"};
 
     public static final String PATH = "الطريق";
     public static final String ITS_COST = "و تكلفتهُ   ";

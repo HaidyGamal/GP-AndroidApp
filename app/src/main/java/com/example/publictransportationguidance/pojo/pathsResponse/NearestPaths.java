@@ -12,15 +12,15 @@ public class NearestPaths implements Serializable {
 
     @SerializedName("latitude")
     @Expose
-    private Double latitude=0.0;
+    private double latitude=0.0;
 
     @SerializedName("longitude")
     @Expose
-    private Double longitude=0.0;
+    private double longitude=0.0;
 
     @SerializedName("cost")
     @Expose
-    private Integer cost=0;
+    private double cost=0.0;
 
 //    @SerializedName("distance")
 //    @Expose
@@ -40,17 +40,17 @@ public class NearestPaths implements Serializable {
 
     @SerializedName("totalCost")
     @Expose
-    private Integer totalCost=0;
+    private double totalCost=0.0;
 
     @SerializedName("totalDistance")
     @Expose
-    private Double totalDistance=0.0;
+    private double totalDistance=0.0;
 
     private final static long serialVersionUID = 2142764386547270924L;
 
     public NearestPaths() {}
 
-    public NearestPaths(String name, Double latitude, Double longitude, Integer cost, Double distance, String transportationType, String lineNumber, Integer totalCost, Double totalDistance) {
+    public NearestPaths(String name, double latitude, double longitude, double cost, double distance, String transportationType, String lineNumber, double totalCost, double totalDistance) {
         super(); this.name = name; this.latitude = latitude; this.longitude = longitude;
         this.cost = cost; this.distance = distance; this.transportationType = transportationType; this.lineNumber = lineNumber;
         this.totalCost = totalCost; this.totalDistance = totalDistance;
@@ -63,24 +63,24 @@ public class NearestPaths implements Serializable {
         this.name = name;
     }
 
-    public Double getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
-    public void setLatitude(Double latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public Double getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
-    public void setLongitude(Double longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
-    public Integer getCost() {
+    public double getCost() {
         return cost;
     }
-    public void setCost(Integer cost) {
+    public void setCost(double cost) {
         this.cost = cost;
     }
 
@@ -111,17 +111,17 @@ public class NearestPaths implements Serializable {
         this.lineNumber = lineNumber;
     }
 
-    public Integer getTotalCost() {
+    public double getTotalCost() {
         return totalCost;
     }
-    public void setTotalCost(Integer totalCost) {
+    public void setTotalCost(double totalCost) {
         this.totalCost = totalCost;
     }
 
-    public Double getTotalDistance() {
+    public double getTotalDistance() {
         return totalDistance;
     }
-    public void setTotalDistance(Double totalDistance) {
+    public void setTotalDistance(double totalDistance) {
         this.totalDistance = totalDistance;
     }
 

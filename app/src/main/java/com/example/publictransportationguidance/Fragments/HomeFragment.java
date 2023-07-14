@@ -127,13 +127,11 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         binding.orderByTime.setOnClickListener(v -> {       sortingByTimeToast(getContext());       SORTING_CRITERIA=TIME;     pointer=3; });
 
         binding.searchBtn.setOnClickListener(v -> {
-
             if(!(binding.tvLocation.getText() + "").equals("") && !(binding.tvDestination.getText() + "").equals(""))  {
                 if(pointer!=0)      searchForPaths(locationLats,destinationLats,pointer);
                 else                Toast.makeText(getContext(),"اختر طريقة للترتيب حسب رغبتك", Toast.LENGTH_SHORT).show(); }
             else  Toast.makeText(getContext(),R.string.AutoCompleteTextViewWarning, Toast.LENGTH_SHORT).show();
         });
-
 
     }
 
@@ -332,13 +330,11 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
 
             case LISTEN_TO_SORTING_CRITERIA:                                    /* M Osama: receiving the sortingCriteria from the blind*/
                 String searchingMethod=convertHaaToTaaMarbuta(speechConvertedToText.get(0));
-                if(stringIsFound(searchingMethod,SORTING_CRITERIA_ACCEPTANCE)) {
-                    if (searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[4]) || searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[5])) {       sortingByCostToast(getContext());       SORTING_CRITERIA = COST;    }
-                    else if (searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[2]) || searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[3])) {  sortingByDistanceToast(getContext());   SORTING_CRITERIA = DISTANCE;  }
-                    else if (searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[0]) || searchingMethod.equals(SORTING_CRITERIA_ACCEPTANCE[1])) {  sortingByTimeToast(getContext());       SORTING_CRITERIA = TIME;      }
-                    searchForPaths(locationLats, destinationLats,pointer);
-                }
-                else  textToSpeechHelper.speak(getString(R.string.SortingCriteriaSecondListen), () -> listenToSortingCriteria(this));
+                if(stringIsFound(searchingMethod,SORT_BY_COST)){            sortingByCostToast(getContext());       SORTING_CRITERIA = COST;         searchForPaths(locationLats, destinationLats,pointer); }
+                else if(stringIsFound(searchingMethod,SORT_BY_DISTANCE)){   sortingByDistanceToast(getContext());   SORTING_CRITERIA = DISTANCE;     searchForPaths(locationLats, destinationLats,pointer); }
+                else if(stringIsFound(searchingMethod,SORT_BY_TIME)){       sortingByTimeToast(getContext());       SORTING_CRITERIA = TIME;         searchForPaths(locationLats, destinationLats,pointer); }
+                else    textToSpeechHelper.speak(getString(R.string.SortingCriteriaSecondListen), () -> listenToSortingCriteria(this));
+                break;
         }
 
     }

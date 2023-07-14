@@ -205,11 +205,14 @@ public class LocationUpdatesService extends Service {
         PendingIntent servicePendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);   // The PendingIntent that leads to a call to onStartCommand() in this service.
         PendingIntent activityPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, SelectedPath.class), 0|PendingIntent.FLAG_IMMUTABLE);         // The PendingIntent to launch activity.
 
+        String locationTitle = Utils.getLocationTitle(this,mLocation);
+        if(locationTitle.equals("null") || locationTitle==null || locationTitle.isEmpty())  locationTitle="جاري معرفة اسم مكانك الحالي";
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .addAction(R.drawable.ic_launcher_foreground, getString(R.string.return_to_activity), activityPendingIntent)
                 .addAction(R.drawable.ic_launcher_background, getString(R.string.remove_location_updates), servicePendingIntent)
                 .setContentText(text)
-                .setContentTitle(Utils.getLocationTitle(this,mLocation))
+                .setContentTitle(locationTitle)
                 .setOngoing(true)
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setSmallIcon(R.drawable.icon)

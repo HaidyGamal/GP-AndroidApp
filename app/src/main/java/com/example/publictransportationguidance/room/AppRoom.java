@@ -11,7 +11,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.example.publictransportationguidance.pojo.Review;
 import com.example.publictransportationguidance.pojo.pathsResponse.PathInfo;
 
-@Database(entities = {PathInfo.class, Review.class}, version = 15)
+@Database(entities = {PathInfo.class, Review.class}, version = 17)
 public abstract class AppRoom extends RoomDatabase {
     private static AppRoom instance;
     public abstract PathsDao pathsDao();

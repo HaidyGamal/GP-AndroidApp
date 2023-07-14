@@ -22,6 +22,7 @@ import com.example.publictransportationguidance.api.RetrofitClient;
 import com.example.publictransportationguidance.blindMode.ArrowFunction;
 import com.example.publictransportationguidance.pojo.estimatedTimeResponse.EstimatedTime;
 import com.example.publictransportationguidance.pojo.pathsResponse.NearestPaths;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -357,6 +358,20 @@ public class Functions {
             return input.substring(0, firstCommaIndex).trim();
         }
         return input;
+    }
+
+    public static ArrayList<ArrayList<LatLng>> extractNodesLatLng(List<List<NearestPaths>> shortestPaths){
+        ArrayList<ArrayList<LatLng>> pathsNodesLatLng = new ArrayList<>();
+        ArrayList<LatLng> tempPathNodesLatLng=new ArrayList<>();
+        for(int pathNumber=0;pathNumber<shortestPaths.size();pathNumber++){
+            List<NearestPaths> path = shortestPaths.get(pathNumber);
+            for(int nodeNumber=0;nodeNumber<path.size();nodeNumber++) {
+                NearestPaths node = path.get(nodeNumber);
+                tempPathNodesLatLng.add(nodeNumber,new LatLng(node.getLatitude(),node.getLongitude()));
+            }
+            pathsNodesLatLng.add(pathNumber, tempPathNodesLatLng);
+        }
+        return pathsNodesLatLng;
     }
 
     public static String availableStopsToBeRead(boolean firstTime,List<String> items) {
