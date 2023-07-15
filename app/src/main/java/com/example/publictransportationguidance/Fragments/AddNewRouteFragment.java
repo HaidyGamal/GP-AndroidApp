@@ -127,7 +127,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         bind = DataBindingUtil.inflate(inflater,R.layout.fragment_add_new_route,container,false);
         initializeMapActivityResultLauncher();
-         SharedPrefs.init(getActivity());
+        SharedPrefs.init(getActivity());
         firebaseInitializer();
         db = FirebaseFirestore.getInstance();
 
@@ -168,6 +168,7 @@ public class AddNewRouteFragment extends Fragment implements AdapterView.OnItemS
 
         /* M Osama: ask the user to log in if he isn't loggedIn to be able to add new route*/
         if(IS_LOGGED_IN ==0) showLogInDialog();
+        firebaseInitializer();
 
         return bind.getRoot();
     }

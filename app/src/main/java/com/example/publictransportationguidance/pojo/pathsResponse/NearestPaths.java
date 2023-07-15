@@ -46,14 +46,19 @@ public class NearestPaths implements Serializable {
     @Expose
     private double totalDistance=0.0;
 
+    @SerializedName("totalTime")
+    @Expose
+    private int totalTime=0;
+
     private final static long serialVersionUID = 2142764386547270924L;
 
     public NearestPaths() {}
 
-    public NearestPaths(String name, double latitude, double longitude, double cost, double distance, String transportationType, String lineNumber, double totalCost, double totalDistance) {
+    public NearestPaths(String name, double latitude, double longitude, double cost, double distance, String transportationType, String lineNumber, double totalCost, double totalDistance,int totalTime) {
         super(); this.name = name; this.latitude = latitude; this.longitude = longitude;
         this.cost = cost; this.distance = distance; this.transportationType = transportationType; this.lineNumber = lineNumber;
         this.totalCost = totalCost; this.totalDistance = totalDistance;
+        this.totalTime=totalTime;
     }
 
     public String getName() {
@@ -125,6 +130,12 @@ public class NearestPaths implements Serializable {
         this.totalDistance = totalDistance;
     }
 
+    public int getTotalTime() {
+        return totalTime;
+    }
 
+    public void setTotalTime(int totalTime) {
+        this.totalTime = totalTime;
+    }
 
 }

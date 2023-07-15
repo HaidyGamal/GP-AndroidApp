@@ -1,10 +1,7 @@
 package com.example.publictransportationguidance.helpers;
 
-import static com.example.publictransportationguidance.BuildConfig.MAPS_API_KEY;
-import static com.example.publictransportationguidance.api.Api.GOOGLE_MAPS_BASE_URL;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.BUS;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.METRO;
-import static com.example.publictransportationguidance.helpers.GlobalVariables.MODE;
 
 import android.content.Context;
 import android.location.Address;
@@ -17,8 +14,6 @@ import android.widget.Toast;
 import com.example.publictransportationguidance.R;
 import com.example.publictransportationguidance.pojo.estimatedTimeResponse.Duration;
 import com.example.publictransportationguidance.pojo.estimatedTimeResponse.Route;
-import com.example.publictransportationguidance.tracking.trackingModule.trackingHelpers.TripsTimeCallback;
-import com.example.publictransportationguidance.api.RetrofitClient;
 import com.example.publictransportationguidance.blindMode.ArrowFunction;
 import com.example.publictransportationguidance.pojo.estimatedTimeResponse.EstimatedTime;
 import com.example.publictransportationguidance.pojo.pathsResponse.NearestPaths;
@@ -29,11 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import retrofit2.Response;
 
@@ -264,59 +254,6 @@ public class Functions {
     public static int getPathSize(List<NearestPaths> path) {
         return path.size();
     }
-
-
-//   M Osama: Faster method to calculate estimated time by Google
-    public static void calcEstimatedTripsTime(List<List<NearestPaths>> paths, TripsTimeCallback callback) {
-
-        /* M Osama: to store the estimated time of each Possible Path */
-        int[] globalDurations = new int[paths.size()];
-        Arrays.fill(globalDurations, 0);
-
-        ExecutorService executor = Executors.newFixedThreadPool(paths.size());                      /* M Osama: Creating multiple threads to calculate the duration between each two intermediate Nodes */
-
-        List<Future<List<String>>> responses = new ArrayList<>();
-
-        for (int pathNumber = 0; pathNumber < paths.size(); pathNumber++) {
-            List<NearestPaths> path = getPathByNumber(paths, pathNumber);
-            int numberOfIntermediatePaths = getPathSize(path) - 1;
-
-            ArrayList<String> nodes = getPathNodes(path);
-            ArrayList<String> means = getPathMeans(path);
-
-            Callable<List<String>> task = () -> {
-                List<String> localDurations = new ArrayList<>();
-
-                for (int nodeNumber = 0; nodeNumber < numberOfIntermediatePaths; nodeNumber++) {
-                    int constantNodeNumberForRequest = nodeNumber;
-                    Response<EstimatedTime> response = RetrofitClient.getInstance(GOOGLE_MAPS_BASE_URL)
-                            .getApi().getEstimatedTime(nodes.get(constantNodeNumberForRequest), nodes.get(constantNodeNumberForRequest + 1), MODE, means.get(constantNodeNumberForRequest), MAPS_API_KEY).execute();
-                    localDurations.add(getDurationText(response));                          /* M Osama: Getting a response from the multiple responses we runned then Getting duration of moving between two intermediate Nodes */
-                }
-
-                return localDurations;
-            };
-
-            Future<List<String>> future = executor.submit(task);
-            responses.add(future);
-        }
-
-        executor.shutdown();                                    // Shutdown the executor after completing the tasks
-
-        for (int i = 0; i < responses.size(); i++) {
-            try {
-                List<String> localDurations = responses.get(i).get();
-                for (String duration : localDurations) {
-                    globalDurations[i] += extractMinutes(duration);                     /* M Osama: Summing all subDurations to calculate the totalDuration */
-                }
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-        }
-
-        callback.onTripsTimeCalculated(globalDurations);
-    }
-
 
     /* M Osama: execute any function without the need of buttons */
     public static void execute(ArrowFunction function) {

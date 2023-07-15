@@ -29,6 +29,14 @@ public class PathsTokenizer {
         }
         else return -1.0;
     }
+    public static int getPathTime(List<List<NearestPaths>> listOfList, int pathNumber){
+        if(pathNumber<getNumberOfPaths(listOfList)){
+            List<NearestPaths> path=listOfList.get(pathNumber);
+            int pathSize = path.size();
+            return path.get(pathSize-1).getTotalTime();
+        }
+        else return -1;
+    }
 
     public static List<NearestPaths> getPath(List<List<NearestPaths>> listOfList, int pathNumber){
         if(pathNumber<getNumberOfPaths(listOfList)) return listOfList.get(pathNumber);

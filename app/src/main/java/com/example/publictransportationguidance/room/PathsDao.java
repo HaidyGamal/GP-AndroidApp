@@ -21,9 +21,6 @@ public interface PathsDao {
     @Query("SELECT COUNT(path) FROM Paths")
     int getNumberOfRowsOfPathsTable();
 
-    @Query("UPDATE Paths SET time = :time WHERE defaultPathNumber = :pathNum")
-    void updatePathTime(int pathNum, int time);
-
     @Query("SELECT * FROM Paths ORDER BY " + "CASE " + "WHEN :sortingCriteria = 'time' THEN time " + "WHEN :sortingCriteria = 'distance' THEN distance " + "WHEN :sortingCriteria = 'cost' THEN cost " + "END ASC")
     List<PathInfo> getSortedPathsASC(String sortingCriteria);
 

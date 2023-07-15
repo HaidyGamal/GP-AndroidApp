@@ -21,11 +21,9 @@ import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.publictransportationguidance.R;
-import com.example.publictransportationguidance.blindMode.speechToText.SpeechRecognitionCallback;
 import com.example.publictransportationguidance.blindMode.speechToText.SpeechToTextHelper;
 import com.example.publictransportationguidance.blindMode.textToSpeech.TextToSpeechHelper;
 import com.example.publictransportationguidance.sharedPrefs.SharedPrefs;
@@ -53,7 +51,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements SpeechRecognitionCallback {
+public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
@@ -171,16 +169,6 @@ public class MainActivity extends AppCompatActivity implements SpeechRecognition
             speechRecognitionResults.put(requestCode,result);
             processSpeechRecognitionResult(requestCode,result);
         }
-    }
-
-    @Override
-    public void onSpeechRecognitionResult(String result, EditText targetEditText) {
-        processSpeechRecognitionResult(currentRequestCode, result);
-    }
-
-    @Override
-    public void onSpeechRecognitionResult(String result) {
-        processSpeechRecognitionResult(currentRequestCode, result);
     }
 
     private void processSpeechRecognitionResult(int requestCode, String result) {

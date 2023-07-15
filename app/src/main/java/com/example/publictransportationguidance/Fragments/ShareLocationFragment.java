@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,6 +48,12 @@ public class ShareLocationFragment extends Fragment implements OnFriendshipCheck
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_share_location,container,false);
         firebaseInitializer();
         db = FirebaseFirestore.getInstance();
+
+        if (getParentFragment() != null && !getParentFragment().isAdded()) {
+            getParentFragment().getChildFragmentManager().beginTransaction().add(new ShareLocationFragment(), "ShareLocationFragment").commit();
+        }
+
+
         return binding.getRoot();
     }
 
@@ -80,12 +87,21 @@ public class ShareLocationFragment extends Fragment implements OnFriendshipCheck
             else checkFriendship(mUser.getEmail(),trackedEmail,this);
         });
 
+//        if(mUser!=null) {
+//            listenToWhichFriendWantToTrack(mUser.getEmail());
+//            listenToTrackingResponse();
+//        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
         if(mUser!=null) {
             listenToWhichFriendWantToTrack(mUser.getEmail());
             listenToTrackingResponse();
         }
     }
-
 
     private void firebaseInitializer(){
         mAuth= FirebaseAuth.getInstance();
@@ -205,13 +221,13 @@ public class ShareLocationFragment extends Fragment implements OnFriendshipCheck
 
                         if (friendDeleted) {
                             docRef.update("friends", updatedFriends)
-                                    .addOnSuccessListener(v -> fireToast("Friend is deleted successfully"))
-                                    .addOnFailureListener(v -> fireToast("Failed to delete friend"));
+                                    .addOnSuccessListener(v -> fireToast("تم حذف الصديق بنجاح"))
+                                    .addOnFailureListener(v -> fireToast("فشلنا في حذف الصديق، نرجو إعادة المحاولة"));
                         } else {
-                            fireToast("Friend not found");
+                            fireToast("هذا ليس متوفر في قائمة الأصدقاء");
                         }
                     })
-                    .addOnFailureListener(v -> fireToast("Failed to delete friend"));
+                    .addOnFailureListener(v -> fireToast("فشلنا في حذف الصديق، نرجو إعادة المحاولة"));
         } else fireToast(getString(R.string.PleaseLogInFirst));
 
     }
@@ -233,9 +249,9 @@ public class ShareLocationFragment extends Fragment implements OnFriendshipCheck
 
                 if (friendFound) {
                     editDocRef.update("friends", friends)
-                            .addOnSuccessListener(v -> fireToast("Friend updated successfully"))
-                            .addOnFailureListener(v -> fireToast("Failed to update friend"));
-                } else fireToast("Friend not found");
+                            .addOnSuccessListener(v -> Log.i("TAG","From(ShareLocationFragment) Friend updated successfully"))
+                            .addOnFailureListener(v -> Log.i("TAG","From(ShareLocationFragment) Failed to update friend"));
+                } else Log.i("TAG","From(ShareLocationFragment) Friend not found");
             })
                     .addOnFailureListener(v -> fireToast("Failed to update friend"));
         } else fireToast(getString(R.string.PleaseLogInFirst));
@@ -278,12 +294,12 @@ public class ShareLocationFragment extends Fragment implements OnFriendshipCheck
 
                                                     if (reverseFriendshipExists) if (listener != null) {
                                                         listener.onFriendshipExists(friendEmail);
-                                                        fireToast("You are friends");
+                                                        fireToast("أنتم أصدقاء");
                                                     }
                                                     else {
                                                         if (listener != null) {
                                                             listener.onFriendshipDoesNotExist();
-                                                            fireToast("You aren't Friends");
+                                                            fireToast("أنتم لستم أصدقاء");
                                                         }
                                                     }
                                                 } else if (listener != null) listener.onFriendshipDoesNotExist();
@@ -292,13 +308,13 @@ public class ShareLocationFragment extends Fragment implements OnFriendshipCheck
                                         .addOnFailureListener(e -> {
                                             if (listener != null) {
                                                 listener.onFailedToRetrieveData();
-                                                fireToast("Bad Internet Connection");
+                                                fireToast("جودة الإنترنت سيئة");
                                             }
                                         });
                             } else {
                                 if (listener != null) {
                                     listener.onFriendshipDoesNotExist();
-                                    fireToast("This isn't a friend"+friendsList.get(0).keySet().toArray()[0]);
+                                    fireToast("أنتم لستم أصدقاء");
                                 }
                             }
                         } else if (listener != null) listener.onFriendshipDoesNotExist();
@@ -366,7 +382,7 @@ public class ShareLocationFragment extends Fragment implements OnFriendshipCheck
 
             docRef.addSnapshotListener((snapshot, error) -> {
                 if (error != null) {
-                    fireToast("Failed to listen for friend updates");
+                    fireToast("فشلنا في متابعة تحديثات مكان صديقك");
                     return;
                 }
 
@@ -388,7 +404,7 @@ public class ShareLocationFragment extends Fragment implements OnFriendshipCheck
                                     if(mUser.getEmail().equals(specificEmail)) {
                                         showRequestSharingLocationDialog(email);
                                     }
-                                    fireToast("Friend with email " + email + " Want to track you");
+//                                    fireToast("صديقك صاحب هذا الحساب " + email + " يريد متابعة تحديثات موقعك");
                                 }
                                 friendStates.put(email, value);  // Update the previous state for the email
                             }
@@ -413,14 +429,23 @@ public class ShareLocationFragment extends Fragment implements OnFriendshipCheck
     }
 
     private void fireToast(String toastContent){
-        Toast.makeText(getContext(), toastContent, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getParentFragmentManager().getPrimaryNavigationFragment().getContext(), toastContent, Toast.LENGTH_SHORT).show();
     }
 
-    private void showRequestSharingLocationDialog(String email){
-        RequestSharingLocationDialog dialog = new RequestSharingLocationDialog(email);
+    private void showDialog(RequestSharingLocationDialog dialog) {
         dialog.setShareLocationDialogListener(this);
-        dialog.show(getFragmentManager(),RequestSharingLocationDialog.TAG);
+        dialog.show(getActivity().getSupportFragmentManager(), RequestSharingLocationDialog.TAG);
     }
+
+
+    private void showRequestSharingLocationDialog(String email) {
+        if (isAdded() && getActivity() != null) {
+            RequestSharingLocationDialog dialog = new RequestSharingLocationDialog(email);
+            showDialog(dialog);
+        }
+    }
+
+
 
     @Override
     public void onOptionSelected(int option, String email) {

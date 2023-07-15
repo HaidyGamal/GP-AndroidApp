@@ -4,7 +4,6 @@ import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 import static com.example.publictransportationguidance.api.Api.NEO4J_BASE_URL;
 import static com.example.publictransportationguidance.blindMode.speechToText.SpeechToTextHelper.convertHaaToTaaMarbuta;
 import static com.example.publictransportationguidance.helpers.Functions.LISTEN_TO_CHOOSING_PATH_OR_NOT;
-import static com.example.publictransportationguidance.helpers.Functions.calcEstimatedTripsTime;
 import static com.example.publictransportationguidance.helpers.Functions.checkInternetConnectionToast;
 import static com.example.publictransportationguidance.helpers.Functions.convertMathIntoThoma;
 import static com.example.publictransportationguidance.helpers.Functions.extractNodesLatLng;
@@ -45,6 +44,7 @@ import static com.example.publictransportationguidance.helpers.GlobalVariables.s
 import static com.example.publictransportationguidance.helpers.PathsTokenizer.detailedPathToPrint;
 import static com.example.publictransportationguidance.helpers.PathsTokenizer.getPathCost;
 import static com.example.publictransportationguidance.helpers.PathsTokenizer.getPathDistance;
+import static com.example.publictransportationguidance.helpers.PathsTokenizer.getPathTime;
 import static com.example.publictransportationguidance.helpers.PathsTokenizer.getStringPathToPopulateRoom;
 import static com.example.publictransportationguidance.helpers.PathsTokenizer.listToArray;
 import static com.example.publictransportationguidance.helpers.PathsTokenizer.enumeratePaths;
@@ -74,7 +74,6 @@ import com.example.publictransportationguidance.pojo.pathsResponse.NearestPaths;
 import com.example.publictransportationguidance.databinding.ActivityPathResultsBinding;
 import com.example.publictransportationguidance.sharedPrefs.SharedPrefs;
 import com.example.publictransportationguidance.tracking.trackingModule.trackingHelpers.TextAnimator;
-import com.example.publictransportationguidance.tracking.trackingModule.trackingHelpers.TripsTimeCallback;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -87,7 +86,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PathResults extends AppCompatActivity implements TripsTimeCallback {
+public class PathResults extends AppCompatActivity{
     ActivityPathResultsBinding binding;
     PathsDao dao;
     int numberOfVisits=0;
@@ -146,7 +145,8 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
             textToSpeechHelper.speak(getString(R.string.SearchingForAvaliablePaths), this::listenToNothing);
         }
 
-        getNearestPaths(LOCATION,DESTINATION,this);
+//        getNearestPaths(LOCATION,DESTINATION,this);
+        getNearestPaths(LOCATION,DESTINATION);
 
         textAnimator.startAnimation(binding.textView,"");
     }
@@ -160,7 +160,7 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
         }
     }
 
-    public void getNearestPaths(String location, String destination, TripsTimeCallback callback) {
+    public void getNearestPaths(String location, String destination) {
 
         Objects.requireNonNull(RetrofitClient.getInstance(NEO4J_BASE_URL)).getApi().getNearestPaths(location,destination).enqueue(new Callback<List<List<NearestPaths>>>() {
             @Override
@@ -174,8 +174,8 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
                 if (paths != null) {
                     if (paths.size() > 0) {
                         cacheToRoom(enumeratePaths(paths),paths, extractNodesLatLng(paths));        /* M Osama: give each Path a number then cache them to AppRoom where each contains it's route nodes latLng*/
-                        calcEstimatedTripsTime(paths,callback);
                         sortingOnClickListeners();                                                  /* M Osama: onClickListener for two sorting Buttons */
+                        updateViewsOnReSorting(sortPathsAscUsing(SORTING_CRITERIA));
                     }
                     else { tryAgainToast(getApplicationContext());  noPathsFound();  noAvailablePathsToast(getApplicationContext()); }
                 }
@@ -195,12 +195,6 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
 
     }
 
-    @Override
-    public void onTripsTimeCalculated(int[] globalDurations) {
-        for (int pathNumber = 0; pathNumber < globalDurations.length; pathNumber++) {   dao.updatePathTime(pathNumber,globalDurations[pathNumber]); }
-        updateViewsOnReSorting(sortPathsAscUsing(SORTING_CRITERIA));
-    }
-
     public void cacheToRoom(HashMap pathMap, List<List<NearestPaths>> shortestPaths,ArrayList<ArrayList<LatLng>> pathsNodesLatLng){
         /*ToBe Deleted*/
         dao.deleteAllPaths();
@@ -210,10 +204,10 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
             for (int pathNum = 0; pathNum < pathMap.size(); pathNum++) {
                 double tempDistance = getPathDistance(shortestPaths, pathNum);
                 double tempCost = getPathCost(shortestPaths, pathNum);
-                /* int tempTime is written down at onTripsTimeCalculated */
+                int tempTime = getPathTime(shortestPaths,pathNum);
                 String tempPath = getStringPathToPopulateRoom(pathMap).get(pathNum);
                 String pickedPathDetails = detailedPathToPrint(stopsAndMeans(shortestPaths,pathNum));
-                PathInfo pathInfo = new PathInfo(pathNum, tempDistance,tempCost, 0, tempPath,pickedPathDetails,pathsNodesLatLng.get(pathNum));
+                PathInfo pathInfo = new PathInfo(pathNum, tempDistance,tempCost, tempTime, tempPath,pickedPathDetails,pathsNodesLatLng.get(pathNum));
                 dao.insertPath(pathInfo);
             }
         }
