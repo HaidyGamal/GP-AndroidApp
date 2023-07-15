@@ -1,6 +1,7 @@
 package com.example.publictransportationguidance.tracking.trackingModule.trackingModule;
 
 import static com.example.publictransportationguidance.helpers.Functions.getLocationName;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.ARABIC;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.SHARE_LOCATION_COLLECTION_NAME;
 import static com.example.publictransportationguidance.tracking.trackingModule.trackingModule.TrackLiveLocation.googleMap;
 
@@ -29,6 +30,9 @@ import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.publictransportationguidance.R;
+import com.example.publictransportationguidance.blindMode.speechToText.SpeechToTextHelper;
+import com.example.publictransportationguidance.blindMode.textToSpeech.TextToSpeechHelper;
+import com.example.publictransportationguidance.sharedPrefs.SharedPrefs;
 import com.example.publictransportationguidance.tracking.SelectedPath;
 import com.example.publictransportationguidance.tracking.trackingModule.util.Utils;
 import com.example.publictransportationguidance.tracking.trackingModule.util.logic.MapUtils;
@@ -95,6 +99,9 @@ public class LocationUpdatesService extends Service {
     FirebaseFirestore db;
     DocumentReference docRef;
 
+    public TextToSpeechHelper textToSpeechHelper;
+    public SpeechToTextHelper speechToTextHelper;
+
     public LocationUpdatesService() {}
 
     @Override
@@ -127,6 +134,11 @@ public class LocationUpdatesService extends Service {
             docRef = db.collection(SHARE_LOCATION_COLLECTION_NAME).document(Objects.requireNonNull(mUser.getEmail()));
             ensureDocumentIsExit(mUser.getEmail());
         }
+
+        /* M Osama: initializing tts & stt */
+        initializeTTSandSTT();
+        SharedPrefs.init(this);
+
     }
 
     @Override
@@ -246,7 +258,12 @@ public class LocationUpdatesService extends Service {
 
         Log.i("TAG","From (locationUpdatesService.java)"+currentLocation.latitude+","+currentLocation.longitude);
 
-        updateUserSharedLocation(currentLocation.latitude+"",currentLocation.longitude+"",getLocationName(this,currentLocation.latitude,currentLocation.longitude));
+        String currentLocationName = getLocationName(this,currentLocation.latitude,currentLocation.longitude);
+        if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1){
+            textToSpeechHelper.speak("أنتم الآنَ في " + currentLocationName, this::listenToNothing);
+        }
+
+        updateUserSharedLocation(currentLocation.latitude+"",currentLocation.longitude+"",currentLocationName);
 
         TrackLiveLocation.listOfActualPathNodes.add(currentLocation);
         MapUtils.moveCar(googleMap,getApplicationContext(), currentLocation);
@@ -339,4 +356,10 @@ public class LocationUpdatesService extends Service {
         }
     }
 
+    void initializeTTSandSTT(){
+        textToSpeechHelper = TextToSpeechHelper.getInstance(this,ARABIC);
+        speechToTextHelper = SpeechToTextHelper.getInstance(ARABIC);
+    }
+
+    private void listenToNothing(){}
 }

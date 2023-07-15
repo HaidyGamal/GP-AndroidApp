@@ -48,6 +48,7 @@ public class Functions {
     public static final int LISTEN_TO_CHOOSING_PATH_OR_NOT =3333; //Afnan: in PathResults for Blind Mode
     public static final int LISTEN_TO_TRACKING_OR_NOT =2222;      //Afnan: in SelectedPath for Blind Mode
     public static final int LISTEN_TO_RE_SPEAK_ROUTE_OR_NOT=1111;
+    public static final int LISTEN_TO_RETURN_OR_RECURSION=101010;
 
     public static String[] listToArray(List<String> list) {
         String[] array = new String[list.size()];
@@ -89,7 +90,7 @@ public class Functions {
             Address address = myList.get(0);
             Log.i("TAG","From(Functions)"+address.getLocality()+"");
             return address.getLocality();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return "هناك مشكلة في الانترنت";
         }

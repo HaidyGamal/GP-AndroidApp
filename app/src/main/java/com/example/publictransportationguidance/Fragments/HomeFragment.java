@@ -206,10 +206,11 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
 
             autoCompleteOnFooterClick(acTextView);
 
-            if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1) {
-                if(acTextView.getId()==binding.tvLocation.getId()) execute(()->textToSpeechHelper.speak(availableStopsToBeRead(true,stopsDetailsList),()-> listenToSpecifiedLocationName(this) ));
-                else if(acTextView.getId()==binding.tvDestination.getId()) execute(()->textToSpeechHelper.speak(availableStopsToBeRead(true,stopsDetailsList),()-> listenToSpecifiedDestinationName(this)));
-            }
+            /* M Osama: it's combined in the function called executeAfterStopsDetailsListPopulated */
+//            if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1) {
+//                if(acTextView.getId()==binding.tvLocation.getId()) execute(()->textToSpeechHelper.speak(availableStopsToBeRead(true,stopsDetailsList),()-> listenToSpecifiedLocationName(this) ));
+//                else if(acTextView.getId()==binding.tvDestination.getId()) execute(()->textToSpeechHelper.speak(availableStopsToBeRead(true,stopsDetailsList),()-> listenToSpecifiedDestinationName(this)));
+//            }
 
         }).addOnFailureListener((exception) -> Toast.makeText(getContext(), R.string.CheckInternetConnection, Toast.LENGTH_SHORT).show());
 
@@ -401,10 +402,8 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
 
     private void executeAfterStopsDetailsListPopulated(AutoCompleteTextView acTextView) {
         if (SharedPrefs.readMap("ON_BLIND_MODE", 0) == 1) {
-            if (acTextView.getId() == binding.tvLocation.getId())
-                textToSpeechHelper.speak(availableStopsToBeRead(true, stopsDetailsList), () -> listenToSpecifiedLocationName(this));
-            else if (acTextView.getId() == binding.tvDestination.getId())
-                textToSpeechHelper.speak(availableStopsToBeRead(true, stopsDetailsList), () -> listenToSpecifiedDestinationName(this));
+            if (acTextView.getId() == binding.tvLocation.getId())           textToSpeechHelper.speak(availableStopsToBeRead(true, stopsDetailsList), () -> listenToSpecifiedLocationName(this));
+            else if (acTextView.getId() == binding.tvDestination.getId())   textToSpeechHelper.speak(availableStopsToBeRead(true, stopsDetailsList), () -> listenToSpecifiedDestinationName(this));
         }
     }
 }

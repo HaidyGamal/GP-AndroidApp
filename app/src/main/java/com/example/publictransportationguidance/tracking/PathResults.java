@@ -90,6 +90,7 @@ import retrofit2.Response;
 public class PathResults extends AppCompatActivity implements TripsTimeCallback {
     ActivityPathResultsBinding binding;
     PathsDao dao;
+    int numberOfVisits=0;
 
     /* M Osama: instance to put loadingDialog inFront of UI */
     LoadingDialog loadingDialog = new LoadingDialog(PathResults.this);
@@ -137,17 +138,26 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
 
         textAnimator=new TextAnimator();
 
+        /** M Osama: for testing the blindMode here because of the googleAPI key problem */
+        SharedPrefs.write("ON_BLIND_MODE",1);
+        /** TO BE DELETED */
+
         if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1){
             textToSpeechHelper.speak(getString(R.string.SearchingForAvaliablePaths), this::listenToNothing);
         }
 
-        /** M Osama: for testing the blindMode here because of the googleAPI key problem */
-//        SharedPrefs.write("ON_BLIND_MODE",1);
-        /** TO BE DELETED */
-
         getNearestPaths(LOCATION,DESTINATION,this);
 
         textAnimator.startAnimation(binding.textView,"");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();            /* M Osama: complete reading the paths for the blind when he return from SelectedPath*/
+        if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1){
+            if(numberOfVisits>0){  readPathsForBlinds();  }
+            numberOfVisits++;
+        }
     }
 
     public void getNearestPaths(String location, String destination, TripsTimeCallback callback) {
@@ -176,9 +186,8 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
             @Override
             public void onFailure(@NonNull Call<List<List<NearestPaths>>> call, @NonNull Throwable t) {
                 noPathsFound();
-                if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1){
-                    textToSpeechHelper.speak(getString(R.string.BadInternetConnection),()-> listenToNothing());
-                }
+                if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1)       textToSpeechHelper.speak(getString(R.string.BadInternetConnection),()-> listenToNothing());
+
                 loadingDialog.endLoadingDialog();
                 Log.i("TAG",t.getMessage());
             }

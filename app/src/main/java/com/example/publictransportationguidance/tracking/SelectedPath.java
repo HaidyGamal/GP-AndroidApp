@@ -1,6 +1,7 @@
 package com.example.publictransportationguidance.tracking;
 
 import static com.example.publictransportationguidance.blindMode.speechToText.SpeechToTextHelper.convertHaaToTaaMarbuta;
+import static com.example.publictransportationguidance.helpers.Functions.LISTEN_TO_RETURN_OR_RECURSION;
 import static com.example.publictransportationguidance.helpers.Functions.LISTEN_TO_RE_SPEAK_ROUTE_OR_NOT;
 import static com.example.publictransportationguidance.helpers.Functions.LISTEN_TO_TRACKING_OR_NOT;
 import static com.example.publictransportationguidance.helpers.Functions.addDotBeforeThum;
@@ -12,6 +13,8 @@ import static com.example.publictransportationguidance.helpers.GlobalVariables.B
 import static com.example.publictransportationguidance.helpers.GlobalVariables.INTENT_PATH;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.NAVIGATING_TO_LIVE_LOCATION_REQUEST_CODE;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.NO;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.REPEAT;
+import static com.example.publictransportationguidance.helpers.GlobalVariables.RETURN;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.SELECTED_PATH;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.SORRY;
 import static com.example.publictransportationguidance.helpers.GlobalVariables.YES;
@@ -123,7 +126,7 @@ public class SelectedPath extends AppCompatActivity implements SharedPreferences
 
         //Afnan: In case of Blind Mode
         if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1){
-            textToSpeechHelper.speak(enhanceSentence(String.valueOf(binding.selectedPath.getText()))+"."+"هل تريد قراءة الطريق مرةً أُخري. نعم أَمْ لا " ,()-> listenToReSpeakRouteOrNot(this));
+            textToSpeechHelper.speak(enhanceSentence(String.valueOf(binding.selectedPath.getText()))+"."+"هل تريد قراءة الطريق مرةً أُخْرَى. نعم أَمْ لا " ,()-> listenToReSpeakRouteOrNot(this));
         }
 
     }
@@ -219,10 +222,7 @@ public class SelectedPath extends AppCompatActivity implements SharedPreferences
         if (s.equals(Utils.KEY_REQUESTING_LOCATION_UPDATES)) {setButtonsState(sharedPreferences.getBoolean(Utils.KEY_REQUESTING_LOCATION_UPDATES, false));}
     }
 
-    private void setButtonsState(boolean requestingLocationUpdates) {
-        if (requestingLocationUpdates) {}
-        else {}
-    }
+    private void setButtonsState(boolean requestingLocationUpdates) {}
 
     /* Afnan: Blind Mode */
     void initializeTTSandSTT(){
@@ -240,22 +240,32 @@ public class SelectedPath extends AppCompatActivity implements SharedPreferences
         speechToTextHelper.startSpeechRecognition(selectedPath , LISTEN_TO_RE_SPEAK_ROUTE_OR_NOT);
     }
 
+    private void listenToReturnOrRecursion(SelectedPath selectedPath) {
+        speechToTextHelper.startSpeechRecognition(selectedPath , LISTEN_TO_RETURN_OR_RECURSION);
+    }
+
     /* Afnan: receiving answer from the user in Blind Mode */
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         speechToTextHelper.onActivityResult(requestCode, resultCode, data);                                         // Pass the onActivityResult event to the SpeechToTextHelper
+        assert data != null;
         ArrayList<String> speechConvertedToText = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
         String response = convertHaaToTaaMarbuta(speechConvertedToText.get(0));
         switch (requestCode) {
             case LISTEN_TO_RE_SPEAK_ROUTE_OR_NOT:
-                if(stringIsFound(response,YES))     textToSpeechHelper.speak(enhanceSentence(String.valueOf(binding.selectedPath.getText()))+"."+"هل تريد قراءة الطريق مرةً أُخرى. نعم أَمْ لا " ,()-> listenToReSpeakRouteOrNot(this));
-                else if(stringIsFound(response,NO)) textToSpeechHelper.speak("هل تريد تَتَبُّع رحلتكْ . نعم أَمْ لا " ,()-> listenToTracking(this));
-                else                                textToSpeechHelper.speak(SORRY, () -> listenToReSpeakRouteOrNot(this));
+                if(stringIsFound(response,YES))         textToSpeechHelper.speak(enhanceSentence(String.valueOf(binding.selectedPath.getText()))+"."+"هل تريد قراءة الطريق مرةً أُخرى. نعم أَمْ لا " ,()-> listenToReSpeakRouteOrNot(this));
+                else if(stringIsFound(response,NO))     textToSpeechHelper.speak("هل تريد تَتَبُّع رحلتكْ . نعم أَمْ لا " ,()-> listenToTracking(this));
+                else                                    textToSpeechHelper.speak(SORRY, () -> listenToReSpeakRouteOrNot(this));
                 break;
             case LISTEN_TO_TRACKING_OR_NOT:
-                if (stringIsFound(response,YES))    binding.startLiveLocationBtn.performClick();
-                else if(stringIsFound(response,NO)) finish();
-                else                                textToSpeechHelper.speak(SORRY, () -> listenToTracking(this));
+                if (stringIsFound(response,YES))        binding.startLiveLocationBtn.performClick();
+                else if(stringIsFound(response,NO))     textToSpeechHelper.speak("هل تريد العودة أم قراءة الطريق مرة أُخرى " ,()-> listenToReturnOrRecursion(this));
+                else                                    textToSpeechHelper.speak(SORRY, () -> listenToTracking(this));
+                break;
+            case LISTEN_TO_RETURN_OR_RECURSION:
+                if(stringIsFound(response,RETURN))      finish();
+                else if(stringIsFound(response,REPEAT)) textToSpeechHelper.speak(enhanceSentence(String.valueOf(binding.selectedPath.getText()))+"."+"هل تريد قراءة الطريق مرةً أُخرى. نعم أَمْ لا " ,()-> listenToReSpeakRouteOrNot(this));
+                else                                    textToSpeechHelper.speak(SORRY, () -> listenToReturnOrRecursion(this));
                 break;
         }
     }

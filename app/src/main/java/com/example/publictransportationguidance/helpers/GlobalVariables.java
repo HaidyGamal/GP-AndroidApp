@@ -65,6 +65,10 @@ public class GlobalVariables {
     public static final String[] SORT_BY_TIME = {"الوقت","وقت"};
     public static final String[] SORT_BY_DISTANCE = {"المسافة","مسافة"};
     public static final String[] SORT_BY_COST = {"التكلفة","تكلفة"};
+    public static final String[] RETURN = {"العودة","عوده","العوده","الرجوع","رجوع","عودة"};
+    public static final String[] REPEAT = {"قراءة","قراءه","قراءة الطريق","قراءة الطريق مرة أُخرى","قراءة الطريق مره أُخرى","قراءة الطريق مرة","قراءه الطريق مره","قراءه الطريق مرة أخرى","قراءه الطريق مرة أخري","قراءه الطريق مرة أُخري","قراءه الطريق ثانية","قراءه الطريق"};
+//    public static final String[] THANKS = {"شكراً","شكراٍ","شكرن","شكرا","شكر"};
+
 
     public static final String PATH = "الطريق";
     public static final String ITS_COST = "و تكلفتهُ   ";
