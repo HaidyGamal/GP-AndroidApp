@@ -139,7 +139,7 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
         textAnimator=new TextAnimator();
 
         /** M Osama: for testing the blindMode here because of the googleAPI key problem */
-        SharedPrefs.write("ON_BLIND_MODE",1);
+//        SharedPrefs.write("ON_BLIND_MODE",1);
         /** TO BE DELETED */
 
         if(SharedPrefs.readMap("ON_BLIND_MODE",0)==1){
@@ -296,8 +296,6 @@ public class PathResults extends AppCompatActivity implements TripsTimeCallback 
         binding.time.setText(path.getTime()+"");
         if(path.getTime()==0) failedToEstimateTime(getApplicationContext());
     }
-
-
 
 
     /* M Osama: Build String Array from cachedPath Info */
