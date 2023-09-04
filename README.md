@@ -12,13 +12,13 @@
 
 Here're some of the project's best features:
 
-*   1- Providing different routes passing by different intermediate points
-*   2- Provide necessary information like costdistance & time for each route
-*   3- Allow the user to specfiy his preferred sorting criteria
-*   4- Allow the user to share his location with any relative/friend he gives a permission
-*   5- Allow the user to suggest adding new route between to points by taking some information from him
-*   6- Allow the user to give a rate for any sub Route he passed by during his trip
-*   7- Allow the user to track himself on google Map
+*   1- Provides different routes passing by different intermediate points
+*   2- Provides necessary information like costdistance & time for each route
+*   3- Allows the user to specfiy his preferred sorting criteria
+*   4- Allows the user to share his location with any relative/friend he gives a permission
+*   5- Allows the user to suggest adding new route between to points by taking some information from him
+*   6- Allows the user to give a rate for any sub Route he passed by during his trip
+*   7- Allows the user to track himself on google Map
 *   8- Allows the blinds to use the application by using voice Commands created for them
 
   
